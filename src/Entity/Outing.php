@@ -51,6 +51,9 @@ class Outing
     #[ORM\ManyToOne(inversedBy: 'outings')]
     private ?Campus $campus = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -201,6 +204,18 @@ class Outing
     public function setCampus(?Campus $campus): static
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }
