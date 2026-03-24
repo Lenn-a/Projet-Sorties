@@ -1,58 +1,95 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="general-infos">
+        <p><strong>Date du jour : {{ "now" | date('d/m/Y') }}</strong></p>
+        {% if app.user %}
+            <p><strong>Participant : {{ app.user.username }}</strong></p>
+        {% endif %}
+    </div>
     <h1>Sorties</h1>
     {% for outing in outings %}
         <article class="outingInList">
-
-            <div>
-                <p><strong>Nom de la sortie :</strong></p>
-                <p>{{ outing.name }}</p>
+            <div class="outing-img">
+                <img src="{{ asset('images/Outing-default.png') }}">
             </div>
-
-            <div>
-                <p><strong>Date de la sortie :</strong></p>
-                <p>{{ outing.startDateTime | date('d/m/Y') }}</p>
-            </div>
-
-            <div>
-                <p><strong>Clôture :</strong></p>
-                <p>{{ outing.signupDateLimit | date('d/m/Y') }}</p>
-            </div>
-
-            <div>
-                <p><strong>Inscrits/places :</strong></p>
-                <p>X/{{ outing.nbSignupsMax }}</p>
-            </div>
-
-            <div>
-                <p><strong>État :</strong></p>
-                <p>{{ outing.status.label }}</p>
-            </div>
-
-            <div>
-                <p><strong>Inscrit :</strong></p>
-                <p>[]</p>
-            </div>
-
-            <div>
-                <p><strong>Organisateur :</strong></p>
-                <p>{{ outing.organiser.username }}</p>
-            </div>
-
-            <div>
-                <p><strong>Actions:</strong></p>
+            <div class="outing-infos">
                 <div>
-                    <a href="{{ path('outing_details', {'id': outing.id }) }}">Afficher</a>
+                    <h4>{{ outing.name }}</h4>
+                    <small>Organisée par {{ outing.organiser.username }}</small>
                 </div>
-                {% if app.user == outing.organiser %}
+                <div class="outing-date">
+                    <span><strong>Date de la sortie :</strong> {{ outing.startDateTime | date('d/m/Y') }} | </span>
+                    <span><strong> Date limite inscription :</strong> {{ outing.signupDateLimit | date('d/m/Y') }}</span>
+                </div>
                 <div>
-                    <a href="{{ path('outing_update', {'id': outing.id }) }}">Modifier</a>
-                </div>
-                {% elseif outing.participants.contains(app.user) %}
-                    <a>Se désister</a>
+                    <p><strong>Inscrits :</strong> {{ outing.participants | length }}/{{ outing.nbSignupsMax }}
+                {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
+                    <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
                 {% endif %}
+                    </p>
+                </div>
+                <div>
+                    <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button>Afficher les détails</button></a>
+                    {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
+                        <a href=""><button>Se désister</button></a>
+                    {% endif %}
+                </div>
+
             </div>
+
+
+
+
+
+{#            <div>#}
+{#                <p><strong>Nom de la sortie :</strong></p>#}
+{#                <p>{{ outing.name }}</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>Date de la sortie :</strong></p>#}
+{#                <p>{{ outing.startDateTime | date('d/m/Y') }}</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>Clôture :</strong></p>#}
+{#                <p>{{ outing.signupDateLimit | date('d/m/Y') }}</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>Inscrits/places :</strong></p>#}
+{#                <p>X/{{ outing.nbSignupsMax }}</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>État :</strong></p>#}
+{#                <p>{{ outing.status.label }}</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>Inscrit :</strong></p>#}
+{#                <p>[]</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>Organisateur :</strong></p>#}
+{#                <p>{{ outing.organiser.username }}</p>#}
+{#            </div>#}
+
+{#            <div>#}
+{#                <p><strong>Actions:</strong></p>#}
+{#                <div>#}
+{#                    <a href="{{ path('outing_details', {'id': outing.id }) }}">Afficher</a>#}
+{#                </div>#}
+{#                {% if app.user == outing.organiser %}#}
+{#                <div>#}
+{#                    <a href="{{ path('outing_update', {'id': outing.id }) }}">Modifier</a>#}
+{#                </div>#}
+{#                {% elseif outing.participants.contains(app.user) %}#}
+{#                    <a>Se désister</a>#}
+{#                {% endif %}#}
+{#            </div>#}
 
         </article>
     {% endfor %}

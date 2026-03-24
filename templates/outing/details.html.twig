@@ -8,7 +8,7 @@
     <div class="outing-details">
         <h1>Détails d'une sortie</h1>
         <h2>{{ outing.name }}</h2>
-        <div>Date et heure : {{ outing.startDateTime | date('Y/m/d')}}</div>
+        <div>Date et heure : {{ outing.startDateTime | date('Y/m/d') }}</div>
         <div>Date limite d'inscription : {{ outing.signupDateLimit | date('Y/m/d') }}</div>
         <div>Nombre de place : {{ outing.nbSignupsMax }}</div>
         <div>Durée : {{ outing.duration }}</div>
@@ -16,8 +16,8 @@
         <div>Campus : {{ outing.campus }}</div>
         <div>Localisation : {{ outing.location }}</div>
         <div>Status : {{ outing.status }}</div>
-        {% if app.user == outing.organiser  %}
-        <button>Annuler</button>
+        {% if app.user == outing.organiser %}
+            <button>Annuler</button>
         {% endif %}
     </div>
 {% endblock %}
