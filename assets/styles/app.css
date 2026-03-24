@@ -1,3 +1,20 @@
 body {
     background-color: skyblue;
 }
+
+/************* CSS Lenn *************/
+
+.outingInList {
+    display: flex;
+    flex-flow: wrap row;
+}
+
+.outingInList div {
+    margin-right: 2vw;
+    margin-left: 2vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+
+}
+
+/************************************/
