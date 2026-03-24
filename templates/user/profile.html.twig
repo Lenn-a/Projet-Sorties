@@ -1,10 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-
-{% endblock %}
-
 {% block title %}
-
+    {{ parent() }} | Profil
 {% endblock %}
+
+{% block body %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id === user.id %}
+        <h1>Mon profil</h1>
+        {{ form_start(userForm) }}
+        {{ form_widget(userForm) }}
+        <button type="submit" class="btn">Enregistrer</button>
+        <button type="reset" class="btn">Annuler</button>
+        {{ form_end(userForm) }}
+    {% else %}
+    <div>
+        <h1>{{ user.username }}</h1>
+        <div>
+            <div>Prénom : {{ user.firstname }}</div>
+            <div>Nom :  {{ user.lastname }}</div>
+            <div>Téléphone : {{ user.phone }}</div>
+            <div>Email : {{ user.email }}</div>
+            <div>Campus : {{ user.campus.name }}</div>
+        </div>
+        <div>
+            <a href="{{ path('outing_list') }}">Retour</a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+
 
