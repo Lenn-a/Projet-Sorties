@@ -30,6 +30,8 @@ final class UserController extends AbstractController
         $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
         if($userForm->isSubmitted() && $userForm->isValid()) {
+
+            // TODO: add conditional, if mdp change then hash new, if not change then...
             $plainPassword = $userForm->get('password')->getData();
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             $entityManager->persist($user);

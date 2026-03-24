@@ -33,7 +33,7 @@ class UserType extends AbstractType
             ->add('email', TextType::class, [
                 'label' => 'Mail',
             ])
-            ->add('password', RepeatedType::class, [
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmation mot de passe'],
