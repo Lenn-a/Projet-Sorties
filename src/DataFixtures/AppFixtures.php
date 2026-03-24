@@ -126,8 +126,8 @@ class AppFixtures extends Fixture
             //Make the organiser a participant :
             $participantsList = [$outing->getOrganiser()];
             //Then add a number of random users (between 1 and 49)
-            for($i = 0; $i < $faker->numberBetween(1, 49); $i++) {
-                $participantsList[] = $faker->randomElement($participantsList);
+            for($i = 0; $i < random_int(1, 49); $i++) {
+                $participantsList[] = $faker->randomElement($usersList);
             }
             //And add them one by one in $outing's participants.
             foreach ($participantsList as $oneLittleGuy) {
