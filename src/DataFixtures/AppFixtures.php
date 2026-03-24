@@ -87,6 +87,18 @@ class AppFixtures extends Fixture
             ;
             $manager->persist($user);
         }
+        $beepboop = new User();
+        $beepboop->setFirstname('Beep')
+            ->setLastName('Boop')
+            ->setUsername('BeepBoop')
+            ->setPhone('08 33 98 00 90')
+            ->setEmail('beep@boop.com')
+            ->setPassword(password_hash('BEEPBOOP', PASSWORD_DEFAULT))
+            ->setRoles(['ROLE_ADMIN'])
+            ->setActive(true)
+            ->setCampus($faker->randomElement($campusList))
+            ;
+        $manager->persist($beepboop);
         $manager->flush();
     }
 
@@ -107,7 +119,7 @@ class AppFixtures extends Fixture
                 ->setNbSignupsMax($faker->numberBetween(1, 50))
                 ->setOutingInfo($faker->paragraph())
                 ->setLocation($faker->randomElement($locationList))
-                ->setOrganiser($faker->randomElement($usersList));
+                ->setOrganiser($faker->randomElement($usersList))
             ;
             $participantsList = [$outing->getOrganiser()];
             for($i = 0; $i < $faker->numberBetween(1, 49); $i++) {
