@@ -3,7 +3,7 @@
         <div>
             <li><a href="{{ path('outing_list') }}">Accueil</a></li>
             <li><a href="{{ path('outing_create') }}">Création sortie</a></li>
-            <li><a href="{{ path('user_profile') }}">Mon profil</a></li>
+            <li><a href="{{ path('user_profile', {'id': app.user.id}) }}">Mon profil</a></li>
             <li><a href="{{ path('app_login') }}">Login</a></li>
             <li><a href="{{ path('app_logout') }}">Logout</a></li>
         </div>

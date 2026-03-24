@@ -5,7 +5,19 @@
 {% endblock %}
 
 {% block body %}
-<h1>Hello</h1>
+    <div>
+        <h1>{{ user.username }}</h1>
+        <div>
+            <div>Prénom : {{ user.firstname }}</div>
+            <div>Nom :  {{ user.lastname }}</div>
+            <div>Téléphone : {{ user.phone }}</div>
+            <div>Email : {{ user.email }}</div>
+            <div>Campus : {{ user.campus.name }}</div>
+        </div>
+        <div>
+            <a href="{{ path('outing_list') }}">Retour</a>
+        </div>
+    </div>
 {% endblock %}
 
 
