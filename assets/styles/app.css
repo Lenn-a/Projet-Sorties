@@ -3,19 +3,61 @@ body {
 }
 
 /************* CSS Lenn *************/
-
+/*List of all outings : */
 .outingInList {
     display: flex;
     flex-flow: wrap row;
+    align-items: center;
 }
 
-.outingInList div {
+.outing-img {
+    background-color: #e5f9ff;
+    border-radius: 20px;
     margin-right: 2vw;
-    margin-left: 2vw;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-
+}
+.outing-img img {
+    max-width: 20vw;
 }
 
+.outing-infos h4 {
+    margin-bottom: 0;
+}
+
+.outing-infos div {
+    margin-bottom: 1vh;
+    margin-top: 0;
+}
+
+.outing-infos div:first-child {
+    margin-bottom: 5vh;
+}
+
+.outing-date {
+    display: inline-block;
+}
+
+.outing-infos button {
+    border-radius: 15px;
+    margin-right: 2vw;
+}
+
+/*Box w/ current date & username*/
+.general-infos {
+    font-size: 0.7rem;
+    display: flex;
+    justify-self: flex-end;
+    padding: 1vh;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width:15vw;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+}
+
+
+.goodNews {
+    font-weight: bold;
+    color: #509e69;
+}
 /************************************/
 
