@@ -1,7 +1,6 @@
 <nav>
     <ul>
         <div class="navContainer">
-            <div>
                 <li><a href="{{ path('outing_list') }}">Accueil</a></li>
             {% if app.user %}
                 <li><a href="{{ path('outing_create') }}">Création sortie</a></li>
@@ -10,7 +9,6 @@
             {% else %}
                 <li><a href="{{ path('app_login') }}">Login</a></li>
             {% endif %}
-            </div>
         </div>
     </ul>
 </nav>
