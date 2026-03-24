@@ -43,7 +43,7 @@ class Outing
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'outings')]
-    private Collection $participant;
+    private Collection $participants;
 
     #[ORM\ManyToOne(inversedBy: 'outings')]
     private ?Status $status = null;
@@ -56,7 +56,7 @@ class Outing
 
     public function __construct()
     {
-        $this->participant = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,15 +163,15 @@ class Outing
     /**
      * @return Collection<int, User>
      */
-    public function getParticipant(): Collection
+    public function getParticipants(): Collection
     {
-        return $this->participant;
+        return $this->participants;
     }
 
     public function addParticipant(User $participant): static
     {
-        if (!$this->participant->contains($participant)) {
-            $this->participant->add($participant);
+        if (!$this->participants->contains($participant)) {
+            $this->participants->add($participant);
         }
 
         return $this;
@@ -179,7 +179,7 @@ class Outing
 
     public function removeParticipant(User $participant): static
     {
-        $this->participant->removeElement($participant);
+        $this->participants->removeElement($participant);
 
         return $this;
     }
