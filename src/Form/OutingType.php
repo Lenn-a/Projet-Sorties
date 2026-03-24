@@ -2,10 +2,14 @@
 
 namespace App\Form;
 
+use App\Entity\Campus;
+use App\Repository\CampusRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +20,7 @@ class OutingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void{
         $builder
             ->add('name', TextType::class, [
-                'label'=>'Your outing name',
+                'label'=>'your outing name',
             ])
             ->add('startDateTime', DateType::class, [
                 'widget' => 'single_text',
@@ -42,19 +46,18 @@ class OutingType extends AbstractType
             ->add('outingInfo', TextareaType::class, [
                 'label'=>'Your outing infos',
             ])
-            ->add('photo', FileType::class, [
-                'mapped' => false,
-            ])
-            ->add('campus', ChoiceType::class, [
-                'choices' => [
-                    'Nantes'=>'Nantes',
-                    'Rennes'=>'Rennes',
-                    'Niort'=>'Niort',
-                    'Quimpert'=>'Quimpert',
-                ]
+            ->add('campus', EntityType::class, [
+                'class' => Campus::class,
+                'choice_label' => 'name',
+                'query_builder' => function (CampusRepository $campusRepository) {
+                return $campusRepository->createQueryBuilder('c');
+                }
             ])
             ->add('location', TextType::class, [
                 'label'=>'Your location',
+            ])
+            ->add('photo', FileType::class, [
+                'mapped' => false,
             ]);
     }
 }
