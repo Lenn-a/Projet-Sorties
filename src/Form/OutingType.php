@@ -2,6 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Campus;
+use App\Repository\CampusRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -43,13 +46,12 @@ class OutingType extends AbstractType
             ->add('outingInfo', TextareaType::class, [
                 'label'=>'Your outing infos',
             ])
-            ->add('campus', ChoiceType::class, [
-                'choices' => [
-                    'Nantes'=>'Nantes',
-                    'Rennes'=>'Rennes',
-                    'Niort'=>'Niort',
-                    'Quimpert'=>'Quimpert',
-                ]
+            ->add('campus', EntityType::class, [
+                'class' => Campus::class,
+                'choice_label' => 'name',
+                'query_builder' => function (CampusRepository $campusRepository) {
+                return $campusRepository->createQueryBuilder('c');
+                }
             ])
             ->add('location', TextType::class, [
                 'label'=>'Your location',
