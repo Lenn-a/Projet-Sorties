@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+    <h1>Liste des sorties</h1>
+    <div>
+        {% for outing in outings %}
+            <article>
+                <a href="{{ path('outing_details', {'id': outing.id}) }}"></a>
+            </article>
+        {% endfor %}
+    </div>
 {% endblock %}
 
 {% block title %}
