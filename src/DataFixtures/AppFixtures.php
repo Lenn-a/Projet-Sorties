@@ -120,21 +120,26 @@ class AppFixtures extends Fixture
                 ->setOutingInfo($faker->paragraph())
                 ->setLocation($faker->randomElement($locationList))
                 ->setOrganiser($faker->randomElement($usersList))
+                ->setCampus($faker->randomElement($campusList))
             ;
+            /////////////////////Participants/////////////////////
+            //Make the organiser a participant :
             $participantsList = [$outing->getOrganiser()];
+            //Then add a number of random users (between 1 and 49)
             for($i = 0; $i < $faker->numberBetween(1, 49); $i++) {
                 $participantsList[] = $faker->randomElement($participantsList);
             }
+            //And add them one by one in $outing's participants.
             foreach ($participantsList as $oneLittleGuy) {
                 $outing->addParticipant($oneLittleGuy);
             }
+            //////////////////////////////////////////////////////
+
             $outing->setStatus($faker->randomElement($statusList))
-                ->setCampus($faker->randomElement($campusList))
             ;
             $manager->persist($outing);
-
         }
-
         $manager->flush();
     }
+
 }
