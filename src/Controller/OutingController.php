@@ -18,9 +18,11 @@ final class OutingController extends AbstractController
     #[Route('', name: 'list')]
     public function list(OutingRepository $outingRepository): Response
     {
-        $outings = $outingRepository->findAll();
+//        $outings = $outingRepository->findAll();
+        $outings = $outingRepository->findOutingsPastMonth();
+
         return $this->render('outing/list.html.twig', [
-            'outing' => $outings
+            'outings' => $outings
         ]);
     }
 

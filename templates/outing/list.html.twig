@@ -1,14 +1,53 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Liste des sorties</h1>
-    <div>
-        {% for outing in outings %}
-            <article>
-                <a href="{{ path('outing_details', {'id': outing.id}) }}"></a>
-            </article>
-        {% endfor %}
-    </div>
+    <h1>Sorties</h1>
+    {% for outing in outings %}
+        <article class="outingInList">
+
+            <div>
+                <p><strong>Nom de la sortie :</strong></p>
+                <p>{{ outing.name }}</p>
+            </div>
+
+            <div>
+                <p><strong>Date de la sortie :</strong></p>
+                <p>{{ outing.startDateTime | date('d/m/Y') }}</p>
+            </div>
+
+            <div>
+                <p><strong>Clôture :</strong></p>
+                <p>{{ outing.signupDateLimit | date('d/m/Y') }}</p>
+            </div>
+
+            <div>
+                <p><strong>Inscrits/places :</strong></p>
+                <p>X/{{ outing.nbSignupsMax }}</p>
+            </div>
+
+            <div>
+                <p><strong>État :</strong></p>
+                <p>{{ outing.status.label }}</p>
+            </div>
+
+            <div>
+                <p><strong>Inscrit :</strong></p>
+                <p>[]</p>
+            </div>
+
+            <div>
+                <p><strong>Organisateur :</strong></p>
+                <p>{{ outing.organiser.username }}</p>
+            </div>
+
+            <div>
+                <p><strong>Actions:</strong></p>
+                <p>[--------]</p>
+            </div>
+
+        </article>
+    {% endfor %}
+
 {% endblock %}
 
 {% block title %}
