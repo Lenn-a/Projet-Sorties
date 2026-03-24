@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Outing;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +41,11 @@ class OutingRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findOutingsPastMonth() {
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder->where('o.startDateTime <= :date')->setParameter('date', new DateTime('-1 month'))
+                     ->orderBy('o.startDateTime', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
