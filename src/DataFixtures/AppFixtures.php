@@ -81,7 +81,7 @@ class AppFixtures extends Fixture
                 ->setPhone($faker->phoneNumber())
                 ->setEmail($faker->email())
                 ->setPassword(password_hash('password', PASSWORD_DEFAULT))
-                ->setRole('ROLE_USER')
+                ->setRoles(['ROLE_USER'])
                 ->setActive(true)
                 ->setCampus($faker->randomElement($campusList))
             ;
