@@ -42,7 +42,16 @@
 
             <div>
                 <p><strong>Actions:</strong></p>
-                <p>[--------]</p>
+                <div>
+                    <a href="{{ path('outing_details', {'id': outing.id }) }}">Afficher</a>
+                </div>
+                {% if app.user == outing.organiser %}
+                <div>
+                    <a href="{{ path('outing_update', {'id': outing.id }) }}">Modifier</a>
+                </div>
+                {% elseif outing.participants.contains(app.user) %}
+                    <a>Se désister</a>
+                {% endif %}
             </div>
 
         </article>
