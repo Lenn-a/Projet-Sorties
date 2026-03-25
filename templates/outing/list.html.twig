@@ -10,18 +10,23 @@
     <h1>Sorties</h1>
     {% for outing in outings %}
         <article class="outingInList">
+
             <div class="outing-img">
                 <img src="{{ asset('images/Outing-default.png') }}">
             </div>
+
             <div class="outing-infos">
+
                 <div>
                     <h4>{{ outing.name }}</h4>
                     <small>Organisée par {{ outing.organiser.username }}</small>
                 </div>
+
                 <div class="outing-date">
-                    <span><strong>Date de la sortie :</strong> {{ outing.startDateTime | date('d/m/Y') }} | </span>
-                    <span><strong> Date limite inscription :</strong> {{ outing.signupDateLimit | date('d/m/Y') }}</span>
+                        <span><strong>Date de la sortie :</strong> {{ outing.startDateTime | date('d/m/Y') }}</span><span> | </span>
+                        <span><strong>Date limite inscription :</strong> {{ outing.signupDateLimit | date('d/m/Y') }}</span>
                 </div>
+
                 <div>
                     <p><strong>Inscrits :</strong> {{ outing.participants | length }}/{{ outing.nbSignupsMax }}
                 {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
@@ -29,10 +34,11 @@
                 {% endif %}
                     </p>
                 </div>
+
                 <div>
                     <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button>Afficher les détails</button></a>
                     {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
-                        <a href=""><button>Se désister</button></a>
+                        <a href="{{ path('outing_quit', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')"><button>Se désister</button></a>
                     {% endif %}
                 </div>
 
