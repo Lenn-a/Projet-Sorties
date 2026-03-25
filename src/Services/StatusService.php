@@ -12,7 +12,8 @@ class StatusService
     public function __construct(StatusRepository $repository) {
         $this->repository = $repository;
     }
-    public function statusOpenClose(Outing $outing) {
+    public function statusOpenClose(Outing $outing): void
+    {
         if (count($outing->getParticipants()) == $outing->getNbSignupsMax()) {
             $status = $this->repository->getStatusByName('Clôturée');
             $outing->setStatus($status);
@@ -20,5 +21,11 @@ class StatusService
             $status = $this->repository->getStatusByName('Ouverte');
             $outing->setStatus($status);
         }
+    }
+
+    public function setStatusWithName(Outing $outing, string $label): void
+    {
+        $status = $this->repository->getStatusByName($label);
+        $outing->setStatus($status);
     }
 }

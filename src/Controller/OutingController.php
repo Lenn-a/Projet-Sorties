@@ -44,23 +44,28 @@ final class OutingController extends AbstractController
     public function delete(
         int $id,
         OutingRepository $outingRepository,
-        StatusRepository $statusRepository,
+        StatusService $statusService,
         EntityManagerInterface $entityManager
     ) : Response {
         $outing = $outingRepository->find($id);
 
-        $status = $statusRepository->getStatusByName('Annulée');
-        $outing->setStatus($status);
+        if ($outing->getOrganiser() !== $this->getUser()) {
+            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+            return $this->redirectToRoute('outing_list');
+        }
+
+        $statusService->setStatusWithName($outing, 'Annulée');
+
         $entityManager->persist($outing);
         $entityManager->flush();
 
-        return $this->redirectToRoute('outing_list');
+        return $this->redirectToRoute('outing_details', ['id' => $id]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
         EntityManagerInterface $entityManager,
-        StatusRepository $statusRepository,
+        StatusService $statusService,
         Request $request,
     ): Response {
         $outing = new Outing();
@@ -75,9 +80,7 @@ final class OutingController extends AbstractController
             //Organiser is a participant by default :
             $outing->addParticipant($this->getUser());
 
-            //Assign status 'Ouverte' when outing is published
-            $published = $statusRepository->getStatusByName('Ouverte');
-            $outing->setStatus($published);
+            $statusService->statusOpenClose($outing);
 
             $entityManager->persist($outing);
             $entityManager->flush();
