@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -20,6 +21,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'Ce champs est obligatoire.')]
+    #[Assert\Email(message: 'Veuillez renseigner une adresse email valide.')]
+    #[Assert\Length(min: 6, max: 180,
+        minMessage: 'Veuillez renseigner une adresse mail entre 3 à 180 caractères.',
+        maxMessage: 'Veuillez renseigner une adresse mail entre 3 à 180 caractères.'
+    )]
     private ?string $email = null;
 
     /**
@@ -35,12 +42,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'Ce champs est obligatoire.')]
+    #[Assert\Length(min: 2, max: 50)]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'Ce champs est obligatoire.')]
+    #[Assert\Length(min: 2, max: 50)]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'Ce champs est obligatoire.')]
+    #[Assert\Length(min: 5, max: 50)]
     private ?string $username = null;
 
     #[ORM\Column(length: 15)]
