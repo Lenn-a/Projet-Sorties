@@ -40,4 +40,13 @@ class OutingRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
 
     }
+
+    public function findOutingsByCampus($campus)
+    {
+        $qb = $this->createQueryBuilder('o');
+        $qb
+            ->where('o.campus.label = :campus')->setParameter('campus', 'Campus')
+            ->orderBy('o.startDateTime', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
 }
