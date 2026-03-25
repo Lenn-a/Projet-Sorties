@@ -31,11 +31,11 @@ class OutingRepository extends ServiceEntityRepository
         $queryBuilder
             ->leftJoin('o.status', 'status')
             ->addSelect('status')
-            ->andWhere('status.label = :label')->setParameter('label', 'Ouverte')
-            ->andWhere('status.label = :label')->setParameter('label', 'Terminée')
-            ->andWhere('status.label = :label')->setParameter('label', 'En cours')
-            ->andWhere('status.label = :label')->setParameter('label', 'Clôturée')
-            ->andWhere('status.label = :label')->setParameter('label', 'Annulée')
+            ->Where('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
+            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
+            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
+            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
+            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée')
         ;
         return $queryBuilder->getQuery()->getResult();
 
