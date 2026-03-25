@@ -6,6 +6,7 @@ use App\Repository\OutingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OutingRepository::class)]
 class Outing
@@ -15,19 +16,25 @@ class Outing
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veyez donner un nom à votre activité')]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Veyez saisir une date')]
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Veyez saisir une durée')]
     private ?int $duration = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Veyez saisir une date')]
     private ?\DateTime $signupDateLimit = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message: 'veyez indiquer le nombre de participant maximum')]
     private ?int $nbSignupsMax = null;
 
     #[ORM\Column(length: 255, nullable: true)]
