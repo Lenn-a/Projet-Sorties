@@ -7,6 +7,7 @@ use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -76,4 +77,45 @@ final class OutingController extends AbstractController
             'outingForm' => $outingForm
         ]);
 }
+
+#[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
+public function participateInOuting(int $id,
+                                    EntityManagerInterface $entityManager,
+                                    OutingRepository $outingRepository
+                                   ): RedirectResponse
+{
+        $outing = $outingRepository->find($id);
+        $currentUser = $this->getUser();
+
+        if ($outing->getParticipants()->contains($currentUser)) {
+            $this->addFlash('error', "User already signed up for this outing");
+            return $this->redirectToRoute('outing_list');
+        }
+
+        $outing->addParticipant($currentUser);
+        $entityManager->persist($outing);
+        $entityManager->flush();
+        return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+}
+
+#[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
+public function quitAnOuting(int $id,
+                             EntityManagerInterface $entityManager,
+                             OutingRepository $outingRepository) {
+    $outing = $outingRepository->find($id);
+    $currentUser = $this->getUser();
+
+    if (!$outing->getParticipants()->contains($currentUser)) {
+        $this->addFlash('error', "User isn't signed up for this outing");
+        return $this->redirectToRoute('outing_list');
+    }
+    $outing->removeParticipant($currentUser);
+
+    $entityManager->persist($outing);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+}
+
+
 }
