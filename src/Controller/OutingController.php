@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Outing;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
+use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,7 +20,7 @@ final class OutingController extends AbstractController
     #[Route('', name: 'list')]
     public function list(OutingRepository $outingRepository): Response
     {
-        $outings = $outingRepository->findAll();
+        $outings = $outingRepository->findAllPublishedOutings();
 //        $outings = $outingRepository->findOutingsPastMonth();
 
         return $this->render('outing/list.html.twig', [
@@ -52,25 +53,34 @@ final class OutingController extends AbstractController
         return $this->redirectToRoute('outing_list');
     }
 
-    #[Route('/create', name: 'create')]
-    #[Route('/update/{id}', name: 'update', requirements: ['id' => '\d+'])]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
         EntityManagerInterface $entityManager,
-        OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
         Request $request,
-        int $id = null
     ): Response {
         $outing = new Outing();
-
 
         $outingForm = $this->createForm(OutingType::class, $outing);
         $outingForm->handleRequest($request);
 
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+            //User making the Outing is its organiser :
+            $outing->setOrganiser($this->getUser());
+
+            //Organiser is a participant by default :
+            $outing->addParticipant($this->getUser());
+
+            //Assign status 'Ouverte' when outing is published
+            $published = $statusRepository->getStatusByName('Ouverte');
+            $outing->setStatus($published);
+
             $entityManager->persist($outing);
             $entityManager->flush();
 
-            return $this->redirectToRoute('outing_list', ['id' => $outing->getId()]);
+            $this->addFlash('success', 'Outing' . $outing->getName() . ' has been added.');
+
+            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
         }
         return $this->render('outing/create.html.twig', [
             'outingForm' => $outingForm

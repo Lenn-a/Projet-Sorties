@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Campus;
+use App\Entity\Location;
+use App\Entity\Outing;
 use App\Repository\CampusRepository;
+use App\Repository\LocationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OutingType extends AbstractType
 {
@@ -27,14 +31,14 @@ class OutingType extends AbstractType
             ])
             ->add('duration', ChoiceType::class, [
                 'choices' => [
-                    '30 minutes' =>'30 minutes',
-                    '1 heure' =>'1 heure',
-                    '1 heure 30 minutes' =>'1 heure 30 minutes',
-                    '2 heures' =>'2 heures',
-                    '2 heures 30 minutes' =>'2 heures 30 minutes',
-                    '3 heures' =>'3 heures',
-                    '3 heures 30 minutes' =>'3 heures 30 minutes',
-                    '4 heures' =>'4 heures',
+                    '30 minutes' => 30,
+                    '1 heure' => 60,
+                    '1 heure 30 minutes' => 90,
+                    '2 heures' => 120,
+                    '2 heures 30 minutes'=> 150,
+                    '3 heures'=> 180,
+                    '3 heures 30 minutes'=> 210,
+                    '4 heures'=> 2400,
                 ]
             ])
             ->add('signUpDateLimit', DateType::class, [
@@ -53,11 +57,23 @@ class OutingType extends AbstractType
                 return $campusRepository->createQueryBuilder('c');
                 }
             ])
-            ->add('location', TextType::class, [
+            ->add('location', EntityType::class, [
                 'label'=>'Your location',
+                'class' => Location::class,
+                'choice_label' => 'name',
+                'query_builder' => function (LocationRepository $locationRepository) {
+                return $locationRepository->createQueryBuilder('l');
+                }
             ])
-            ->add('photo', FileType::class, [
-                'mapped' => false,
-            ]);
+//            ->add('photo', FileType::class, [
+//                'mapped' => false,
+//            ])
+;
+    }
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Outing::class,
+        ]);
     }
 }

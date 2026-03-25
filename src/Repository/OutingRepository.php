@@ -17,35 +17,27 @@ class OutingRepository extends ServiceEntityRepository
         parent::__construct($registry, Outing::class);
     }
 
-    //    /**
-    //     * @return Outing[] Returns an array of Outing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('o.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Outing
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
     public function findOutingsPastMonth() {
         $queryBuilder = $this->createQueryBuilder('o');
         $queryBuilder->where('o.startDateTime <= :date')->setParameter('date', new DateTime('-1 month'))
                      ->orderBy('o.startDateTime', 'DESC');
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findAllPublishedOutings() {
+//        SELECT * FROM `outing` LEFT JOIN status on outing.status_id = status.id
+//WHERE status.label = 'Ouverte'
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder
+            ->leftJoin('o.status', 'status')
+            ->addSelect('status')
+            ->andWhere('status.label = :label')->setParameter('label', 'Ouverte')
+            ->andWhere('status.label = :label')->setParameter('label', 'Terminée')
+            ->andWhere('status.label = :label')->setParameter('label', 'En cours')
+            ->andWhere('status.label = :label')->setParameter('label', 'Clôturée')
+            ->andWhere('status.label = :label')->setParameter('label', 'Annulée')
+        ;
+        return $queryBuilder->getQuery()->getResult();
+
     }
 }
