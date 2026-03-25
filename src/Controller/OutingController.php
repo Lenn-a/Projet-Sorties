@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Form\Model\OutingSearch;
+use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
@@ -18,13 +20,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class OutingController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(OutingRepository $outingRepository): Response
+    public function list(OutingRepository $outingRepository, OutingSearch $outingSearch, OutingSearchType $outingSearchType, Request $request): Response
     {
+        $outingSearch = new OutingSearch();
+        $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
+        $outingSearchForm->handleRequest($request);
+
         $outings = $outingRepository->findAllPublishedOutings();
 //        $outings = $outingRepository->findOutingsPastMonth();
 
         return $this->render('outing/list.html.twig', [
-            'outings' => $outings
+            'outings' => $outings,
+            'outingSearchForm' => $outingSearchForm,
         ]);
     }
 

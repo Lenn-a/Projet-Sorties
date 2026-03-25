@@ -33,16 +33,16 @@ class OutingSearchType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'et',
             ])
-            ->add('outingsOrganiser', CheckboxType::class, [
+            ->add('outingOrganiser', CheckboxType::class, [
                 'label' => 'Sorties dont je l\'organisateur/trice',
             ])
-            ->add('outingsParticipant', CheckboxType::class, [
+            ->add('outingParticipant', CheckboxType::class, [
                 'label' => 'Sorties auxquelles je suis inscrit/e',
             ])
-            ->add('outingsNotParticipant', CheckboxType::class, [
+            ->add('outingNotParticipant', CheckboxType::class, [
                 'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
             ])
-            ->add('outingsPassed', CheckboxType::class, [
+            ->add('outingPassed', CheckboxType::class, [
                 'label' => 'Sorties passées',
             ])
         ;

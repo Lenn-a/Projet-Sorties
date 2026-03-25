@@ -2,9 +2,7 @@
 
 namespace App\Form\Model;
 
-use App\Entity\Outing;
-use App\Entity\User;
-use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class OutingSearch
 {
@@ -16,13 +14,13 @@ class OutingSearch
 
     private ?\DateTime $endSearchDate = null;
 
-    private ?Collection $outingsOrganiser = null;
+    private ?boolean $outingOrganiser = null;
 
-    private ?Collection $outingsParticipant = null;
+    private ?boolean $outingParticipant = null;
 
-    private ?Collection $outingsNotParticipant = null;
+    private ?boolean $outingNotParticipant = null;
 
-    private ?Collection $outingsPassed = null;
+    private ?boolean $outingPassed = null;
 
     public function getCampus(): ?string
     {
@@ -64,46 +62,43 @@ class OutingSearch
         $this->endSearchDate = $endSearchDate;
     }
 
-    public function getOutingsOrganiser(): ?Collection
+    public function getOutingOrganiser(): ?bool
     {
-        return $this->outingsOrganiser;
+        return $this->outingOrganiser;
     }
 
-    public function setOutingsOrganiser(?Collection $outingsOrganiser): void
+    public function setOutingOrganiser(?bool $outingOrganiser): void
     {
-        $this->outingsOrganiser = $outingsOrganiser;
+        $this->outingOrganiser = $outingOrganiser;
     }
 
-    public function getOutingsParticipant(): ?Collection
+    public function getOutingParticipant(): ?bool
     {
-        return $this->outingsParticipant;
+        return $this->outingParticipant;
     }
 
-    public function setOutingsParticipant(?Collection $outingsParticipant): void
+    public function setOutingParticipant(?bool $outingParticipant): void
     {
-        $this->outingsParticipant = $outingsParticipant;
+        $this->outingParticipant = $outingParticipant;
     }
 
-    public function getOutingsNotParticipant(): ?Collection
+    public function getOutingNotParticipant(): ?bool
     {
-        return $this->outingsNotParticipant;
+        return $this->outingNotParticipant;
     }
 
-    public function setOutingsNotParticipant(?Collection $outingsNotParticipant): void
+    public function setOutingNotParticipant(?bool $outingNotParticipant): void
     {
-        $this->outingsNotParticipant = $outingsNotParticipant;
+        $this->outingNotParticipant = $outingNotParticipant;
     }
 
-    public function getOutingsPassed(): ?Collection
+    public function getOutingPassed(): ?bool
     {
-        return $this->outingsPassed;
+        return $this->outingPassed;
     }
 
-    public function setOutingsPassed(?Collection $outingsPassed): void
+    public function setOutingPassed(?bool $outingPassed): void
     {
-        $this->outingsPassed = $outingsPassed;
+        $this->outingPassed = $outingPassed;
     }
-
-
-
 }
