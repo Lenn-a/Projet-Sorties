@@ -24,7 +24,7 @@
                 <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
                 <a href="{{ path('outing_quit', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')"><button>Se désister</button></a>
             </div>
-            {% else %}
+            {% elseif outing.status.label == 'Ouverte' and outing.participants.count < outing.nbSignupsMax %}
             <a href="{{ path('outing_participate', {'id':outing.id}) }}" onclick="return confirm('Participer à cette sortie ?')"><button>Participer</button></a>
         {% endif %}
         </div>

@@ -14,7 +14,8 @@ body {
 .outing-img {
     background-color: #e5f9ff;
     border-radius: 20px;
-    margin-right: 2vw;
+    margin-right: 3vw;
+    margin-left: 3vw;
 }
 .outing-img img {
     max-width: 20vw;
@@ -22,6 +23,7 @@ body {
 .outing-infos {
     display: flex;
     flex-flow: wrap column;
+    width: fit-content;
 }
 
 .outing-infos h4 {
@@ -62,6 +64,10 @@ body {
     border-radius: 12px;
 }
 
+.general-infos div {
+    align-self: center;
+}
+
 
 .goodNews {
     font-weight: bold;
@@ -77,6 +83,42 @@ body {
 .button-space a {
     margin-top: 2vh;
 }
+
+/*Affichage selon le statut de la sortie*/
+.outing-status {
+    font-weight: bold;
+    text-align: center;
+    border-radius: 20px;
+    color: white;
+    max-width: 15vw;
+}
+
+.status-cancelled {
+    background-color: #911238;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
+.status-toolate {
+    background-color: #123e91;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
+.status-done {
+    background-color: #12914d;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
+.widgets-space {
+    display: flex;
+    justify-content: space-between;
+}
+.widgets-space button {
+    margin:0
+}
+
 /************************************/
 
 
