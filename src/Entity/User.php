@@ -6,12 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Pas disponible, veuillez renseigner une autre adresse mail.')]
+#[UniqueEntity(fields: ['username'], message: 'Pas disponible, veuillez renseigner un autre pseudo.')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -20,7 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(name: 'email', length: 180, unique: true)]
     #[Assert\NotBlank(message: 'Ce champs est obligatoire.')]
     #[Assert\Email(message: 'Veuillez renseigner une adresse email valide.')]
     #[Assert\Length(min: 6, max: 180,
@@ -51,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min: 2, max: 50)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(name: 'username', length: 50, unique: true)]
     #[Assert\NotBlank(message: 'Ce champs est obligatoire.')]
     #[Assert\Length(min: 5, max: 50)]
     private ?string $username = null;
