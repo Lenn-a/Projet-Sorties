@@ -27,7 +27,17 @@
             {% include 'views/nav/nav.html.twig' %}
         </header>
     </div>
-    {% block body %}{% endblock %}
+    {% block body %}
+    <main>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </main>
+    {% endblock %}
     </body>
 </div>
 </html>

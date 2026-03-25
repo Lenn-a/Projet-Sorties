@@ -15,27 +15,31 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     #[Route('/profile/{id}', name: 'profile', methods: ['POST', 'GET'])]
-    public function getUserProfile(
+    public function getOrModifyUserProfile(
         User $id,
         EntityManagerInterface $entityManager,
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher): Response
     {
-        if ($this->getUser() !== null) {
-            $user = $this->getUser();
-        } else {
-            $user = new User();
-        }
+        $user = $this->getUser();
 
         $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
-        if($userForm->isSubmitted() && $userForm->isValid()) {
 
-            // TODO: add conditional, if mdp change then hash new, if not change then...
-            $plainPassword = $userForm->get('password')->getData();
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        if($userForm->isSubmitted() && $userForm->isValid()) {
+            // get data of MDP field, if NOT NULL then reset user password with this new data
+            // if MDP field null, then no change to current password
+            $plainPassword = $userForm->get('plainPassword')->getData();
+            if($plainPassword !== null) {
+                $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
+
+            // Flash s'affiche pas
+            $this->addFlash('success', 'Modifications enregistrées.');
+            return $this->redirectToRoute('user_profile', ['id' => $user->getId()]);
         }
 
         return $this->render('user/profile.html.twig', [
