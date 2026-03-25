@@ -5,13 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Créer une sortie</h1>
-    {{ form_start(outingForm) }}
-    {{ form_widget(outingForm) }}
-    {{ form_end(outingForm) }}
-    <div>
-        <button type="submit">Valider</button>
-        <button>Enregistrer</button>
-    </div>
+        <h1>Créer une sortie</h1>
+        {{ form_start(outingForm) }}
+        {{ form_widget(outingForm) }}
+        <button>Valider</button>
+        {{ form_end(outingForm) }}
+{#        <button>Enregistrer</button>#}
 {% endblock %}
 

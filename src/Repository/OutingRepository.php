@@ -17,35 +17,27 @@ class OutingRepository extends ServiceEntityRepository
         parent::__construct($registry, Outing::class);
     }
 
-    //    /**
-    //     * @return Outing[] Returns an array of Outing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('o.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Outing
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
     public function findOutingsPastMonth() {
         $queryBuilder = $this->createQueryBuilder('o');
         $queryBuilder->where('o.startDateTime <= :date')->setParameter('date', new DateTime('-1 month'))
                      ->orderBy('o.startDateTime', 'DESC');
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findAllPublishedOutings() {
+//        SELECT * FROM `outing` LEFT JOIN status on outing.status_id = status.id
+//WHERE status.label = 'Ouverte'
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder
+            ->leftJoin('o.status', 'status')
+            ->addSelect('status')
+            ->Where('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
+            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
+            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
+            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
+            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée')
+        ;
+        return $queryBuilder->getQuery()->getResult();
+
     }
 }
