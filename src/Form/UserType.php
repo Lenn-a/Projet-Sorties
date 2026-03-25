@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserType extends AbstractType
 {
@@ -38,6 +39,11 @@ class UserType extends AbstractType
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmation mot de passe'],
                 'mapped' => false,
+                'constraints' => [
+                    new Assert\Regex(
+                        '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_])[A-Za-z\d@$!%*?&\-_]{8,}$/',
+                        message: "Votre mot de passe d'au moins 8 caractères doit inclure au moins une lettre minuscule, une lettre majuscule, une chiffre et une symbole (@ $ ! % * ? & - _)."),
+                ]
             ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
