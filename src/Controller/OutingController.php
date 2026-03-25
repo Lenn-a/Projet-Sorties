@@ -85,11 +85,65 @@ final class OutingController extends AbstractController
         return $this->render('outing/create.html.twig', [
             'outingForm' => $outingForm
         ]);
-
 }
 
-#[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
-public function participateInOuting(int $id,
+    //retourne le formulaire pour update une sortie
+//    #[Route('/update/{id}', name: 'update', requirements: ['id' => '\d+'])]
+//    public function update(
+//        int $id,
+//        OutingRepository $outingRepository,
+//        Request $request,
+//        EntityManagerInterface $entityManager,
+//    ){
+//        $outing = $outingRepository->find($id);
+//        $outingForm = $this->createForm(OutingType::class, $outing);
+//        $outingForm->handleRequest($request);
+//        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+//            $entityManager->persist($outing);
+//            $entityManager->flush();
+//            $this->addFlash('success', 'Votre sortie' . $outing->getName() . ' a été mise à jour.');
+//            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+//        }
+//        return $this->render('outing/update.html.twig', [
+//            'outing' => $outing,
+//        ]);
+//    }
+
+
+
+
+
+//il faut aussi une route pour acceder à une "privateList"
+// qui affiche les sorties dont l'utilisateur ets l'organisateur.
+
+//    #[Route('/save', name: 'save', methods: ['GET', 'POST'])]
+//    public function save(
+//        EntityManagerInterface $entityManager,
+//        Request $request,
+//        OutingRepository $outingRepository,
+//        int $id,
+//    ): Response {
+//        $outing = new Outing();
+//        $outingForm = $this->createForm(OutingType::class, $outing);
+//        $outingForm->handleRequest($request);
+//
+//        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+//
+//
+//            $entityManager->persist($outing);
+//            $entityManager->flush();
+//
+//            $this->addFlash('success', 'La sortie ' . $outing->getName() . ' a été sauvgardée.');
+//
+//            return $this->redirectToRoute('outing_save', ['id' => $outing->getId()]);
+//        }
+//        return $this->render('outing/privateList.html.twig', [
+//            'outingForm' => $outingForm
+//        ]);
+//    }
+
+    #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
+    public function participateInOuting(int $id,
                                     EntityManagerInterface $entityManager,
                                     OutingRepository $outingRepository
                                    ): RedirectResponse
