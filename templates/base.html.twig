@@ -27,7 +27,6 @@
             {% include 'views/nav/nav.html.twig' %}
         </header>
     </div>
-    {% block body %}
     <main>
         {% for label, messages in app.flashes %}
             {% for message in messages %}
@@ -36,8 +35,11 @@
                 </div>
             {% endfor %}
         {% endfor %}
+
+        {% block body %}
+
+        {% endblock %}
     </main>
-    {% endblock %}
     </body>
 </div>
 </html>
