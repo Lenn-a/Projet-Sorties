@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
 #[Route('/outing', name: 'outing_')]
 final class OutingController extends AbstractController
 {
@@ -52,7 +51,7 @@ final class OutingController extends AbstractController
         return $this->redirectToRoute('outing_list');
     }
 
-    #[Route('/create', name: 'create')]
+    #[Route('/create', name: 'create', methods: ['POST', 'GET'])]
     #[Route('/update/{id}', name: 'update', requirements: ['id' => '\d+'])]
     public function create(
         EntityManagerInterface $entityManager,
@@ -70,12 +69,13 @@ final class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
 
-            return $this->redirectToRoute('outing_list', ['id' => $outing->getId()]);
+            $this->addFlash('success', 'Successfully created.');
+
+            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
         }
         return $this->render('outing/create.html.twig', [
             'outingForm' => $outingForm
         ]);
-
 }
 
 #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
@@ -119,4 +119,3 @@ public function quitAnOuting(int $id,
 
 
 }
-
