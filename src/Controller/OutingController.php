@@ -7,6 +7,7 @@ use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
+use App\Services\StatusService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,18 +41,26 @@ final class OutingController extends AbstractController
         ]);
     }
 
-    #[Route('delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
+    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
     public function delete(
         int $id,
         OutingRepository $outingRepository,
+        StatusService $statusService,
         EntityManagerInterface $entityManager
     ) : Response {
         $outing = $outingRepository->find($id);
 
-        $entityManager->remove($outing);
+        if ($outing->getOrganiser() !== $this->getUser()) {
+            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+            return $this->redirectToRoute('outing_list');
+        }
+
+        $statusService->setStatusWithName($outing, 'Annulée');
+
+        $entityManager->persist($outing);
         $entityManager->flush();
 
-        return $this->redirectToRoute('outing_list');
+        return $this->redirectToRoute('outing_details', ['id' => $id]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
@@ -59,6 +68,7 @@ final class OutingController extends AbstractController
         EntityManagerInterface $entityManager,
         StatusRepository $statusRepository,
         UserRepository $userRepository,
+        StatusService $statusService,
         Request $request,
     ): Response {
         $outing = new Outing();
@@ -94,6 +104,7 @@ final class OutingController extends AbstractController
                 //Status = en création si on clic sur "enregistrer"
                 $published = $statusRepository->getStatusByName('En création');
                 $outing->setStatus($published);
+            $statusService->statusOpenClose($outing);
 
                 $entityManager->persist($outing);
                 $entityManager->flush();
@@ -122,7 +133,8 @@ final class OutingController extends AbstractController
     #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
     public function participateInOuting(int $id,
                                     EntityManagerInterface $entityManager,
-                                    OutingRepository $outingRepository
+                                    OutingRepository $outingRepository,
+                                    StatusService $statusService,
                                    ): RedirectResponse
 {
         $outing = $outingRepository->find($id);
@@ -132,8 +144,14 @@ final class OutingController extends AbstractController
             $this->addFlash('error', "User already signed up for this outing");
             return $this->redirectToRoute('outing_list');
         }
+        if($outing->getStatus()->getLabel() == "Clôturée") {
+            $this->addFlash('error', "Il n'y a plus de places pour cette sortie.");
+        }
 
         $outing->addParticipant($currentUser);
+
+        $statusService->statusOpenClose($outing)
+    ;
         $entityManager->persist($outing);
         $entityManager->flush();
         return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
@@ -142,6 +160,7 @@ final class OutingController extends AbstractController
 #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
 public function quitAnOuting(int $id,
                              EntityManagerInterface $entityManager,
+                             StatusService $statusService,
                              OutingRepository $outingRepository) {
     $outing = $outingRepository->find($id);
     $currentUser = $this->getUser();
@@ -151,6 +170,8 @@ public function quitAnOuting(int $id,
         return $this->redirectToRoute('outing_list');
     }
     $outing->removeParticipant($currentUser);
+
+    $statusService->statusOpenClose($outing);
 
     $entityManager->persist($outing);
     $entityManager->flush();
