@@ -35,30 +35,30 @@ class OutingSearchType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'et',
             ])
-            ->add('outingFilters', ChoiceType::class, [
-                'label' => false,
-                'choices' => [
-                    'Sorties dont je l\'organisateur/trice' => 'organiser',
-                    'Sorties auxquelles je suis inscrit/e' => 'participant',
-                    'Sorties auxquelles je ne suis pas inscrit/e' => 'notParticipant',
-                    'Sorties passées' => 'passed'
-                ],
-                'multiple' => true,
-                'expanded' => true,
-            ]);
+//            ->add('outingFilters', ChoiceType::class, [
+//                'label' => false,
+//                'choices' => [
+//                    'Sorties dont je l\'organisateur/trice' => 'organiser',
+//                    'Sorties auxquelles je suis inscrit/e' => 'participant',
+//                    'Sorties auxquelles je ne suis pas inscrit/e' => 'notParticipant',
+//                    'Sorties passées' => 'passed'
+//                ],
+//                'multiple' => true,
+//                'expanded' => true,
+//            ]);
 
-//        ->add('outingOrganiser', CheckboxType::class, [
-//                'label' => 'Sorties dont je l\'organisateur/trice',
-//            ])
-//            ->add('outingParticipant', CheckboxType::class, [
-//                'label' => 'Sorties auxquelles je suis inscrit/e',
-//            ])
-//            ->add('outingNotParticipant', CheckboxType::class, [
-//                'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
-//            ])
-//            ->add('outingPassed', CheckboxType::class, [
-//                'label' => 'Sorties passées',
-//            ])
+            ->add('outingOrganiser', CheckboxType::class, [
+                'label' => 'Sorties dont je l\'organisateur/trice',
+            ])
+            ->add('outingParticipant', CheckboxType::class, [
+                'label' => 'Sorties auxquelles je suis inscrit/e',
+            ])
+            ->add('outingNotParticipant', CheckboxType::class, [
+                'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
+            ])
+            ->add('outingPassed', CheckboxType::class, [
+                'label' => 'Sorties passées',
+            ])
         ;
     }
 

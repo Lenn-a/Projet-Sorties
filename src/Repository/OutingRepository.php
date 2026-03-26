@@ -63,6 +63,17 @@ class OutingRepository extends ServiceEntityRepository
                 ->andWhere('o.startDateTime <= :endSearchDate')->setParameter('endSearchDate', $outingSearch->getEndSearchDate());
         }
 
+        if ($outingSearch->getConnectedUser()) {
+//            dd($outingSearch->getConnectedUsername());
+            $queryBuilder
+                ->andWhere('o.organiser = :organiser')->setParameter('organiser', $outingSearch->getConnectedUser());
+        }
+
+//        if ($outingSearch->getOutingFilters()) {
+//            $queryBuilder
+//                ->andWhere('o.organiser LIKE :outingFilters')->setParameter('outingFilters', '%' . $outingSearch->getOutingFilters() . '%');
+//        }
+
         $queryBuilder->orderBy('o.startDateTime', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();

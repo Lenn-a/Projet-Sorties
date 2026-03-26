@@ -29,6 +29,11 @@ final class OutingController extends AbstractController
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
+        if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
+            $outingSearch->setConnectedUser($this->getUser());
+//            dd($outingSearch);
+        }
+
         $outings = $outingRepository->findAllPublishedOutings($outingSearch);
 
         foreach ($outings as $outing) {

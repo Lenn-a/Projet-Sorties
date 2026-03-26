@@ -3,6 +3,7 @@
 namespace App\Form\Model;
 
 use App\Entity\Campus;
+use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -16,7 +17,17 @@ class OutingSearch
 
     private ?\DateTime $endSearchDate = null;
 
-    private ?array $outingFilters = null;
+    private ?bool $outingOrganiser = null;
+
+    private ?bool $outingParticipant = null;
+
+    private ?bool $outingNotParticipant = null;
+
+    private ?bool $outingPassed = null;
+
+    private ?User $connectedUser = null;
+
+//    private ?array $outingFilters = null;
 
     public function getCampus(): ?Campus
     {
@@ -58,13 +69,63 @@ class OutingSearch
         $this->endSearchDate = $endSearchDate;
     }
 
-    public function getOutingFilters(): ?array
+    public function getOutingOrganiser(): ?bool
     {
-        return $this->outingFilters;
+        return $this->outingOrganiser;
     }
 
-    public function setOutingFilters(?array $outingFilters): void
+    public function setOutingOrganiser(?bool $outingOrganiser): void
     {
-        $this->outingFilters = $outingFilters;
+        $this->outingOrganiser = $outingOrganiser;
     }
+
+    public function getOutingParticipant(): ?bool
+    {
+        return $this->outingParticipant;
+    }
+
+    public function setOutingParticipant(?bool $outingParticipant): void
+    {
+        $this->outingParticipant = $outingParticipant;
+    }
+
+    public function getOutingNotParticipant(): ?bool
+    {
+        return $this->outingNotParticipant;
+    }
+
+    public function setOutingNotParticipant(?bool $outingNotParticipant): void
+    {
+        $this->outingNotParticipant = $outingNotParticipant;
+    }
+
+    public function getOutingPassed(): ?bool
+    {
+        return $this->outingPassed;
+    }
+
+    public function setOutingPassed(?bool $outingPassed): void
+    {
+        $this->outingPassed = $outingPassed;
+    }
+
+    public function getConnectedUser(): ?User
+    {
+        return $this->connectedUser;
+    }
+
+    public function setConnectedUser(?User $connectedUser): void
+    {
+        $this->connectedUser = $connectedUser;
+    }
+
+//    public function getOutingFilters(): ?array
+//    {
+//        return $this->outingFilters;
+//    }
+//
+//    public function setOutingFilters(?array $outingFilters): void
+//    {
+//        $this->outingFilters = $outingFilters;
+//    }
 }
