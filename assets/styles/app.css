@@ -148,4 +148,75 @@ body {
     color: red;
 }
 
+/* Style of OUTING SEARCH FORM : */
+
+div.outing-search form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-height: 250px;
+    max-width: 100%;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.outing-search-criteria {
+    display: flex;
+    flex-direction: column;
+    margin: 3vh;
+}
+
+.outing-search-criteria input {
+    max-height: 30px;
+    max-width: 200px;
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+.outing-search-criteria select {
+    max-height: 30px;
+    max-width: 200px;
+    font-size: 16px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+div.outing-search-criteria div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/*div.outing-search-checkbox {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*}*/
+
+/*div.outing-search-checkbox div {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*}*/
+
+div#outing_search_outingFilters {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 3vh;
+}
+
+.search-btn-div {
+    display: flex;
+}
+
+.outing-search-btn {
+    max-height: 50px;
+    align-self: anchor-center;
+    font-size: 16px;
+    margin: 3vh;
+}
+
+
 /************************************/

@@ -7,6 +7,24 @@
             <p><strong>Participant : {{ app.user.username }}</strong></p>
         {% endif %}
     </div>
+
+    <div class="outing-search">
+        {{ form_start(outingSearchForm) }}
+        <div class="outing-search-criteria">
+            {{ form_row(outingSearchForm.campus) }}
+            {{ form_row(outingSearchForm.name) }}
+            {{ form_row(outingSearchForm.startSearchDate) }}
+            {{ form_row(outingSearchForm.endSearchDate) }}
+        </div>
+        <div class="outing-search-checkbox">
+            {{ form_row(outingSearchForm.outingFilters) }}
+        </div>
+        <div class="search-btn-div">
+            <button class="outing-search-btn">Recherche</button>
+        </div>
+        {{ form_end(outingSearchForm) }}
+    </div>
+
     <h1>Sorties</h1>
     {% for outing in outings %}
         <article class="outingInList">

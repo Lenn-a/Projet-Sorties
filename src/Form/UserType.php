@@ -52,9 +52,7 @@ class UserType extends AbstractType
             ->add('photo', FileType::class, [
                 'label' => 'Photo du profil',
                 'mapped' => false,
-            ])
-
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
