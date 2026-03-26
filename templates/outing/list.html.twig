@@ -8,11 +8,24 @@
         {% endif %}
     </div>
 
-    <div>
+    <div class="outing-search">
         {{ form_start(outingSearchForm) }}
-        {{ form_widget(outingSearchForm) }}
+        <div class="outing-search-criteria">
+            {{ form_row(outingSearchForm.campus) }}
+            {{ form_row(outingSearchForm.name) }}
+            {{ form_row(outingSearchForm.startSearchDate) }}
+            {{ form_row(outingSearchForm.endSearchDate) }}
+        </div>
+        <div class="outing-search-checkbox">
+            {{ form_row(outingSearchForm.outingOrganiser) }}
+            {{ form_row(outingSearchForm.outingParticipant) }}
+            {{ form_row(outingSearchForm.outingNotParticipant) }}
+            {{ form_row(outingSearchForm.outingPassed) }}
+        </div>
+        <div class="search-btn-div">
+            <button class="outing-search-btn">Recherche</button>
+        </div>
         {{ form_end(outingSearchForm) }}
-        <button></button>
     </div>
 
     <h1>Sorties</h1>
@@ -51,7 +64,6 @@
                 </div>
 
             </div>
-
 
 
 
