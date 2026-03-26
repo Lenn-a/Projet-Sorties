@@ -6,6 +6,7 @@ use App\Entity\Outing;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
+use App\Repository\UserRepository;
 use App\Services\StatusService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -65,6 +66,8 @@ final class OutingController extends AbstractController
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
         EntityManagerInterface $entityManager,
+        StatusRepository $statusRepository,
+        UserRepository $userRepository,
         StatusService $statusService,
         Request $request,
     ): Response {
@@ -73,30 +76,62 @@ final class OutingController extends AbstractController
         $outingForm = $this->createForm(OutingType::class, $outing);
         $outingForm->handleRequest($request);
 
-        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
-            //User making the Outing is its organiser :
-            $outing->setOrganiser($this->getUser());
+        $action = $request->request->get('action');
 
-            //Organiser is a participant by default :
-            $outing->addParticipant($this->getUser());
+        if ($action === 'publier'){
+            if($outingForm->isSubmitted() && $outingForm->isValid()){
+                //Le user qui créer la sortie = organisateur
+                $outing->setOrganiser($this->getUser());
+                //Organisateur est participant par défault
+                $outing->addParticipant($this->getUser());
+                //Status = ouvert quand on clic sur "Publier"
+                $published = $statusRepository->getStatusByName('Ouvert');
+                $outing->setStatus($published);
 
+                $entityManager->persist($outing);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été publiée.');
+                //redirection vers la page de détail de la sortie
+                return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+            }
+        }
+
+        if($action === 'enregistrer'){
+            if($outingForm->isSubmitted() && $outingForm->isValid()){
+                $outing->setOrganiser($this->getUser());
+                $outing->addParticipant($this->getUser());
+                //Status = en création si on clic sur "enregistrer"
+                $published = $statusRepository->getStatusByName('En création');
+                $outing->setStatus($published);
             $statusService->statusOpenClose($outing);
 
-            $entityManager->persist($outing);
-            $entityManager->flush();
+                $entityManager->persist($outing);
+                $entityManager->flush();
 
-            $this->addFlash('success', 'Outing' . $outing->getName() . ' has been added.');
+                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été enregistrée.');
 
-            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+                //Redirection vers la liste de sorties enregistrées
+                return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
+            }
         }
         return $this->render('outing/create.html.twig', [
-            'outingForm' => $outingForm
+            'outingForm'=> $outingForm
         ]);
-
 }
 
-#[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
-public function participateInOuting(int $id,
+    //Liste privé d'un utilisateur
+    #[Route('/privateList/{id}', name: 'privateList')]
+    public function privateList(OutingRepository $outingRepository): Response{
+        $outings = $outingRepository->findMyOutings();
+
+        return $this->render('outing/privateList.html.twig', [
+            'outings' => $outings
+        ]);
+    }
+
+    #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
+    public function participateInOuting(int $id,
                                     EntityManagerInterface $entityManager,
                                     OutingRepository $outingRepository,
                                     StatusService $statusService,

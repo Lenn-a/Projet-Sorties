@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: OutingRepository::class)]
 class Outing
 {
@@ -19,6 +20,7 @@ class Outing
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Veyez donner un nom à votre activité')]
+    #[Assert\Length(max: 255, maxMessage: 'Trop long !')]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -38,6 +40,7 @@ class Outing
     private ?int $nbSignupsMax = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: 'Trop long !')]
     private ?string $outingInfo = null;
 
     #[ORM\ManyToOne(inversedBy: 'organiser')]
