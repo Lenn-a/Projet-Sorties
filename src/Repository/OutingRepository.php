@@ -38,6 +38,14 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée')
         ;
         return $queryBuilder->getQuery()->getResult();
+    }
 
+    public function findMyOutings(){
+        $queryBuilder = $this->createQueryBuilder('ec');
+        $queryBuilder
+            ->leftJoin('ec.status', 'status')
+            ->addSelect('status')
+            ->Where('status.label = :encreation')->setParameter('encreation', 'En création');
+        return $queryBuilder->getQuery()->getResult();
     }
 }
