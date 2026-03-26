@@ -21,9 +21,11 @@
         {% if app.user == outing.organiser %}
             {% if outing.status.label != "Annulée" %}
                 <a href="{{ path('outing_cancel', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler cette sortie ? Cette action est irréversible.')"><button>Annuler</button></a>
-            {% elseif outing.status.label == 'En création' %}
-                <a href="{{ path('outing_update', {'id': outing.id}) }}"><button>Modifier</button></a>
+                {% if outing.status == "En création" %}
+                    <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
+                {% endif %}
             {% endif %}
+
         {% elseif outing.participants.contains(app.user) %}
             <div class="button-space">
                 <span class="goodNews">Vous êtes inscrit à cette sortie !</span>

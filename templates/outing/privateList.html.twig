@@ -40,12 +40,19 @@
         </div>
 
         <div>
-            <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button>Afficher les détails</button></a>
+            <a href="{{ path('outing_details', {'id' : outing.id}) }}">
+                <button>Afficher les détails</button>
+            </a>
             {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
-                <a href="{{ path('outing_quit', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')"><button>Se désister</button></a>
+                <a href="{{ path('outing_quit', {'id': outing.id}) }}"
+                   onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">
+                    <button>Se désister</button>
+                </a>
             {% endif %}
         </div>
 
     </div>
+</article>
     {% endfor %}
-{% endblock %}
+
+    {% endblock %}

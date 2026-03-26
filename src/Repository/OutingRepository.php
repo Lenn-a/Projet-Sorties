@@ -71,7 +71,7 @@ class OutingRepository extends ServiceEntityRepository
     public function findMyOutings(){
         $queryBuilder = $this->createQueryBuilder('ec');
         $queryBuilder
-            ->leftJoin('ec.status', 'status')
+            ->Join('ec.status', 'status')
             ->addSelect('status')
             ->Where('status.label = :encreation')->setParameter('encreation', 'En création');
         return $queryBuilder->getQuery()->getResult();
