@@ -119,6 +119,13 @@ body {
     margin:0
 }
 
+.profilePic {
+    display: flex;
+    border-radius: 100%;
+    max-width: 25vh;
+    justify-self:center;
+}
+
 /************************************/
 
 
