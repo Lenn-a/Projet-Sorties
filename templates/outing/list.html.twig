@@ -17,7 +17,11 @@
             {{ form_row(outingSearchForm.endSearchDate) }}
         </div>
         <div class="outing-search-checkbox">
-            {{ form_row(outingSearchForm.outingFilters) }}
+{#            {{ form_row(outingSearchForm.outingFilters) }}#}
+            {{ form_row(outingSearchForm.outingOrganiser) }}
+            {{ form_row(outingSearchForm.outingParticipant) }}
+            {{ form_row(outingSearchForm.outingNotParticipant) }}
+            {{ form_row(outingSearchForm.outingPassed) }}
         </div>
         <div class="search-btn-div">
             <button class="outing-search-btn">Recherche</button>

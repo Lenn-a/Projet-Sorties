@@ -187,17 +187,17 @@ div.outing-search-criteria div {
     justify-content: space-between;
 }
 
-/*div.outing-search-checkbox {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: center;*/
-/*}*/
+div.outing-search-checkbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-/*div.outing-search-checkbox div {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: center;*/
-/*}*/
+div.outing-search-checkbox div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 div#outing_search_outingFilters {
     display: flex;
