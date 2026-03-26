@@ -48,11 +48,22 @@ class OutingRepository extends ServiceEntityRepository
                 ->andWhere('o.campus = :campus')->setParameter('campus', $outingSearch->getCampus());
         }
 
-        // NOT functional but doesn't break things!!!
         if ($outingSearch->getName()) {
             $queryBuilder
                 ->andWhere('o.name LIKE :name')->setParameter('name', '%' . $outingSearch->getName() . '%');
         }
+
+        if ($outingSearch->getStartSearchDate()) {
+            $queryBuilder
+                ->andWhere('o.startDateTime >= :startSearchDate')->setParameter('startSearchDate', $outingSearch->getStartSearchDate());
+        }
+
+        if ($outingSearch->getEndSearchDate()) {
+            $queryBuilder
+                ->andWhere('o.startDateTime <= :endSearchDate')->setParameter('endSearchDate', $outingSearch->getEndSearchDate());
+        }
+
+        $queryBuilder->orderBy('o.startDateTime', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();
     }
