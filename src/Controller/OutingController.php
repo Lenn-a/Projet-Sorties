@@ -36,6 +36,11 @@ final class OutingController extends AbstractController
     OutingRepository $outingRepository
     ): Response {
         $outing = $outingRepository->find($id);
+
+        if(!$outing){
+            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
+        }
+
         return $this->render('outing/details.html.twig', [
             'outing' => $outing
         ]);
@@ -49,6 +54,10 @@ final class OutingController extends AbstractController
         EntityManagerInterface $entityManager
     ) : Response {
         $outing = $outingRepository->find($id);
+
+        if(!$outing){
+            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
+        }
 
         if ($outing->getOrganiser() !== $this->getUser()) {
             $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
@@ -100,10 +109,10 @@ final class OutingController extends AbstractController
         if($action === 'enregistrer'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
                 $outing->setOrganiser($this->getUser());
-                $outing->addParticipant($this->getUser());
                 //Status = en création si on clic sur "enregistrer"
                 $published = $statusRepository->getStatusByName('En création');
                 $outing->setStatus($published);
+                $outing->
             $statusService->statusOpenClose($outing);
 
                 $entityManager->persist($outing);
@@ -120,7 +129,7 @@ final class OutingController extends AbstractController
         ]);
 }
 
-    //Liste privé d'un utilisateur
+    //Liste privée d'un utilisateur
     #[Route('/privateList/{id}', name: 'privateList')]
     public function privateList(OutingRepository $outingRepository): Response{
         $outings = $outingRepository->findMyOutings();
