@@ -19,7 +19,7 @@
 
                 <div>
                     <h4>{{ outing.name }}</h4>
-                    <small>Organisée par {{ outing.organiser.username }}</small>
+                    <small>Organisée par <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></small>
                 </div>
 
                 <div class="outing-date">
@@ -34,69 +34,30 @@
                 {% endif %}
                     </p>
                 </div>
+                <div class="widgets-space">
 
-                <div>
-                    <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button>Afficher les détails</button></a>
-                    {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
-                        <a href="{{ path('outing_quit', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')"><button>Se désister</button></a>
-                    {% endif %}
+                    <div>
+                        <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button>Afficher les détails</button></a>
+                    </div>
+
+                    <div class="outing-status">
+                        {% if outing.status.label == "Annulée" %}
+                            <div class="status-cancelled">Sortie annulée :(</div>
+                        {% endif %}
+                        {% if outing.status.label == "Clôturée" or outing.participants.count == outing.nbSignupsMax %}
+                            <div class="status-toolate">Inscriptions clôturées</div>
+                        {% endif %}
+                        {% if outing.status.label == "Terminée" %}
+                            <div class="status-done">Cette sortie a eu lieu !</div>
+                        {% endif %}
+                        {% if outing.status.label == "En cours" %}
+                            <div class="status-done">Se déroule aujourd'hui !</div>
+                        {% endif %}
+                    </div>
+
                 </div>
 
             </div>
-
-
-
-
-
-{#            <div>#}
-{#                <p><strong>Nom de la sortie :</strong></p>#}
-{#                <p>{{ outing.name }}</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>Date de la sortie :</strong></p>#}
-{#                <p>{{ outing.startDateTime | date('d/m/Y') }}</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>Clôture :</strong></p>#}
-{#                <p>{{ outing.signupDateLimit | date('d/m/Y') }}</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>Inscrits/places :</strong></p>#}
-{#                <p>X/{{ outing.nbSignupsMax }}</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>État :</strong></p>#}
-{#                <p>{{ outing.status.label }}</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>Inscrit :</strong></p>#}
-{#                <p>[]</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>Organisateur :</strong></p>#}
-{#                <p>{{ outing.organiser.username }}</p>#}
-{#            </div>#}
-
-{#            <div>#}
-{#                <p><strong>Actions:</strong></p>#}
-{#                <div>#}
-{#                    <a href="{{ path('outing_details', {'id': outing.id }) }}">Afficher</a>#}
-{#                </div>#}
-{#                {% if app.user == outing.organiser %}#}
-{#                <div>#}
-{#                    <a href="{{ path('outing_update', {'id': outing.id }) }}">Modifier</a>#}
-{#                </div>#}
-{#                {% elseif outing.participants.contains(app.user) %}#}
-{#                    <a>Se désister</a>#}
-{#                {% endif %}#}
-{#            </div>#}
-
         </article>
     {% endfor %}
 
