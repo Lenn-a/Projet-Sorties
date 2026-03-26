@@ -46,8 +46,7 @@ body {
 }
 
 .outing-date {
-    display: flex;
-    flex-direction: row;
+    display: inline-block;
 }
 
 

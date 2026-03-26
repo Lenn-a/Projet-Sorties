@@ -10,7 +10,9 @@ use App\Repository\LocationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,7 +26,7 @@ class OutingType extends AbstractType
             ->add('name', TextType::class, [
                 'label'=>'your outing name',
             ])
-            ->add('startDateTime', DateType::class, [
+            ->add('startDateTime', DateTimeType::class, [
                 'widget' => 'single_text',
             ])
             ->add('duration', ChoiceType::class, [
@@ -39,7 +41,7 @@ class OutingType extends AbstractType
                     '4 heures'=> 2400,
                 ]
             ])
-            ->add('signUpDateLimit', DateType::class, [
+            ->add('signUpDateLimit', DateTimeType::class, [
                 'widget' => 'single_text',
             ])
             ->add('nbSignupsMax', TextType::class, [
@@ -63,15 +65,16 @@ class OutingType extends AbstractType
                 return $locationRepository->createQueryBuilder('l');
                 }
             ])
-//            ->add('photo', FileType::class, [
-//                'mapped' => false,
-//            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Photo',
+            ])
 ;
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Outing::class,
+            'required' => false,
         ]);
     }
 }
