@@ -2,11 +2,13 @@
 
 namespace App\Form\Model;
 
+use App\Entity\Campus;
+use Doctrine\Common\Collections\Collection;
 use phpDocumentor\Reflection\Types\Boolean;
 
 class OutingSearch
 {
-    private ?string $campus = null;
+    private ?Campus $campus = null;
 
     private ?string $name = null;
 
@@ -14,20 +16,14 @@ class OutingSearch
 
     private ?\DateTime $endSearchDate = null;
 
-    private ?boolean $outingOrganiser = null;
+    private ?array $outingFilters = null;
 
-    private ?boolean $outingParticipant = null;
-
-    private ?boolean $outingNotParticipant = null;
-
-    private ?boolean $outingPassed = null;
-
-    public function getCampus(): ?string
+    public function getCampus(): ?Campus
     {
         return $this->campus;
     }
 
-    public function setCampus(?string $campus): void
+    public function setCampus(?Campus $campus): void
     {
         $this->campus = $campus;
     }
@@ -62,43 +58,13 @@ class OutingSearch
         $this->endSearchDate = $endSearchDate;
     }
 
-    public function getOutingOrganiser(): ?bool
+    public function getOutingFilters(): ?array
     {
-        return $this->outingOrganiser;
+        return $this->outingFilters;
     }
 
-    public function setOutingOrganiser(?bool $outingOrganiser): void
+    public function setOutingFilters(?array $outingFilters): void
     {
-        $this->outingOrganiser = $outingOrganiser;
-    }
-
-    public function getOutingParticipant(): ?bool
-    {
-        return $this->outingParticipant;
-    }
-
-    public function setOutingParticipant(?bool $outingParticipant): void
-    {
-        $this->outingParticipant = $outingParticipant;
-    }
-
-    public function getOutingNotParticipant(): ?bool
-    {
-        return $this->outingNotParticipant;
-    }
-
-    public function setOutingNotParticipant(?bool $outingNotParticipant): void
-    {
-        $this->outingNotParticipant = $outingNotParticipant;
-    }
-
-    public function getOutingPassed(): ?bool
-    {
-        return $this->outingPassed;
-    }
-
-    public function setOutingPassed(?bool $outingPassed): void
-    {
-        $this->outingPassed = $outingPassed;
+        $this->outingFilters = $outingFilters;
     }
 }

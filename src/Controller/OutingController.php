@@ -27,7 +27,7 @@ final class OutingController extends AbstractController
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
-        $outings = $outingRepository->findAllPublishedOutings();
+        $outings = $outingRepository->findAllPublishedOutings($outingSearch);
 //        $outings = $outingRepository->findOutingsPastMonth();
 
         return $this->render('outing/list.html.twig', [

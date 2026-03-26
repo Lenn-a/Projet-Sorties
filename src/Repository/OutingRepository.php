@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Outing;
+use App\Form\Model\OutingSearch;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,29 +25,36 @@ class OutingRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findAllPublishedOutings() {
+    public function findAllPublishedOutings(OutingSearch $outingSearch) {
+
 //        SELECT * FROM `outing` LEFT JOIN status on outing.status_id = status.id
 //WHERE status.label = 'Ouverte'
         $queryBuilder = $this->createQueryBuilder('o');
-        $queryBuilder
-            ->leftJoin('o.status', 'status')
-            ->addSelect('status')
-            ->Where('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
-            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
-            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
-            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
-            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée')
-        ;
+
+//        $queryBuilder
+//            ->leftJoin('o.status', 'status')
+//            ->addSelect('status');
+
+//            ->Where('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
+//            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
+//            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
+//            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
+//            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée');
+
+        if ($outingSearch->getCampus()) {
+            $queryBuilder
+                ->leftJoin('o.campus', 'campus')
+                ->addSelect('campus')
+                ->andWhere('o.campus = :campus')->setParameter('campus', $outingSearch->getCampus());
+        }
+
+        // NOT functional but doesn't break things!!!
+        if ($outingSearch->getName()) {
+            $queryBuilder
+                ->andWhere('o.name LIKE :name')->setParameter('name', '%' . $outingSearch->getName() . '%');
+        }
+
         return $queryBuilder->getQuery()->getResult();
 
-    }
-
-    public function findOutingsByCampus($campus)
-    {
-        $qb = $this->createQueryBuilder('o');
-        $qb
-            ->where('o.campus.label = :campus')->setParameter('campus', 'Campus')
-            ->orderBy('o.startDateTime', 'DESC');
-        return $qb->getQuery()->getResult();
     }
 }

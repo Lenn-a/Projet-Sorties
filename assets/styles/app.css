@@ -149,7 +149,8 @@ body {
 }
 
 /* Style of OUTING SEARCH FORM : */
-form {
+
+div.outing-search form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -162,6 +163,7 @@ form {
 .outing-search-criteria {
     display: flex;
     flex-direction: column;
+    margin: 3vh;
 }
 
 .outing-search-criteria input {
@@ -176,6 +178,8 @@ form {
     max-width: 200px;
     font-size: 16px;
     margin-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 
 div.outing-search-criteria div {
@@ -184,21 +188,23 @@ div.outing-search-criteria div {
     justify-content: space-between;
 }
 
-/*div.outing-search-criteria div:first-child {*/
+/*div.outing-search-checkbox {*/
 /*    display: flex;*/
-/*    justify-content: space-between;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
 /*}*/
 
-.outing-search-checkbox {
+/*div.outing-search-checkbox div {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*}*/
+
+div#outing_search_outingFilters {
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-div.outing-search-checkbox div {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: left;
+    margin: 3vh;
 }
 
 .search-btn-div {
@@ -209,6 +215,7 @@ div.outing-search-checkbox div {
     max-height: 50px;
     align-self: anchor-center;
     font-size: 16px;
+    margin: 3vh;
 }
 
 

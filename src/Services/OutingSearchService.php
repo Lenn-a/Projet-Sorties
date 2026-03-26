@@ -13,7 +13,7 @@ class OutingSearchService
 
     public function refineOutingSearch(OutingSearch $outingSearch) {
         if ($outingSearch->getCampus()) {
-            $this->outingRepository->findOutingsByCampus($outingSearch->getCampus());
+            $this->outingRepository->findPublishedOutingsByCampus($outingSearch->getCampus());
         }
     }
 
