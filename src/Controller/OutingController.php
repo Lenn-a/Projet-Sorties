@@ -9,6 +9,7 @@ use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
+use App\Services\FileUploader;
 use App\Services\StatusService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,13 +23,17 @@ use Symfony\Component\Routing\Attribute\Route;
 final class OutingController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(OutingRepository $outingRepository, OutingSearch $outingSearch, OutingSearchType $outingSearchType, Request $request): Response
+    public function list(OutingRepository $outingRepository, OutingSearch $outingSearch, OutingSearchType $outingSearchType, Request $request, StatusService $statusService): Response
     {
         $outingSearch = new OutingSearch();
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
         $outings = $outingRepository->findAllPublishedOutings($outingSearch);
+
+        foreach ($outings as $outing) {
+            $statusService->setStatusByDate($outing);
+        }
 //        $outings = $outingRepository->findOutingsPastMonth();
 
         return $this->render('outing/list.html.twig', [
@@ -88,11 +93,19 @@ final class OutingController extends AbstractController
         if ($action === 'publier'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
                 //Le user qui créer la sortie = organisateur
+                    $file = $outingForm -> get('photo')-> getData();
+                    if ($file != null) {
+                        $outing->setPhoto(
+                            $fileUploader->upload($file, 'images/', $outing->getName())
+                        );
+                    }else {
+                        $outing->setPhoto('images/Outings/Outing-default.png');
+                    }
                 $outing->setOrganiser($this->getUser());
                 //Organisateur est participant par défault
                 $outing->addParticipant($this->getUser());
                 //Status = ouvert quand on clic sur "Publier"
-                $published = $statusRepository->getStatusByName('Ouvert');
+                $published = $statusRepository->getStatusByName('Ouverte');
                 $outing->setStatus($published);
 
                 $entityManager->persist($outing);
@@ -106,6 +119,14 @@ final class OutingController extends AbstractController
 
         if($action === 'enregistrer'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
+                if($outing->getPhoto() !== null){
+                    $file = $outingForm -> get('photo')-> getData();
+                    $outing -> setPhoto(
+                        $fileUploader->upload($file, 'images/Outings', $outing->getName())
+                    );
+                }else {
+                    $outing -> setPhoto('Outing-default.png');
+                }
                 $outing->setOrganiser($this->getUser());
                 $outing->addParticipant($this->getUser());
                 //Status = en création si on clic sur "enregistrer"
