@@ -6,7 +6,7 @@
                 <li><a href="{{ path('outing_create') }}">Création sortie</a></li>
                 <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Mon profil</a></li>
                 <li><a href="{{ path('app_logout') }}">Logout</a></li>
-{#                <li><a href="{{ path('outing_save') }}">Mes sorties</a></li>#}
+                <li><a href="{{ path('outing_privateList', {'id': app.user.id}) }}">Mes sorties</a></li>
             {% else %}
                 <li><a href="{{ path('app_login') }}">Login</a></li>
             {% endif %}
