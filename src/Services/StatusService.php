@@ -50,8 +50,9 @@ class StatusService
 //            dump($currentStatus == 'Cloturée' || $signupDate < $now);
 
         switch (true) {
+            case $currentStatus == 'En création' : $statusLabel = 'En création'; break;
             case $outingDate <= $limitHistorisee: $statusLabel = 'Historisée';break;
-            case $currentStatus == 'Annulée' : $statusLabel = 'Annulée';break;
+            case $currentStatus == 'Annulée' : $statusLabel = 'Annulée'; break;
             case $outingDate > $now && $outingDate < $endOuting: $statusLabel = 'En cours';break;
             case $now > $endOuting : $statusLabel = 'Terminée';break;
             case $currentStatus == 'Cloturée' || $signupDate < $now: $statusLabel= 'Clôturée'; break;
