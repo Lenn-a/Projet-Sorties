@@ -47,9 +47,11 @@ final class OutingController extends AbstractController
             if ($outingSearch->getOutingPassed() === true) {
                 $outingSearch->setCurrentDateTime(new \DateTime());
             }
+            $outings = $outingRepository->findAllPublishedOutings($outingSearch);
         } else {
             $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
+
 
 
         return $this->render('outing/list.html.twig', [
@@ -63,20 +65,35 @@ final class OutingController extends AbstractController
         int $id,
         OutingRepository $outingRepository,
         Request $request,
+        StatusService $statusService,
         UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
     ): Response {
         $outing = $outingRepository->find($id);
         $user = $userRepository->findAll($id);
 
+        if(!$outing){
+            throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
+        }
+
+        // CANCELLATION of an OUTING (ANNULATION)
         $outingCancel = new OutingCancel();
         $outingCancelForm = $this->createForm(OutingCancelType::class, $outingCancel);
         $outingCancelForm->handleRequest($request);
 
         if ($outingCancelForm->isSubmitted() && $outingCancelForm->isValid()) {
-            return $this->redirectToRoute('outing_cancel', ['id' => $id]);
+            $statusService->setStatusWithName($outing, 'Annulée');
+
+            $outing->setOutingInfo($outing->getOutingInfo() . ' ' . $outing->getStatus() . ' Motif : ' . $outingCancel->getCancelMotive());
+
+            $entityManager->persist($outing);
+            $entityManager->flush();
         }
 
-        dump($outingCancel);
+//        if ($outing->getOrganiser() !== $this->getUser()) {
+//            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+//            return $this->redirectToRoute('outing_list');
+//        }
 
         return $this->render('outing/details.html.twig', [
             'outing' => $outing,
@@ -86,31 +103,32 @@ final class OutingController extends AbstractController
         ]);
     }
 
-    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-    public function delete(
-        int $id,
-        OutingRepository $outingRepository,
-        StatusService $statusService,
-        EntityManagerInterface $entityManager,
-    ) : Response {
-        $outing = $outingRepository->find($id);
-
-        if(!$outing){
-            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-        }
-
-        if ($outing->getOrganiser() !== $this->getUser()) {
-            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
-            return $this->redirectToRoute('outing_list');
-        }
-
-        $statusService->setStatusWithName($outing, 'Annulée');
-
-        $entityManager->persist($outing);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('outing_details', ['id' => $id]);
-    }
+//    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
+//    public function delete(
+//        int $id,
+//        OutingRepository $outingRepository,
+//        StatusService $statusService,
+//        OutingCancel $outingCancel,
+//        EntityManagerInterface $entityManager,
+//    ) : Response {
+//        $outing = $outingRepository->find($id);
+//
+////        if(!$outing){
+////            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
+////        }
+////
+////        if ($outing->getOrganiser() !== $this->getUser()) {
+////            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+////            return $this->redirectToRoute('outing_list');
+////        }
+////
+////        $statusService->setStatusWithName($outing, 'Annulée');
+////
+////        $entityManager->persist($outing);
+////        $entityManager->flush();
+//
+//        return $this->redirectToRoute('outing_details', ['id' => $id]);
+//    }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
