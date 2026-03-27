@@ -6,6 +6,7 @@ use App\Entity\Outing;
 use App\Form\Model\OutingSearch;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,41 +19,52 @@ class OutingRepository extends ServiceEntityRepository
         parent::__construct($registry, Outing::class);
     }
 
-    public function findOutingsPastMonth() {
+    public function findOutingsPastMonth()
+    {
         $queryBuilder = $this->createQueryBuilder('o');
         $queryBuilder->where('o.startDateTime <= :date')->setParameter('date', new DateTime('-1 month'))
-                     ->orderBy('o.startDateTime', 'DESC');
+            ->orderBy('o.startDateTime', 'DESC');
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findAllPublishedOutings(OutingSearch $outingSearch) {
+    public function findAllPublishedOutings(OutingSearch $outingSearch)
+    {
 
 //        SELECT * FROM `outing` LEFT JOIN status on outing.status_id = status.id
 //WHERE status.label = 'Ouverte'
         $queryBuilder = $this->createQueryBuilder('o');
+//        $queryBuilder->select('o.name', 'o.signupDateLimit', 'o.nbSignupsMax', 'o.startDateTime', 'o.photo')
+        $queryBuilder->innerJoin('o.campus', 'c')
+            ->addSelect('c')
+            ->innerJoin('o.organiser', 'u')
+            ->addSelect('u')
+            ->leftJoin('o.participants', 'p')
+            ->addSelect('p')
+            ->innerJoin('o.status', 's')
+            ->addSelect('s')
 
 //        $queryBuilder
 //            ->leftJoin('o.status', 'status')
 //            ->addSelect('status');
 
-//            ->Where('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
-//            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
-//            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
-//            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
-//            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée');
-
+            ->andWhere('s.label = :ouverte')->setParameter('ouverte', 'Ouverte')
+            ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
+            ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
+            ->orWhere('s.label = :cloturee')->setParameter('cloturee', 'Clôturée')
+            ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée');
+        // Filter outings by CAMPUS
         if ($outingSearch->getCampus()) {
             $queryBuilder
                 ->leftJoin('o.campus', 'campus')
                 ->addSelect('campus')
                 ->andWhere('o.campus = :campus')->setParameter('campus', $outingSearch->getCampus());
         }
-
+        // Filter outings by NAME
         if ($outingSearch->getName()) {
             $queryBuilder
                 ->andWhere('o.name LIKE :name')->setParameter('name', '%' . $outingSearch->getName() . '%');
         }
-
+        // Filter outings by DATE
         if ($outingSearch->getStartSearchDate()) {
             $queryBuilder
                 ->andWhere('o.startDateTime >= :startSearchDate')->setParameter('startSearchDate', $outingSearch->getStartSearchDate());
@@ -62,29 +74,53 @@ class OutingRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('o.startDateTime <= :endSearchDate')->setParameter('endSearchDate', $outingSearch->getEndSearchDate());
         }
-
-        if ($outingSearch->getConnectedUser()) {
-//            dd($outingSearch->getConnectedUsername());
+        // Filter outings by ORGANISER
+        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingOrganiser()) {
             $queryBuilder
                 ->andWhere('o.organiser = :organiser')->setParameter('organiser', $outingSearch->getConnectedUser());
         }
+        // Filter outings by PARTICIPANT
+        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingParticipant()) {
+            $queryBuilder
+                ->andWhere(':participant MEMBER OF o.participants')->setParameter('participant', $outingSearch->getConnectedUser());
+        }
+        // Filter outings by NOT PARTICIPANT
+        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingNotParticipant()) {
+            $queryBuilder
+                ->andWhere(':participant NOT MEMBER OF o.participants')->setParameter('participant', $outingSearch->getConnectedUser());
+        }
 
-//        if ($outingSearch->getOutingFilters()) {
-//            $queryBuilder
-//                ->andWhere('o.organiser LIKE :outingFilters')->setParameter('outingFilters', '%' . $outingSearch->getOutingFilters() . '%');
-//        }
+        // Filter outings by PASSED DATE
+        if ($outingSearch->getOutingPassed()) {
+            $queryBuilder
+                ->andWhere('DATE_ADD(o.startDateTime, o.duration, \'MINUTE\') < :passed')->setParameter('passed', $outingSearch->getCurrentDateTime());
+        }
 
         $queryBuilder->orderBy('o.startDateTime', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findMyOutings(){
+    public function findMyOutings()
+    {
         $queryBuilder = $this->createQueryBuilder('ec');
         $queryBuilder
             ->Join('ec.status', 'status')
             ->addSelect('status')
             ->Where('status.label = :encreation')->setParameter('encreation', 'En création');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function outingsThatCanChange()
+    {
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder->innerJoin('o.status', 's')
+            ->addSelect('s')
+            ->where('s.label = :ouverte')->setParameter('ouverte', 'Ouverte')
+            ->orWhere('s.label = :cloturee')->setParameter('cloturee', 'Clôturée')
+            ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
+            ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
+            ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée');
         return $queryBuilder->getQuery()->getResult();
     }
 }

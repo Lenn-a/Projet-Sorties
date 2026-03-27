@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Services\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ final class UserController extends AbstractController
         User $id,
         EntityManagerInterface $entityManager,
         Request $request,
+        FileUploader $fileUploader,
         UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = $this->getUser();
@@ -33,6 +35,12 @@ final class UserController extends AbstractController
             $plainPassword = $userForm->get('plainPassword')->getData();
             if($plainPassword !== null) {
                 $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            }
+            $file = $userForm -> get('photo')-> getData();
+            if ($file != null) {
+                $user->setPhoto(
+                    $fileUploader->upload($file, 'images/PFP/', $user->getUsername())
+                );
             }
 
             $entityManager->persist($user);
