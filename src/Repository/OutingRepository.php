@@ -19,14 +19,6 @@ class OutingRepository extends ServiceEntityRepository
         parent::__construct($registry, Outing::class);
     }
 
-    public function findOutingsPastMonth()
-    {
-        $queryBuilder = $this->createQueryBuilder('o');
-        $queryBuilder->where('o.startDateTime <= :date')->setParameter('date', new DateTime('-1 month'))
-            ->orderBy('o.startDateTime', 'DESC');
-        return $queryBuilder->getQuery()->getResult();
-    }
-
     public function findAllPublishedOutings(OutingSearch $outingSearch)
     {
 
@@ -42,6 +34,15 @@ class OutingRepository extends ServiceEntityRepository
             ->addSelect('p')
             ->innerJoin('o.status', 's')
             ->addSelect('s')
+            ->leftJoin('o.location', 'l')
+            ->addSelect('l')
+            ->leftJoin('l.city', 'v')
+            ->addSelect('v')
+        ;
+        // DISPLAY only PUBLISHED outings
+        $queryBuilder
+            ->leftJoin('o.status', 'status')
+            ->addSelect('status')
 
 //        $queryBuilder
 //            ->leftJoin('o.status', 'status')
@@ -55,8 +56,6 @@ class OutingRepository extends ServiceEntityRepository
         // Filter outings by CAMPUS
         if ($outingSearch->getCampus()) {
             $queryBuilder
-                ->leftJoin('o.campus', 'campus')
-                ->addSelect('campus')
                 ->andWhere('o.campus = :campus')->setParameter('campus', $outingSearch->getCampus());
         }
         // Filter outings by NAME
@@ -105,7 +104,7 @@ class OutingRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('ec');
         $queryBuilder
-            ->Join('ec.status', 'status')
+            ->leftJoin('ec.status', 'status')
             ->addSelect('status')
             ->Where('status.label = :encreation')->setParameter('encreation', 'En création');
         return $queryBuilder->getQuery()->getResult();
@@ -120,7 +119,10 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('s.label = :cloturee')->setParameter('cloturee', 'Clôturée')
             ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
             ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
-            ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée');
+            ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée')
+            ->innerJoin('o.participants', 'p')
+            ->addSelect('p')
+            ;
         return $queryBuilder->getQuery()->getResult();
     }
 }

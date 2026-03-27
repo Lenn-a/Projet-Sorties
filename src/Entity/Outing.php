@@ -43,7 +43,7 @@ class Outing
     #[Assert\Length(max: 255, maxMessage: 'Trop long !')]
     private ?string $outingInfo = null;
 
-    #[ORM\ManyToOne(inversedBy: 'organiser')]
+    #[ORM\ManyToOne(inversedBy: 'outing')]
     private ?Location $location = null;
 
     #[ORM\ManyToOne(inversedBy: 'outings')]
