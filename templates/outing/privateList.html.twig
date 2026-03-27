@@ -32,14 +32,6 @@
         </div>
 
         <div>
-            <p><strong>Inscrits :</strong> {{ outing.participants | length }}/{{ outing.nbSignupsMax }}
-                {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
-                    <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
-                {% endif %}
-            </p>
-        </div>
-
-        <div>
             <a href="{{ path('outing_details', {'id' : outing.id}) }}">
                 <button>Afficher les détails</button>
             </a>
