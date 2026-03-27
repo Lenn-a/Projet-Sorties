@@ -31,16 +31,16 @@ class OutingRepository extends ServiceEntityRepository
 //        SELECT * FROM `outing` LEFT JOIN status on outing.status_id = status.id
 //WHERE status.label = 'Ouverte'
         $queryBuilder = $this->createQueryBuilder('o');
+        // DISPLAY only PUBLISHED outings
+        $queryBuilder
+            ->leftJoin('o.status', 'status')
+            ->addSelect('status')
 
-//        $queryBuilder
-//            ->leftJoin('o.status', 'status')
-//            ->addSelect('status');
-
-//            ->Where('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
-//            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
-//            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
-//            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
-//            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée');
+            ->andWhere('status.label = :ouverte')->setParameter('ouverte', 'Ouverte')
+            ->orWhere('status.label = :terminee')->setParameter('terminee', 'Terminée')
+            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
+            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
+            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée');
         // Filter outings by CAMPUS
         if ($outingSearch->getCampus()) {
             $queryBuilder
