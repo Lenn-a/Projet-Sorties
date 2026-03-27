@@ -121,12 +121,24 @@ body {
 .profilePic {
     display: flex;
     border-radius: 100%;
-    max-width: 25vh;
+    width: 25vh;
+    height: 25vh;
     justify-self:center;
 }
 
-/************************************/
+/************* CSS Adrien ***********************/
 
+.participants-list{
+    margin-inline: 7rem;
+}
+.participants-details{
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
 
 /************* CSS Emilia *************/
 /* Style de messages FLASH et ERROR : */

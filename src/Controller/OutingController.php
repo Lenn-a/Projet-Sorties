@@ -31,6 +31,8 @@ final class OutingController extends AbstractController
         Request $request,
         StatusService $statusService): Response
     {
+        $statusService->setStatusByDate();
+
         $outingSearch = new OutingSearch();
         // Instance and handling of search/filter form on Outings list page
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
@@ -45,16 +47,10 @@ final class OutingController extends AbstractController
             if ($outingSearch->getOutingPassed() === true) {
                 $outingSearch->setCurrentDateTime(new \DateTime());
             }
-
-            $outings = $outingRepository->findAllPublishedOutings($outingSearch);
         } else {
             $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
 
-        foreach ($outings as $outing) {
-            $statusService->setStatusByDate($outing);
-        }
-//        $outings = $outingRepository->findOutingsPastMonth();
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings,
@@ -67,12 +63,10 @@ final class OutingController extends AbstractController
         int $id,
         OutingRepository $outingRepository,
         Request $request,
+        UserRepository $userRepository,
     ): Response {
         $outing = $outingRepository->find($id);
-
-        if(!$outing){
-            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-        }
+        $user = $userRepository->findAll($id);
 
         $outingCancel = new OutingCancel();
         $outingCancelForm = $this->createForm(OutingCancelType::class, $outingCancel);
@@ -86,6 +80,7 @@ final class OutingController extends AbstractController
 
         return $this->render('outing/details.html.twig', [
             'outing' => $outing,
+            'users' => $user,
             'outingCancelForm' => $outingCancelForm,
             'outingCancel' => $outingCancel,
         ]);
@@ -121,7 +116,7 @@ final class OutingController extends AbstractController
     public function create(
         EntityManagerInterface $entityManager,
         StatusRepository $statusRepository,
-        UserRepository $userRepository,
+        FileUploader $fileUploader,
         StatusService $statusService,
         Request $request,
     ): Response {
@@ -134,14 +129,14 @@ final class OutingController extends AbstractController
 
         if ($action === 'publier'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
-                //Le user qui créer la sortie = organisateur
+                //Le user qui créé la sortie = organisateur
                     $file = $outingForm -> get('photo')-> getData();
                     if ($file != null) {
                         $outing->setPhoto(
-                            $fileUploader->upload($file, 'images/', $outing->getName())
+                            $fileUploader->upload($file, 'images/Outings/', $outing->getName())
                         );
                     }else {
-                        $outing->setPhoto('images/Outings/Outing-default.png');
+                        $outing->setPhoto('Outing-default.png');
                     }
                 $outing->setOrganiser($this->getUser());
                 //Organisateur est participant par défault
@@ -161,19 +156,18 @@ final class OutingController extends AbstractController
 
         if($action === 'enregistrer'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
-                if($outing->getPhoto() !== null){
-                    $file = $outingForm -> get('photo')-> getData();
-                    $outing -> setPhoto(
-                        $fileUploader->upload($file, 'images/Outings', $outing->getName())
+                $file = $outingForm -> get('photo')-> getData();
+                if ($file != null) {
+                    $outing->setPhoto(
+                        $fileUploader->upload($file, 'images/Outings/', $outing->getName())
                     );
                 }else {
-                    $outing -> setPhoto('Outing-default.png');
+                    $outing->setPhoto('Outing-default.png');
                 }
                 $outing->setOrganiser($this->getUser());
                 //Status = en création si on clic sur "enregistrer"
                 $published = $statusRepository->getStatusByName('En création');
                 $outing->setStatus($published);
-                $outing->
             $statusService->statusOpenClose($outing);
 
                 $entityManager->persist($outing);
@@ -225,6 +219,7 @@ final class OutingController extends AbstractController
         $entityManager->persist($outing);
         $entityManager->flush();
         return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+
 }
 
 #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
@@ -248,7 +243,6 @@ public function quitAnOuting(int $id,
 
     return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
 }
-
 
 }
 
