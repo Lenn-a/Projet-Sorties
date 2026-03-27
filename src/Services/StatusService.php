@@ -57,6 +57,8 @@ class StatusService
             $signupDate = $outing->getSignupDateLimit();
             $currentStatus = $outing->getStatus()->getLabel();
             $endOuting = $outing->getStartDateTime()->modify('+' . $outing->getDuration() . ' minutes');
+            $nbParticipants = count($outing->getParticipants());
+            $nbSignupMax = $outing->getNbSignupsMax();
 
             switch (true) {
                 case $outingDate <= $limitHistorisee:
@@ -71,7 +73,7 @@ class StatusService
                 case $now > $endOuting :
                     $finalStatus = $terminee;
                     break;
-                case $currentStatus == 'Clôturée' || $signupDate < $now:
+                case $nbParticipants == $nbSignupMax || $now > $signupDate:
                     $finalStatus = $cloturee;
                     break;
             }
