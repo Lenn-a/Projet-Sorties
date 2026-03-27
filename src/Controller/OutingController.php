@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Form\Model\OutingCancel;
 use App\Form\Model\OutingSearch;
+use App\Form\OutingCancelType;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
@@ -24,7 +26,10 @@ use function Symfony\Component\Clock\now;
 final class OutingController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(OutingRepository $outingRepository, OutingSearch $outingSearch, OutingSearchType $outingSearchType, Request $request, StatusService $statusService): Response
+    public function list(
+        OutingRepository $outingRepository,
+        Request $request,
+        StatusService $statusService): Response
     {
         $outingSearch = new OutingSearch();
         // Instance and handling of search/filter form on Outings list page
@@ -59,8 +64,9 @@ final class OutingController extends AbstractController
 
     #[Route('/{id}', name: 'details', requirements: ['id' => '\d+'])]
     public function details(
-    int $id,
-    OutingRepository $outingRepository
+        int $id,
+        OutingRepository $outingRepository,
+        Request $request,
     ): Response {
         $outing = $outingRepository->find($id);
 
@@ -68,8 +74,20 @@ final class OutingController extends AbstractController
             throw $this->createNotFoundException("Oups ! Activité non trouvée !");
         }
 
+        $outingCancel = new OutingCancel();
+        $outingCancelForm = $this->createForm(OutingCancelType::class, $outingCancel);
+        $outingCancelForm->handleRequest($request);
+
+        if ($outingCancelForm->isSubmitted() && $outingCancelForm->isValid()) {
+            return $this->redirectToRoute('outing_cancel', ['id' => $id]);
+        }
+
+        dump($outingCancel);
+
         return $this->render('outing/details.html.twig', [
-            'outing' => $outing
+            'outing' => $outing,
+            'outingCancelForm' => $outingCancelForm,
+            'outingCancel' => $outingCancel,
         ]);
     }
 
@@ -78,7 +96,7 @@ final class OutingController extends AbstractController
         int $id,
         OutingRepository $outingRepository,
         StatusService $statusService,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) : Response {
         $outing = $outingRepository->find($id);
 
