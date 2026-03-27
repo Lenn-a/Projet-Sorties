@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    <div><img src="{{ asset('images/PFP/default_pfp.png') }}" alt="{{ user.username }}" class="profilePic"></div>
+
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id === user.id %}
+        <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
         <h1>Mon profil</h1>
         {{ form_start(userForm) }}
         {{ form_widget(userForm) }}
@@ -15,6 +16,7 @@
         {{ form_end(userForm) }}
     {% else %}
     <div>
+        <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
         <h1>{{ user.username }}</h1>
         <div>
             <div>Prénom : {{ user.firstname }}</div>
