@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Form\Model\OutingCancel;
 use App\Form\Model\OutingSearch;
+use App\Form\OutingCancelType;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
@@ -24,7 +26,10 @@ use function Symfony\Component\Clock\now;
 final class OutingController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(OutingRepository $outingRepository, OutingSearch $outingSearch, OutingSearchType $outingSearchType, Request $request, StatusService $statusService): Response
+    public function list(
+        OutingRepository $outingRepository,
+        Request $request,
+        StatusService $statusService): Response
     {
         $statusService->setStatusByDate();
 
@@ -42,9 +47,11 @@ final class OutingController extends AbstractController
             if ($outingSearch->getOutingPassed() === true) {
                 $outingSearch->setCurrentDateTime(new \DateTime());
             }
+            $outings = $outingRepository->findAllPublishedOutings($outingSearch);
         } else {
             $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
+
 
 
         return $this->render('outing/list.html.twig', [
@@ -55,44 +62,73 @@ final class OutingController extends AbstractController
 
     #[Route('/{id}', name: 'details', requirements: ['id' => '\d+'])]
     public function details(
-    int $id,
-    OutingRepository $outingRepository,
-    UserRepository $userRepository,
+        int $id,
+        OutingRepository $outingRepository,
+        Request $request,
+        StatusService $statusService,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
     ): Response {
         $outing = $outingRepository->find($id);
         $user = $userRepository->findAll($id);
 
+        if(!$outing){
+            throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
+        }
+
+        // CANCELLATION of an OUTING (ANNULATION)
+        $outingCancel = new OutingCancel();
+        $outingCancelForm = $this->createForm(OutingCancelType::class, $outingCancel);
+        $outingCancelForm->handleRequest($request);
+
+        if ($outingCancelForm->isSubmitted() && $outingCancelForm->isValid()) {
+            $statusService->setStatusWithName($outing, 'Annulée');
+
+            $outing->setOutingInfo($outing->getOutingInfo() . ' ' . $outing->getStatus() . ' Motif : ' . $outingCancel->getCancelMotive());
+
+            $entityManager->persist($outing);
+            $entityManager->flush();
+        }
+
+//        if ($outing->getOrganiser() !== $this->getUser()) {
+//            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+//            return $this->redirectToRoute('outing_list');
+//        }
+
         return $this->render('outing/details.html.twig', [
             'outing' => $outing,
             'users' => $user,
+            'outingCancelForm' => $outingCancelForm,
+            'outingCancel' => $outingCancel,
         ]);
     }
 
-    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-    public function delete(
-        int $id,
-        OutingRepository $outingRepository,
-        StatusService $statusService,
-        EntityManagerInterface $entityManager
-    ) : Response {
-        $outing = $outingRepository->find($id);
-
-        if(!$outing){
-            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-        }
-
-        if ($outing->getOrganiser() !== $this->getUser()) {
-            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
-            return $this->redirectToRoute('outing_list');
-        }
-
-        $statusService->setStatusWithName($outing, 'Annulée');
-
-        $entityManager->persist($outing);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('outing_details', ['id' => $id]);
-    }
+//    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
+//    public function delete(
+//        int $id,
+//        OutingRepository $outingRepository,
+//        StatusService $statusService,
+//        OutingCancel $outingCancel,
+//        EntityManagerInterface $entityManager,
+//    ) : Response {
+//        $outing = $outingRepository->find($id);
+//
+////        if(!$outing){
+////            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
+////        }
+////
+////        if ($outing->getOrganiser() !== $this->getUser()) {
+////            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+////            return $this->redirectToRoute('outing_list');
+////        }
+////
+////        $statusService->setStatusWithName($outing, 'Annulée');
+////
+////        $entityManager->persist($outing);
+////        $entityManager->flush();
+//
+//        return $this->redirectToRoute('outing_details', ['id' => $id]);
+//    }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(

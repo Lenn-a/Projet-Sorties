@@ -16,21 +16,24 @@
         <div>Description et infos : {{ outing.outingInfo }}</div>
         <div>Campus : {{ outing.campus }}</div>
         <div>Localisation : {{ outing.location }}</div>
+        {% if outing.status.label !== "Annulée" %}
         <div>Status : {{ outing.status }}</div>
+        {% endif %}
+
         <div>
-            {% if app.user == outing.organiser %}
-                {% if outing.status.label != "Annulée" %}
-                    <a href="{{ path('outing_cancel', {'id': outing.id}) }}"
-                       onclick="return confirm('Veux-tu vraiment annuler cette sortie ? Cette action est irréversible.')">
-                        <button>Annuler</button>
-                    </a>
-                    {% if outing.status == "En création" %}
-                        <a href="{{ path('outing_create', {'id': outing.id}) }}"
-                           onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')">
-                            <button>Modifier</button>
-                        </a>
-                    {% endif %}
+        {% if app.user == outing.organiser %}
+            {% if outing.status.label != "Annulée" %}
+                <div class="cancel-form-div" style="display: none">
+                    {{ form_start(outingCancelForm) }}
+                    {{ form_widget(outingCancelForm) }}
+                        <button type="submit" class="btn">Valider</button>
+                    {{ form_end(outingCancelForm) }}
+                </div>
+                <button class="cancel-form-trigger" style="display: block" style="background-color: #5B21B6">Annuler</button>
+                {% if outing.status == "En création" %}
+                    <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
                 {% endif %}
+            {% endif %}
 
             {% elseif outing.participants.contains(app.user) %}
                 <div class="button-space">

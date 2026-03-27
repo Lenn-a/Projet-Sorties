@@ -166,9 +166,10 @@ div.outing-search form {
     flex-direction: row;
     justify-content: space-between;
     max-height: 250px;
-    max-width: 100%;
+    max-width: 950px;
     font-size: 16px;
     margin-bottom: 25px;
+    justify-self: center;
 }
 
 .outing-search-criteria {
@@ -207,8 +208,9 @@ div.outing-search-checkbox {
 
 div.outing-search-checkbox div {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row-reverse;
+    justify-content: left;
+    min-width: 295px;
 }
 
 div#outing_search_outingFilters {
@@ -227,6 +229,22 @@ div#outing_search_outingFilters {
     align-self: anchor-center;
     font-size: 16px;
     margin: 3vh;
+}
+
+li#outing_search_startSearchDate_error1 {
+    color: #aa0505;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    min-width: 200px;
+}
+
+li#outing_search_endSearchDate_error1 {
+    color: #aa0505;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    min-width: 200px;
 }
 
 
