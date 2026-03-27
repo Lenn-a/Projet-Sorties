@@ -6,6 +6,7 @@ use App\Entity\Outing;
 use App\Form\Model\OutingSearch;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,19 +41,19 @@ class OutingRepository extends ServiceEntityRepository
 //            ->orWhere('status.label = :encours')->setParameter('encours', 'En cours')
 //            ->orWhere('status.label = :cloturee')->setParameter('cloturee', 'Clôturée')
 //            ->orWhere('status.label = :annulee')->setParameter('annulee', 'Annulée');
-
+        // Filter outings by CAMPUS
         if ($outingSearch->getCampus()) {
             $queryBuilder
                 ->leftJoin('o.campus', 'campus')
                 ->addSelect('campus')
                 ->andWhere('o.campus = :campus')->setParameter('campus', $outingSearch->getCampus());
         }
-
+        // Filter outings by NAME
         if ($outingSearch->getName()) {
             $queryBuilder
                 ->andWhere('o.name LIKE :name')->setParameter('name', '%' . $outingSearch->getName() . '%');
         }
-
+        // Filter outings by DATE
         if ($outingSearch->getStartSearchDate()) {
             $queryBuilder
                 ->andWhere('o.startDateTime >= :startSearchDate')->setParameter('startSearchDate', $outingSearch->getStartSearchDate());
@@ -62,17 +63,27 @@ class OutingRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('o.startDateTime <= :endSearchDate')->setParameter('endSearchDate', $outingSearch->getEndSearchDate());
         }
-
-        if ($outingSearch->getConnectedUser()) {
-//            dd($outingSearch->getConnectedUsername());
+        // Filter outings by ORGANISER
+        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingOrganiser()) {
             $queryBuilder
                 ->andWhere('o.organiser = :organiser')->setParameter('organiser', $outingSearch->getConnectedUser());
         }
+        // Filter outings by PARTICIPANT
+        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingParticipant()) {
+            $queryBuilder
+                ->andWhere(':participant MEMBER OF o.participants')->setParameter('participant', $outingSearch->getConnectedUser());
+        }
+        // Filter outings by NOT PARTICIPANT
+        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingNotParticipant()) {
+            $queryBuilder
+                ->andWhere(':participant NOT MEMBER OF o.participants')->setParameter('participant', $outingSearch->getConnectedUser());
+        }
 
-//        if ($outingSearch->getOutingFilters()) {
-//            $queryBuilder
-//                ->andWhere('o.organiser LIKE :outingFilters')->setParameter('outingFilters', '%' . $outingSearch->getOutingFilters() . '%');
-//        }
+        // Filter outings by PASSED DATE
+        if ($outingSearch->getOutingPassed()) {
+            $queryBuilder
+                ->andWhere('DATE_ADD(o.startDateTime, o.duration, \'MINUTE\') < :passed')->setParameter('passed', $outingSearch->getCurrentDateTime());
+        }
 
         $queryBuilder->orderBy('o.startDateTime', 'ASC');
 
