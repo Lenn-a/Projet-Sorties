@@ -11,8 +11,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,12 +24,17 @@ class OutingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void{
         $builder
             ->add('name', TextType::class, [
-                'label'=>'your outing name',
+                'label'=>'Nom de la sortie*',
+                'attr' => [
+                    'placeholder' => 'Ma chouette sortie',
+                ],
             ])
             ->add('startDateTime', DateTimeType::class, [
+                'label' => 'Date et heure de début*',
                 'widget' => 'single_text',
             ])
             ->add('duration', ChoiceType::class, [
+                'label' => 'Durée*',
                 'choices' => [
                     '30 minutes' => 30,
                     '1 heure' => 60,
@@ -42,15 +47,23 @@ class OutingType extends AbstractType
                 ]
             ])
             ->add('signUpDateLimit', DateTimeType::class, [
+                'label' => 'Date limite d\'inscription*',
                 'widget' => 'single_text',
             ])
-            ->add('nbSignupsMax', TextType::class, [
-                'label'=>'Number of sign up max',
+            ->add('nbSignupsMax', IntegerType::class, [
+                'label'=>'Nombre de places (max.)',
+                'attr' => [
+                    'placeholder' => 'ex. 5',
+                ],
             ])
             ->add('outingInfo', TextareaType::class, [
-                'label'=>'Your outing infos',
+                'label'=>'Déscription et informations',
+                'attr' => [
+                    'placeholder' => 'Soirée inoubliable...',
+                ],
             ])
             ->add('campus', EntityType::class, [
+                'label' => 'Campus*',
                 'class' => Campus::class,
                 'choice_label' => 'name',
                 'query_builder' => function (CampusRepository $campusRepository) {
@@ -58,15 +71,16 @@ class OutingType extends AbstractType
                 }
             ])
             ->add('location', EntityType::class, [
-                'label'=>'Your location',
+                'label'=>'Lieu de la sortie*',
                 'class' => Location::class,
                 'choice_label' => 'name',
+                'placeholder' => 'Sélectionner un lieu',
                 'query_builder' => function (LocationRepository $locationRepository) {
                 return $locationRepository->createQueryBuilder('l');
                 }
             ])
             ->add('photo', FileType::class, [
-                'label' => 'Photo',
+                'label' => 'Photo (facultatif)',
             ])
 ;
     }

@@ -19,31 +19,40 @@ class Outing
 
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Veuillez donner un nom à votre activité')]
-    #[Assert\Length(max: 255, maxMessage: 'Trop long !')]
+    #[Assert\NotBlank(message: 'Veuillez donner un nom à votre activité.')]
+    #[Assert\Length(min: 3, max: 255,
+        minMessage: 'Le nom de votre sortie doit contenir entre 3 et 255.',
+        maxMessage: 'Le nom de votre sortie doit contenir entre 3 et 255.')]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veuillez saisir une date')]
+    #[Assert\NotBlank(message: 'Veuillez sélectionner une date.')]
+    #[Assert\Expression(
+        "value > (new DateTime('+60 minutes'))",
+        message: "La sortie doit commencer dans au moins une heure."
+    )]
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veuillez saisir une durée')]
+    #[Assert\NotBlank(message: 'Veuillez sélectionner une durée.')]
     private ?int $duration = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veuillez saisir une date')]
+    #[Assert\NotBlank(message: 'Veuillez sélectionner une date.')]
+    #[Assert\LessThan(propertyPath: "startDateTime", message: "La date limite d'inscription doit préceder le début de la sortie.")]
     private ?\DateTime $signupDateLimit = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\NotBlank(message: 'Veuillez indiquer le nombre de participants maximum')]
+    #[Assert\NotBlank(message: 'Veuillez indiquer le nombre de participants maximum.')]
+    #[Assert\GreaterThanOrEqual(value: 3, message: "Le nombre de places ne peut pas être inférieur à 3.")]
     private ?int $nbSignupsMax = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(max: 255, maxMessage: 'Trop long !')]
+    #[Assert\Length(max: 255, maxMessage: 'Votre déscription ne doit pas dépasser 255 caractères.')]
     private ?string $outingInfo = null;
 
     #[ORM\ManyToOne(inversedBy: 'outing')]
+    #[Assert\NotBlank(message: 'Veuillez sélectionner un lieu de sortie.')]
     private ?Location $location = null;
 
     #[ORM\ManyToOne(inversedBy: 'outings')]

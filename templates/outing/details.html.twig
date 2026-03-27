@@ -11,19 +11,20 @@
         <div>Organisateur : <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
         <div>Date et heure : {{ outing.startDateTime | date('d/m/Y H:i') }}</div>
         <div>Date limite d'inscription : {{ outing.signupDateLimit | date('d/m/Y H:i') }}</div>
-        <div>Nombre de place : {{ outing.nbSignupsMax }}</div>
+        <div>Nombre de places : {{ outing.nbSignupsMax }}</div>
         <div>Durée : {{ outing.duration }}</div>
         <div>Description et infos : {{ outing.outingInfo }}</div>
         <div>Campus : {{ outing.campus }}</div>
-        <div>Localisation : {{ outing.location }}</div>
+        <div>Lieu : {{ outing.location }}</div>
         {% if outing.status.label !== "Annulée" %}
-        <div>Status : {{ outing.status }}</div>
+        <div>Statut : {{ outing.status }}</div>
         {% endif %}
 
         <div>
         {% if app.user == outing.organiser %}
             {% if outing.status.label != "Annulée" %}
                 <div class="cancel-form-div" style="display: none">
+                    <h3 id="cancel-motive-prompt">Veuillez donner un motif d'annulation <span class="required-motive">(obligatoire)</span></h3>
                     {{ form_start(outingCancelForm) }}
                     {{ form_widget(outingCancelForm) }}
                         <button type="submit" class="btn">Valider</button>
