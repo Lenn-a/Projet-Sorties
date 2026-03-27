@@ -121,7 +121,8 @@ body {
 .profilePic {
     display: flex;
     border-radius: 100%;
-    max-width: 25vh;
+    width: 25vh;
+    height: 25vh;
     justify-self:center;
 }
 

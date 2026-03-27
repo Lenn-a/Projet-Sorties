@@ -50,7 +50,7 @@ class UserType extends AbstractType
                 'choice_label' => 'name',
             ])
             ->add('photo', FileType::class, [
-                'label' => 'Photo du profil',
+                'label' => 'Photo de profil',
                 'mapped' => false,
             ]);
     }

@@ -84,6 +84,7 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_USER'])
                 ->setActive(true)
                 ->setCampus($faker->randomElement($campusList))
+                ->setPhoto('default_pfp.png')
             ;
             $manager->persist($user);
         }
@@ -97,6 +98,7 @@ class AppFixtures extends Fixture
             ->setRoles(['ROLE_ADMIN'])
             ->setActive(true)
             ->setCampus($faker->randomElement($campusList))
+            ->setPhoto('default_pfp.png')
             ;
         $manager->persist($beepboop);
         $manager->flush();
@@ -122,6 +124,7 @@ class AppFixtures extends Fixture
                 ->setLocation($faker->randomElement($locationList))
                 ->setOrganiser($faker->randomElement($usersList))
                 ->setCampus($faker->randomElement($campusList))
+                ->setPhoto('Outing-default.png')
             ;
             /////////////////////Participants/////////////////////
             //Make the organiser a participant :
