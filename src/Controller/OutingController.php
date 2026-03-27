@@ -50,16 +50,15 @@ final class OutingController extends AbstractController
     #[Route('/{id}', name: 'details', requirements: ['id' => '\d+'])]
     public function details(
     int $id,
-    OutingRepository $outingRepository
+    OutingRepository $outingRepository,
+    UserRepository $userRepository,
     ): Response {
         $outing = $outingRepository->find($id);
-
-        if(!$outing){
-            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-        }
+        $user = $userRepository->findAll($id);
 
         return $this->render('outing/details.html.twig', [
-            'outing' => $outing
+            'outing' => $outing,
+            'users' => $user,
         ]);
     }
 
@@ -145,7 +144,6 @@ final class OutingController extends AbstractController
                 //Status = en création si on clic sur "enregistrer"
                 $published = $statusRepository->getStatusByName('En création');
                 $outing->setStatus($published);
-                $outing->
             $statusService->statusOpenClose($outing);
 
                 $entityManager->persist($outing);
@@ -197,6 +195,7 @@ final class OutingController extends AbstractController
         $entityManager->persist($outing);
         $entityManager->flush();
         return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+
 }
 
 #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
@@ -220,7 +219,6 @@ public function quitAnOuting(int $id,
 
     return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
 }
-
 
 }
 
