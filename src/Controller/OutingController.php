@@ -31,17 +31,20 @@ final class OutingController extends AbstractController
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
-        // IF "Je suis organisateur", "Je suis inscrit" or "Je ne suis pas inscrit" CHECKED
-        if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
-            $outingSearch->setConnectedUser($this->getUser());
-        }
-        // IF "Sorties passées" CHECKED
-        if ($outingSearch->getOutingPassed() === true) {
-            $outingSearch->setCurrentDateTime(new \DateTime());
+        if ($outingSearchForm->isSubmitted() && $outingSearchForm->isValid()) {
+            // IF "Je suis organisateur", "Je suis inscrit" or "Je ne suis pas inscrit" CHECKED
+            if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
+                $outingSearch->setConnectedUser($this->getUser());
+            }
+            // IF "Sorties passées" CHECKED
+            if ($outingSearch->getOutingPassed() === true) {
+                $outingSearch->setCurrentDateTime(new \DateTime());
+            }
 
+            $outings = $outingRepository->findAllPublishedOutings($outingSearch);
+        } else {
+            $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
-
-        $outings = $outingRepository->findAllPublishedOutings($outingSearch);
 
         foreach ($outings as $outing) {
             $statusService->setStatusByDate($outing);

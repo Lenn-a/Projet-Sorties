@@ -4,6 +4,7 @@ namespace App\Form\Model;
 
 use App\Entity\Campus;
 use App\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class OutingSearch
 {
@@ -11,8 +12,10 @@ class OutingSearch
 
     private ?string $name = null;
 
+    #[Assert\LessThan(propertyPath: "endSearchDate", message: "Date doit preceder la date de fin.")]
     private ?\DateTime $startSearchDate = null;
 
+    #[Assert\GreaterThan(propertyPath: "startSearchDate", message: "Date doit suivre la date de début.")]
     private ?\DateTime $endSearchDate = null;
 
     private ?bool $outingOrganiser = null;
