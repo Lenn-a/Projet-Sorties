@@ -20,24 +20,24 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Pseudo',
+                'label' => 'Pseudo*',
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'Prénom*',
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'Nom*',
             ])
             ->add('phone', TextType::class, [
-                'label' => 'Téléphone',
+                'label' => 'Téléphone*',
             ])
             ->add('email', TextType::class, [
-                'label' => 'Mail',
+                'label' => 'Mail*',
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmation mot de passe'],
+                'first_options'  => ['label' => 'Mot de passe*'],
+                'second_options' => ['label' => 'Confirmation du mot de passe*'],
                 'mapped' => false,
                 'constraints' => [
                     new Assert\Regex(
@@ -46,11 +46,12 @@ class UserType extends AbstractType
                 ]
             ])
             ->add('campus', EntityType::class, [
+                'label' => 'Campus*',
                 'class' => Campus::class,
                 'choice_label' => 'name',
             ])
             ->add('photo', FileType::class, [
-                'label' => 'Photo de profil',
+                'label' => 'Photo de profil (facultatif)',
                 'mapped' => false,
             ]);
     }

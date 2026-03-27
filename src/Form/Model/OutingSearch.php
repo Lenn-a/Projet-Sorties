@@ -12,10 +12,10 @@ class OutingSearch
 
     private ?string $name = null;
 
-    #[Assert\LessThan(propertyPath: "endSearchDate", message: "Date doit preceder la date de fin.")]
+    #[Assert\LessThan(propertyPath: "endSearchDate", message: "La date doit préceder la date de fin.")]
     private ?\DateTime $startSearchDate = null;
 
-    #[Assert\GreaterThan(propertyPath: "startSearchDate", message: "Date doit suivre la date de début.")]
+    #[Assert\GreaterThan(propertyPath: "startSearchDate", message: "La date doit suivre la date de début.")]
     private ?\DateTime $endSearchDate = null;
 
     private ?bool $outingOrganiser = null;

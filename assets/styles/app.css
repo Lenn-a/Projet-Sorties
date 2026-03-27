@@ -166,7 +166,7 @@ div.outing-search form {
     flex-direction: row;
     justify-content: space-between;
     max-height: 250px;
-    max-width: 950px;
+    max-width: 1000px;
     font-size: 16px;
     margin-bottom: 25px;
     justify-self: center;
@@ -192,6 +192,10 @@ div.outing-search form {
     margin-bottom: 0;
     padding-bottom: 0;
     padding-top: 0;
+}
+
+div.outing-search-criteria div label {
+    margin-right: 10px;
 }
 
 div.outing-search-criteria div {
@@ -245,6 +249,27 @@ li#outing_search_endSearchDate_error1 {
     margin: 0;
     padding: 0;
     min-width: 200px;
+}
+
+/* Tout formulaire */
+.required-field {
+    font-style: italic;
+    justify-self: flex-end;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Formulaire d'annulation */
+#cancel-motive-prompt {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.required-motive {
+    font-style: italic;
+    justify-self: flex-end;
+    font-size: 14px;
 }
 
 

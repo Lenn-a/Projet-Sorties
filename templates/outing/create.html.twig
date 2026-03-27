@@ -6,6 +6,7 @@
 
 {% block body %}
         <h1>Créer une sortie</h1>
+        <p class="required-field">* champs requis</p>
         {{ form_start(outingForm) }}
         {{ form_widget(outingForm) }}
         <button type="submit" name="action" value="publier">Publier</button>
