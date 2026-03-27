@@ -4,8 +4,6 @@ namespace App\Form\Model;
 
 use App\Entity\Campus;
 use App\Entity\User;
-use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class OutingSearch
 {
@@ -27,7 +25,7 @@ class OutingSearch
 
     private ?User $connectedUser = null;
 
-//    private ?array $outingFilters = null;
+    private ?\DateTime $currentDateTime = null;
 
     public function getCampus(): ?Campus
     {
@@ -119,13 +117,13 @@ class OutingSearch
         $this->connectedUser = $connectedUser;
     }
 
-//    public function getOutingFilters(): ?array
-//    {
-//        return $this->outingFilters;
-//    }
-//
-//    public function setOutingFilters(?array $outingFilters): void
-//    {
-//        $this->outingFilters = $outingFilters;
-//    }
+    public function getCurrentDateTime(): ?\DateTime
+    {
+        return $this->currentDateTime;
+    }
+
+    public function setCurrentDateTime(?\DateTime $currentDateTime): void
+    {
+        $this->currentDateTime = $currentDateTime;
+    }
 }
