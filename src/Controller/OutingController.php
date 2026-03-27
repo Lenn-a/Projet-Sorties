@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use function Symfony\Component\Clock\now;
 
 
 #[Route('/outing', name: 'outing_')]
@@ -25,21 +26,26 @@ final class OutingController extends AbstractController
     #[Route('', name: 'list')]
     public function list(OutingRepository $outingRepository, OutingSearch $outingSearch, OutingSearchType $outingSearchType, Request $request, StatusService $statusService): Response
     {
+        $statusService->setStatusByDate();
+
         $outingSearch = new OutingSearch();
+        // Instance and handling of search/filter form on Outings list page
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
-        if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
-            $outingSearch->setConnectedUser($this->getUser());
-//            dd($outingSearch);
+        if ($outingSearchForm->isSubmitted() && $outingSearchForm->isValid()) {
+            // IF "Je suis organisateur", "Je suis inscrit" or "Je ne suis pas inscrit" CHECKED
+            if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
+                $outingSearch->setConnectedUser($this->getUser());
+            }
+            // IF "Sorties passées" CHECKED
+            if ($outingSearch->getOutingPassed() === true) {
+                $outingSearch->setCurrentDateTime(new \DateTime());
+            }
+        } else {
+            $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
 
-        $outings = $outingRepository->findAllPublishedOutings($outingSearch);
-
-        foreach ($outings as $outing) {
-            $statusService->setStatusByDate($outing);
-        }
-//        $outings = $outingRepository->findOutingsPastMonth();
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings,
@@ -92,7 +98,7 @@ final class OutingController extends AbstractController
     public function create(
         EntityManagerInterface $entityManager,
         StatusRepository $statusRepository,
-        UserRepository $userRepository,
+        FileUploader $fileUploader,
         StatusService $statusService,
         Request $request,
     ): Response {
@@ -105,14 +111,14 @@ final class OutingController extends AbstractController
 
         if ($action === 'publier'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
-                //Le user qui créer la sortie = organisateur
+                //Le user qui créé la sortie = organisateur
                     $file = $outingForm -> get('photo')-> getData();
                     if ($file != null) {
                         $outing->setPhoto(
-                            $fileUploader->upload($file, 'images/', $outing->getName())
+                            $fileUploader->upload($file, 'images/Outings/', $outing->getName())
                         );
                     }else {
-                        $outing->setPhoto('images/Outings/Outing-default.png');
+                        $outing->setPhoto('Outing-default.png');
                     }
                 $outing->setOrganiser($this->getUser());
                 //Organisateur est participant par défault
@@ -132,13 +138,13 @@ final class OutingController extends AbstractController
 
         if($action === 'enregistrer'){
             if($outingForm->isSubmitted() && $outingForm->isValid()){
-                if($outing->getPhoto() !== null){
-                    $file = $outingForm -> get('photo')-> getData();
-                    $outing -> setPhoto(
-                        $fileUploader->upload($file, 'images/Outings', $outing->getName())
+                $file = $outingForm -> get('photo')-> getData();
+                if ($file != null) {
+                    $outing->setPhoto(
+                        $fileUploader->upload($file, 'images/Outings/', $outing->getName())
                     );
                 }else {
-                    $outing -> setPhoto('Outing-default.png');
+                    $outing->setPhoto('Outing-default.png');
                 }
                 $outing->setOrganiser($this->getUser());
                 //Status = en création si on clic sur "enregistrer"

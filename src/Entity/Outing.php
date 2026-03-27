@@ -19,24 +19,24 @@ class Outing
 
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Veyez donner un nom à votre activité')]
+    #[Assert\NotBlank(message: 'Veuillez donner un nom à votre activité')]
     #[Assert\Length(max: 255, maxMessage: 'Trop long !')]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veyez saisir une date')]
+    #[Assert\NotBlank(message: 'Veuillez saisir une date')]
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veyez saisir une durée')]
+    #[Assert\NotBlank(message: 'Veuillez saisir une durée')]
     private ?int $duration = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veyez saisir une date')]
+    #[Assert\NotBlank(message: 'Veuillez saisir une date')]
     private ?\DateTime $signupDateLimit = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\NotBlank(message: 'veyez indiquer le nombre de participant maximum')]
+    #[Assert\NotBlank(message: 'Veuillez indiquer le nombre de participants maximum')]
     private ?int $nbSignupsMax = null;
 
     #[ORM\Column(length: 255, nullable: true)]
