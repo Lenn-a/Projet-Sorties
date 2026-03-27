@@ -22,7 +22,7 @@ class OutingSearchType extends AbstractType
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'name',
-                'placeholder' => 'Selectionner',
+                'placeholder' => 'Sélectionner',
             ])
             ->add('name', TextType::class, [
                 'label' => 'Le nom de la sortie contient :',
@@ -35,18 +35,6 @@ class OutingSearchType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'et',
             ])
-//            ->add('outingFilters', ChoiceType::class, [
-//                'label' => false,
-//                'choices' => [
-//                    'Sorties dont je l\'organisateur/trice' => 'organiser',
-//                    'Sorties auxquelles je suis inscrit/e' => 'participant',
-//                    'Sorties auxquelles je ne suis pas inscrit/e' => 'notParticipant',
-//                    'Sorties passées' => 'passed'
-//                ],
-//                'multiple' => true,
-//                'expanded' => true,
-//            ]);
-
             ->add('outingOrganiser', CheckboxType::class, [
                 'label' => 'Sorties dont je l\'organisateur/trice',
             ])
