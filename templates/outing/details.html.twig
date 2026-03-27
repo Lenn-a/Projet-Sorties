@@ -8,7 +8,8 @@
     <div class="outing-details">
         <h1>Détails d'une sortie</h1>
         <h2>{{ outing.name }}</h2>
-        <div>Organisateur : <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
+        <div>Organisateur : <a
+                href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
         <div>Date et heure : {{ outing.startDateTime | date('Y/m/d H:i') }}</div>
         <div>Date limite d'inscription : {{ outing.signupDateLimit | date('Y/m/d') }}</div>
         <div>Nombre de place : {{ outing.nbSignupsMax }}</div>
@@ -18,22 +19,46 @@
         <div>Localisation : {{ outing.location }}</div>
         <div>Status : {{ outing.status }}</div>
         <div>
-        {% if app.user == outing.organiser %}
-            {% if outing.status.label != "Annulée" %}
-                <a href="{{ path('outing_cancel', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler cette sortie ? Cette action est irréversible.')"><button>Annuler</button></a>
-                {% if outing.status == "En création" %}
-                    <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
+            {% if app.user == outing.organiser %}
+                {% if outing.status.label != "Annulée" %}
+                    <a href="{{ path('outing_cancel', {'id': outing.id}) }}"
+                       onclick="return confirm('Veux-tu vraiment annuler cette sortie ? Cette action est irréversible.')">
+                        <button>Annuler</button>
+                    </a>
+                    {% if outing.status == "En création" %}
+                        <a href="{{ path('outing_create', {'id': outing.id}) }}"
+                           onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')">
+                            <button>Modifier</button>
+                        </a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
-        {% elseif outing.participants.contains(app.user) %}
-            <div class="button-space">
-                <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
-                <a href="{{ path('outing_quit', {'id': outing.id}) }}" onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')"><button>Se désister</button></a>
-            </div>
-        {% elseif outing.status.label == 'Ouverte' and outing.participants.count < outing.nbSignupsMax %}
-            <a href="{{ path('outing_participate', {'id':outing.id}) }}" onclick="return confirm('Participer à cette sortie ?')"><button>Participer</button></a>
-        {% endif %}
+            {% elseif outing.participants.contains(app.user) %}
+                <div class="button-space">
+                    <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
+                    <a href="{{ path('outing_quit', {'id': outing.id}) }}"
+                       onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">
+                        <button>Se désister</button>
+                    </a>
+                </div>
+            {% elseif outing.status.label == 'Ouverte' and outing.participants.count < outing.nbSignupsMax %}
+                <a href="{{ path('outing_participate', {'id':outing.id}) }}"
+                   onclick="return confirm('Participer à cette sortie ?')">
+                    <button>Participer</button>
+                </a>
+            {% endif %}
+        </div>
+        <h2>Liste des participants à la sortie {{ outing.name }}</h2>
+        <div class="participants-list">
+            {% for user in users %}
+                {% if outing.participants %}
+                    <div class="participants-details">
+                        <div>Nom : {{ user.firstname }}</div>
+                        <div>Prénom : {{ user.lastname }}</div>
+                        <div>Pseudo : {{ user.username }}</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
