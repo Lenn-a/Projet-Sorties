@@ -42,27 +42,19 @@ class StatusService
         $currentStatus = $outing->getStatus()->getLabel();
         $endOuting = $outing->getStartDateTime()->modify('+' . $outing->getDuration() . ' minutes');
         $statusLabel = 'Ouverte';
-//        if ($outing->getId() == 297) {
-//            dump($outingDate < $limitHistorisee);
-//            dump($currentStatus == 'Annulée');
-//            dump($outingDate > $now && $outingDate < $endOuting);
-//            dump($now > $endOuting);
-//            dump($currentStatus == 'Cloturée' || $signupDate < $now);
 
         switch (true) {
             case $currentStatus == 'En création' : $statusLabel = 'En création'; break;
             case $outingDate <= $limitHistorisee: $statusLabel = 'Historisée';break;
             case $currentStatus == 'Annulée' : $statusLabel = 'Annulée'; break;
-            case $outingDate > $now && $outingDate < $endOuting: $statusLabel = 'En cours';break;
-            case $now > $endOuting : $statusLabel = 'Terminée';break;
-            case $currentStatus == 'Cloturée' || $signupDate < $now: $statusLabel= 'Clôturée'; break;
+            case $outingDate > $now && $outingDate < $endOuting: $statusLabel = 'En cours'; break;
+            case $now > $endOuting : $statusLabel = 'Terminée'; break;
+            case $currentStatus == 'Clôturée' || $signupDate < $now: $statusLabel= 'Clôturée'; break;
         }
-
 
         $status = $this->repository->getStatusByName($statusLabel);
         $outing->setStatus($status);
         $this->entityManager->persist($outing);
         $this->entityManager->flush();
         }
-//    }
 }
