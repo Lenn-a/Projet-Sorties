@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use function Symfony\Component\Clock\now;
 
 
 #[Route('/outing', name: 'outing_')]
@@ -28,16 +29,10 @@ final class OutingController extends AbstractController
         $statusService->setStatusByDate();
 
         $outingSearch = new OutingSearch();
+        // Instance and handling of search/filter form on Outings list page
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
-        if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
-            $outingSearch->setConnectedUser($this->getUser());
-//            dd($outingSearch);
-        }
-        if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
-            $outingSearch->setConnectedUser($this->getUser());
-        }
         if ($outingSearchForm->isSubmitted() && $outingSearchForm->isValid()) {
             // IF "Je suis organisateur", "Je suis inscrit" or "Je ne suis pas inscrit" CHECKED
             if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
