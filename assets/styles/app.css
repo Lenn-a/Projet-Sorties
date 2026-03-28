@@ -1,5 +1,72 @@
 body {
+    /*background-color: #c7efff;*/
+    background-image: url('../images/base/temp-eniwhere-background.png');
+    background-position: top center;
+    background-repeat: repeat;
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+/*header {*/
+/*    background-color: #c7efff;*/
+/*    width: 100%;*/
+/*    height: fit-content;*/
+/*    border-radius: 5px;*/
+/*}*/
+
+a {
+    text-decoration: none;
+}
+
+.eniwhere-logo {
+    max-height: 55px;
+    margin: 15px 15px 0 15px;
+}
+
+.nav-div {
+    margin: 0 15px 0 15px;
+    font-size: 18px;
+    font-family: "Bangers", system-ui;
+    letter-spacing: 2px;
+}
+
+.main-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     background-color: #c7efff;
+    width: 100%;
+    height: fit-content;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+nav a {
+    color: #06369e;
+}
+
+nav a:hover{
+    color: #af0ca1;
+}
+
+#logout-link {
+    color: #c60a0a;
+}
+
+#logout-link:hover {
+    color: #af0ca1;
+}
+
+button {
+    background-color: #1a44a1;
+    color: white;
+    padding: 10px;
+}
+
+#outing-h1 {
+    font-family: "Bangers", system-ui;
+    letter-spacing: 3px;
 }
 /************************************/
 /************* CSS Lenn *************/
@@ -9,6 +76,7 @@ body {
     display: flex;
     flex-flow: wrap row;
     align-items: center;
+    background-color: #c7efff;
 }
 
 .outing-img {
@@ -54,13 +122,20 @@ body {
 .general-infos {
     font-size: 0.7rem;
     display: flex;
-    justify-self: flex-end;
-    padding: 1vh;
+    padding: 5px;
     justify-content: center;
+    align-self: center;
     flex-wrap: wrap;
-    max-width:15vw;
+    max-width:16vw;
+    height: fit-content;
     background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.general-infos p {
+    padding-bottom: 0;
+    margin-bottom: 5px;
 }
 
 .general-infos div {
@@ -166,10 +241,12 @@ div.outing-search form {
     flex-direction: row;
     justify-content: space-between;
     max-height: 250px;
-    max-width: 1000px;
+    width: 1200px;
     font-size: 16px;
     margin-bottom: 25px;
     justify-self: center;
+    background-color: #c7efff;
+    border-radius: 5px;
 }
 
 .outing-search-criteria {

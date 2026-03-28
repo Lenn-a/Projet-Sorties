@@ -11,6 +11,9 @@
         href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     >
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bebas+Neue&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Permanent+Marker&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     {% block stylesheets %}
     {% endblock %}
@@ -22,10 +25,23 @@
 </head>
 <div class="container">
     <body>
-    <div>
+    <div class="main-div">
         <header>
-            {% include 'views/nav/nav.html.twig' %}
+            <div class="header-div">
+                <a class="header-home-link" href="{{ path('outing_list') }}">
+                    <img class="eniwhere-logo" src="{{ asset('images/base/eniwhere-logo4.png') }}" alt="eniwhere-logo">
+                </a>
+            </div>
+            <div class="nav-div">
+                {% include 'views/nav/nav.html.twig' %}
+            </div>
         </header>
+        <div class="general-infos">
+            <p><strong>Date du jour : {{ "now" | date('d/m/Y') }}</strong></p>
+            {% if app.user %}
+                <p><strong>Participant : {{ app.user.username }}</strong></p>
+            {% endif %}
+        </div>
     </div>
     <main>
         {% for label, messages in app.flashes %}
