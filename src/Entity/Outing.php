@@ -55,7 +55,7 @@ class Outing
     #[Assert\NotBlank(message: 'Veuillez sélectionner un lieu de sortie.')]
     private ?Location $location = null;
 
-    #[ORM\ManyToOne(inversedBy: 'outings')]
+    #[ORM\ManyToOne(inversedBy: 'myOutings')]
     private ?User $organiser = null;
 
     /**
