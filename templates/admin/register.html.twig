@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ parent() }} | Inscriptions
+{% endblock %}
+
+{% block title %}
+    <div class="gen-div-format">
+        <h1>Inscriptions</h1>
+        {{ form_start(userRegistrationForm) }}
+        {{ form_widget(userRegistrationForm) }}
+        <button type="submit">Valider</button>
+        <button type="reset">Annuler</button>
+        {{ form_end(userRegistrationForm) }}
+    </div>
+{% endblock %}
+

@@ -6,6 +6,9 @@
                 <li><a href="{{ path('outing_create') }}">Création sortie</a></li>
                 <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Mon profil</a></li>
                 <li><a href="{{ path('outing_privateList', {'id': app.user.id}) }}">Mes sorties</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('admin_dashboard') }}">Admin</a></li>
+                {% endif %}
                 <li><a id="logout-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
             {% else %}
                 <li><a href="{{ path('app_login') }}">Connexion</a></li>
