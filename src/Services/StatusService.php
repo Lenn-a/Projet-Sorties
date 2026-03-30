@@ -43,40 +43,44 @@ class StatusService
         $outings = $this->outingRepository->outingsThatCanChange();
 
         $now = new \DateTime('now');
-        $limitHistorisee = new \DateTime('-1 month');
+        $limitHistorisee = $now->sub(new \DateInterval('P1M'));
         $ouverte = $this->repository->getStatusByName('Ouverte');
         $historisee = $this->repository->getStatusByName('Historisée');
         $annulee = $this->repository->getStatusByName('Annulée');
         $encours = $this->repository->getStatusByName('En cours');
         $terminee = $this->repository->getStatusByName('Terminée');
         $cloturee = $this->repository->getStatusByName('Clôturée');
-        $finalStatus = $ouverte;
+
 
         foreach ($outings as $outing) {
-            $outingDate = $outing->getStartDateTime();
+            $outingStart = $outing->getStartDateTime();
+
             $signupDate = $outing->getSignupDateLimit();
             $currentStatus = $outing->getStatus()->getLabel();
-            $endOuting = $outing->getStartDateTime()->modify('+' . $outing->getDuration() . ' minutes');
-            $nbParticipants = count($outing->getParticipants());
-            $nbSignupMax = $outing->getNbSignupsMax();
+            $maxParticipants = $outing->getNbSignupsMax();
+            $inscrits = $outing->getParticipants()->count();
 
+
+            $endOuting = date_add( $outing->getStartDateTime(), date_interval_create_from_date_string( $outing->getDuration() . 'minutes'));
+            $finalStatus = $ouverte;
             switch (true) {
-                case $outingDate <= $limitHistorisee:
+                case $outingStart < $limitHistorisee:
                     $finalStatus = $historisee;
                     break;
-                case $currentStatus == 'Annulée' :
+                case $currentStatus === 'Annulée' :
                     $finalStatus = $annulee;
                     break;
-                case $outingDate > $now && $outingDate < $endOuting:
+                case $now > $outingStart && $now < $endOuting:
                     $finalStatus = $encours;
                     break;
                 case $now > $endOuting :
                     $finalStatus = $terminee;
                     break;
-                case $nbParticipants == $nbSignupMax || $now > $signupDate:
+                case $inscrits >= $maxParticipants || $now >= $signupDate:
                     $finalStatus = $cloturee;
                     break;
             }
+
             $outing->setStatus($finalStatus);
             $this->entityManager->persist($outing);
         }
