@@ -1,5 +1,8 @@
+/**********************************/
+/********** GENERAL CSS **********/
+/*********************************/
+
 body {
-    /*background-color: #c7efff;*/
     background-image: url('../images/base/temp-eniwhere-background.png');
     background-position: top center;
     background-repeat: repeat;
@@ -8,42 +11,64 @@ body {
     font-family: "Roboto", sans-serif;
 }
 
-/*header {*/
-/*    background-color: #c7efff;*/
-/*    width: 100%;*/
-/*    height: fit-content;*/
-/*    border-radius: 5px;*/
-/*}*/
-
 a {
     text-decoration: none;
 }
 
+button {
+    background-color: #1a44a1;
+    color: white;
+    padding: 10px;
+}
+
+.gen-div-format {
+    background-color: #c7efff;
+    border-radius: 5px;
+    padding: 1vw 3vw;
+    margin-bottom: 3vh;
+}
+
+h1 {
+    margin-bottom: 0;
+}
+
+/* Tout FORMULAIRE */
+.required-field {
+    font-style: italic;
+    justify-self: flex-end;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Style de HEADER, FOOTER et NAV : */
 .eniwhere-logo {
     max-height: 55px;
-    margin: 15px 15px 0 15px;
+    margin-bottom: 15px;
 }
 
-.nav-div {
-    margin: 0 15px 0 15px;
+#nav-div {
     font-size: 18px;
-    font-family: "Bangers", system-ui;
-    letter-spacing: 2px;
+    font-family: "Google Sans", sans-serif;
+    letter-spacing: 1px;
 }
 
-.main-div {
+#main-div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color: #c7efff;
     width: 100%;
     height: fit-content;
-    border-radius: 5px;
     margin-bottom: 15px;
 }
 
 nav a {
     color: #06369e;
+    padding: 0;
+    margin-right: 15px;
+}
+
+#nav-div li {
+    padding: 0;
 }
 
 nav a:hover{
@@ -58,164 +83,6 @@ nav a:hover{
     color: #af0ca1;
 }
 
-button {
-    background-color: #1a44a1;
-    color: white;
-    padding: 10px;
-}
-
-#outing-h1 {
-    font-family: "Bangers", system-ui;
-    letter-spacing: 3px;
-}
-/************************************/
-/************* CSS Lenn *************/
-
-/*List of all outings : */
-.outingInList {
-    display: flex;
-    flex-flow: wrap row;
-    align-items: center;
-    background-color: #c7efff;
-}
-
-.outing-img {
-    background-color: #e5f9ff;
-    border-radius: 20px;
-    margin-right: 3vw;
-    margin-left: 3vw;
-}
-.outing-img img {
-    max-width: 20vw;
-}
-.outing-infos {
-    display: flex;
-    flex-flow: wrap column;
-    width: fit-content;
-}
-
-.outing-infos h4 {
-    margin-bottom: 0;
-}
-
-.outing-infos div {
-    margin-bottom: 1vh;
-    margin-top: 0;
-}
-
-.outing-infos div:first-child {
-    flex-flow: wrap column;
-    margin-bottom: 5vh;
-}
-
-.outing-infos button {
-    border-radius: 15px;
-    margin-right: 2vw;
-}
-
-.outing-date {
-    display: inline-block;
-}
-
-
-/*Box w/ current date & username*/
-.general-infos {
-    font-size: 0.7rem;
-    display: flex;
-    padding: 5px;
-    justify-content: center;
-    align-self: center;
-    flex-wrap: wrap;
-    max-width:16vw;
-    height: fit-content;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
-    margin-right: 15px;
-}
-
-.general-infos p {
-    padding-bottom: 0;
-    margin-bottom: 5px;
-}
-
-.general-infos div {
-    align-self: center;
-}
-
-
-.goodNews {
-    font-weight: bold;
-    color: #509e69;
-}
-
-.button-space {
-    display: flex;
-    flex-flow: wrap column;
-    margin: 1vh
-}
-
-.button-space a {
-    margin-top: 2vh;
-}
-
-/*Affichage selon le statut de la sortie*/
-.outing-status {
-    font-weight: bold;
-    text-align: center;
-    border-radius: 20px;
-    color: white;
-    max-width: 15vw;
-}
-
-.status-cancelled {
-    background-color: #911238;
-    border-radius: 20px;
-    padding: 0.75rem 1rem;
-}
-
-.status-toolate {
-    background-color: #123e91;
-    border-radius: 20px;
-    padding: 0.75rem 1rem;
-}
-
-.status-done {
-    background-color: #12914d;
-    border-radius: 20px;
-    padding: 0.75rem 1rem;
-}
-
-.widgets-space {
-    display: flex;
-    justify-content: space-between;
-}
-.widgets-space button {
-    margin:0
-}
-
-.profilePic {
-    display: flex;
-    border-radius: 100%;
-    width: 25vh;
-    height: 25vh;
-    justify-self:center;
-}
-
-/************* CSS Adrien ***********************/
-
-.participants-list{
-    margin-inline: 7rem;
-}
-.participants-details{
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 0.5rem;
-}
-
-/************* CSS Emilia *************/
 /* Style de messages FLASH et ERROR : */
 .flash {
     padding: 20px;
@@ -234,19 +101,28 @@ button {
     color: red;
 }
 
+/**********************************/
+/******** CONNECTION PAGE *********/
+/**********************************/
+
+.login-form-div {
+    padding: 15px;
+}
+
+/**********************************/
+/******** OUTING LIST PAGE ********/
+/**********************************/
+
 /* Style of OUTING SEARCH FORM : */
 
-div.outing-search form {
+#outing-search form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     max-height: 250px;
-    width: 1200px;
+    width: 100%;
     font-size: 16px;
-    margin-bottom: 25px;
     justify-self: center;
-    background-color: #c7efff;
-    border-radius: 5px;
 }
 
 .outing-search-criteria {
@@ -328,12 +204,151 @@ li#outing_search_endSearchDate_error1 {
     min-width: 200px;
 }
 
-/* Tout formulaire */
-.required-field {
-    font-style: italic;
-    justify-self: flex-end;
-    font-size: 14px;
-    margin: 0;
+/* List of ALL OUTINGS : */
+.outingInList {
+    display: flex;
+    flex-flow: wrap row;
+    align-items: center;
+    background-color: #c7efff;
+}
+
+.outing-img {
+    background-color: #e5f9ff;
+    border-radius: 20px;
+    margin-right: 3vw;
+    margin-left: 3vw;
+}
+.outing-img img {
+    max-width: 20vw;
+}
+.outing-infos {
+    display: flex;
+    flex-flow: wrap column;
+    width: fit-content;
+}
+
+.outing-infos h4 {
+    margin-bottom: 0;
+}
+
+.outing-infos div {
+    margin-bottom: 1vh;
+    margin-top: 0;
+}
+
+.outing-infos div:first-child {
+    flex-flow: wrap column;
+    margin-bottom: 5vh;
+}
+
+.outing-infos button {
+    border-radius: 15px;
+    margin-right: 2vw;
+}
+
+.outing-date {
+    display: inline-block;
+}
+
+/* Box w/ current DATE & USERNAME : */
+.general-infos {
+    font-size: 0.7rem;
+    display: flex;
+    padding: 5px;
+    justify-content: center;
+    align-self: center;
+    flex-wrap: wrap;
+    max-width:16vw;
+    height: fit-content;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.general-infos p {
+    padding-bottom: 0;
+    margin-bottom: 5px;
+}
+
+.general-infos div {
+    align-self: center;
+}
+
+
+.goodNews {
+    font-weight: bold;
+    color: #509e69;
+}
+
+.button-space {
+    display: flex;
+    flex-flow: wrap column;
+    margin: 1vh
+}
+
+.button-space a {
+    margin-top: 2vh;
+}
+
+/* Affichage selon le STATUT de la SORTIE : */
+.outing-status {
+    font-weight: bold;
+    text-align: center;
+    border-radius: 20px;
+    color: white;
+    max-width: 15vw;
+}
+
+.status-cancelled {
+    background-color: #911238;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
+.status-toolate {
+    background-color: #123e91;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
+.status-done {
+    background-color: #12914d;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
+.widgets-space {
+    display: flex;
+    justify-content: space-between;
+}
+.widgets-space button {
+    margin:0
+}
+
+.profilePic {
+    display: flex;
+    border-radius: 100%;
+    width: 25vh;
+    height: 25vh;
+    justify-self:center;
+}
+
+/**********************************/
+/******* OUTING DETAILS PAGE ******/
+/**********************************/
+
+
+/* List of PARTICIPANTS : */
+.participants-list{
+    margin-inline: 7rem;
+}
+.participants-details{
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.5rem;
 }
 
 /* Formulaire d'annulation */
@@ -349,5 +364,19 @@ li#outing_search_endSearchDate_error1 {
     font-size: 14px;
 }
 
+/**********************************/
+/******* CREATE OUTING PAGE *******/
+/**********************************/
 
-/************************************/
+
+/**********************************/
+/********** PROFILE PAGE **********/
+/**********************************/
+
+
+/**********************************/
+/******** MES SORTIES PAGE ********/
+/**********************************/
+
+#private-h1 {
+}

@@ -23,9 +23,13 @@ class OutingSearchType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionner',
+                'label' => 'Campus',
             ])
             ->add('name', TextType::class, [
-                'label' => 'Le nom de la sortie contient :',
+                'label' => 'Nom',
+                'attr' => [
+                    'placeholder' => 'Le nom contient...',
+                ],
             ])
             ->add('startSearchDate', DateType::class, [
                 'widget' => 'single_text',

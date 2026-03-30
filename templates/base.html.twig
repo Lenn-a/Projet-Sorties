@@ -25,14 +25,14 @@
 </head>
 <div class="container">
     <body>
-    <div class="main-div">
+    <div class="gen-div-format" id="main-div">
         <header>
             <div class="header-div">
                 <a class="header-home-link" href="{{ path('outing_list') }}">
                     <img class="eniwhere-logo" src="{{ asset('images/base/eniwhere-logo4.png') }}" alt="eniwhere-logo">
                 </a>
             </div>
-            <div class="nav-div">
+            <div id="nav-div">
                 {% include 'views/nav/nav.html.twig' %}
             </div>
         </header>

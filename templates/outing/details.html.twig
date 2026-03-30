@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <div class="outing-details">
+    <div class="gen-div-format" id="outing-details">
         <h1>Détails d'une sortie</h1>
         <h2>{{ outing.name }}</h2>
         <div>Organisateur : <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
@@ -51,6 +51,8 @@
                 </a>
             {% endif %}
         </div>
+    </div>
+    <div class="gen-div-format">
         <h2>Liste des participants à la sortie {{ outing.name }}</h2>
         <div class="participants-list">
             {% for user in users %}

@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+    <div class="gen-div-format">
         <h1>Créer une sortie</h1>
         <p class="required-field">* champs requis</p>
         {{ form_start(outingForm) }}
@@ -12,5 +13,6 @@
         <button type="submit" name="action" value="publier">Publier</button>
         <button type="submit" name="action" value="enregistrer">Enregistrer</button>
         {{ form_end(outingForm) }}
+    </div>
 {% endblock %}
 
