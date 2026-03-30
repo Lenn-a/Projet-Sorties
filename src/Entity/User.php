@@ -68,13 +68,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Outing>
      */
-    #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'organiser')]
+    #[ORM\ManyToMany(targetEntity: Outing::class, mappedBy: 'participants')]
     private Collection $outings;
+
+    #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'organiser')]
+    private Collection $myOutings;
 
     #[ORM\Column]
     private ?bool $active = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Campus::class, inversedBy: 'users')]
     private ?Campus $campus = null;
 
     public function __construct()
@@ -263,6 +266,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getMyOutings(): Collection
+    {
+        return $this->myOutings;
+    }
+
+    public function setMyOutings(Collection $myOutings): void
+    {
+        $this->myOutings = $myOutings;
     }
 
     public function getCampus(): ?Campus
