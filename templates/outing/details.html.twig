@@ -54,15 +54,12 @@
         <h2>Liste des participants à la sortie {{ outing.name }}</h2>
         <div class="participants-list">
             {% for user in users %}
-                {% if outing.participants %}
                     <div class="participants-details">
                         <div>Nom : {{ user.firstname }}</div>
                         <div>Prénom : {{ user.lastname }}</div>
                         <div>Pseudo : {{ user.username }}</div>
                     </div>
-                {% endif %}
             {% endfor %}
         </div>
     </div>
 {% endblock %}
-

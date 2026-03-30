@@ -27,10 +27,10 @@ class Outing
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Veuillez sélectionner une date.')]
-    #[Assert\Expression(
-        "value > (new DateTime('+60 minutes'))",
-        message: "La sortie doit commencer dans au moins une heure."
-    )]
+//    #[Assert\Expression(
+//        "value > (new DateTime('+60 minutes'))",
+//        message: "La sortie doit commencer dans au moins une heure."
+//    )]
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
