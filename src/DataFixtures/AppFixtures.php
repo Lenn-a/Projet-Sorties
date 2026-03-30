@@ -114,10 +114,10 @@ class AppFixtures extends Fixture
         for($i = 0; $i < 20; $i++) {
             $outing = new Outing();
             $outing->setName($faker->text(15))
-                ->setStartDateTime($faker->dateTimeBetween('now', '+1 years'))
+                ->setStartDateTime($faker->dateTimeBetween('-6 months', '+1 years'))
                 ->setDuration($faker->randomElement([30, 60, 90, 120, 150, 180, 210, 240, 270, 300]))
                 ;
-            $signuplimit = $outing->getStartDateTime()->modify('-1 days');
+            $signuplimit = $outing->getStartDateTime()->sub(new \DateInterval('P1D'));
             $outing->setSignupDateLimit($signuplimit)
                 ->setNbSignupsMax($faker->numberBetween(1, 50))
                 ->setOutingInfo($faker->paragraph())
@@ -130,7 +130,7 @@ class AppFixtures extends Fixture
             //Make the organiser a participant :
             $participantsList = [$outing->getOrganiser()];
             //Then add a number of random users (between 1 and 49)
-            for($i = 0; $i < random_int(1, $outing->getNbSignupsMax()); $i++) {
+            for($x = 0; $x < random_int(1, $outing->getNbSignupsMax()); $x++) {
                 $participantsList[] = $faker->randomElement($usersList);
             }
             //And add them one by one in $outing's participants.
@@ -143,6 +143,7 @@ class AppFixtures extends Fixture
             ;
             $manager->persist($outing);
         }
+
         $manager->flush();
     }
 
