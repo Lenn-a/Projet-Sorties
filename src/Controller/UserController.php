@@ -16,8 +16,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/user', name: 'user_')]
 final class UserController extends AbstractController
 {
-    #[Route('/profile/{id}', name: 'profile', methods: ['POST', 'GET'])]
+    #[Route('/profile/{id}', name: 'profile', methods: ['GET'])]
     public function getOrModifyUserProfile(
+        User $id,
+        UserRepository $userRepository,
+    ): Response
+    {
+        $user = $userRepository->find($id);
+
+
+        return $this->render('user/profile.html.twig', [
+            'user' => $id,
+        ]);
+    }
+
+    #[Route('/update/{id}', name: 'update', methods: ['POST', 'GET'])]
+    public function updateUserProfile(
         User $id,
         EntityManagerInterface $entityManager,
         Request $request,
@@ -46,12 +60,11 @@ final class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Flash s'affiche pas
             $this->addFlash('success', 'Modifications enregistrées.');
             return $this->redirectToRoute('user_profile', ['id' => $user->getId()]);
         }
 
-        return $this->render('user/profile.html.twig', [
+        return $this->render('user/update.html.twig', [
             'user' => $id,
             'userForm' => $userForm,
         ]);

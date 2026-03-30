@@ -6,31 +6,19 @@
 
 {% block body %}
 <div class="gen-div-format">
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id === user.id %}
-        <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
-        <h1>Mon profil</h1>
-        <p class="required-field">* champs requis</p>
-        {{ form_start(userForm) }}
-        {{ form_widget(userForm) }}
-        <button type="submit" class="btn">Enregistrer</button>
-        <button type="reset" class="btn">Annuler</button>
-        {{ form_end(userForm) }}
-    {% else %}
+    <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
+    <h1>{{ user.username }}</h1>
     <div>
-        <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
-        <h1>{{ user.username }}</h1>
-        <div>
-            <div>Prénom : {{ user.firstname }}</div>
-            <div>Nom :  {{ user.lastname }}</div>
-            <div>Téléphone : {{ user.phone }}</div>
-            <div>Email : {{ user.email }}</div>
-            <div>Campus : {{ user.campus.name }}</div>
-        </div>
-        <div>
-            <a href="{{ path('outing_list') }}">Retour</a>
-        </div>
+        <div>Prénom : {{ user.firstname }}</div>
+        <div>Nom :  {{ user.lastname }}</div>
+        <div>Téléphone : {{ user.phone }}</div>
+        <div>Email : {{ user.email }}</div>
+        <div>Campus : {{ user.campus.name }}</div>
     </div>
-    {% endif %}
+    <div>
+        <a href="{{ app.request.headers.get('referer') ?? path('outing_list') }}">Retour</a>
+        <a href="{{ path('user_update', {'id' : user.id }) }}">Modifier</a>
+    </div>
 </div>
 {% endblock %}
 

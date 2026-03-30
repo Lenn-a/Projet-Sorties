@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Profil
+{% endblock %}
+
+{% block body %}
+<div class="gen-div-format">
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id === user.id %}
+    <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
+    <h1>Mon profil</h1>
+    <p class="required-field">* champs requis</p>
+    {{ form_start(userForm) }}
+    {{ form_widget(userForm) }}
+    <button type="submit" class="btn">Enregistrer</button>
+    <button type="reset" class="btn">Annuler</button>
+    {{ form_end(userForm) }}
+    {% endif %}
+</div>
+{% endblock %}
+
