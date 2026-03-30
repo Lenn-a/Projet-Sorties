@@ -19,7 +19,7 @@ class OutingUserRepository extends ServiceEntityRepository
 
     /**
      * @param int $outingId id de la sortie recherchée
-     * @return array liste les paires userId/outinId correspondantes
+     * @return array liste les paires userId/outingId correspondantes
      */
     public function findOutingUsersByOutingId(int $outingId): array{
         $result = $this->createQueryBuilder('io')

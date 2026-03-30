@@ -164,7 +164,6 @@ final class OutingController extends AbstractController
         EntityManagerInterface $entityManager,
         StatusRepository $statusRepository,
         FileUploader $fileUploader,
-        StatusService $statusService,
         Request $request,
     ): Response {
         $outing = new Outing();
@@ -174,22 +173,33 @@ final class OutingController extends AbstractController
 
         $action = $request->request->get('action');
 
-        if ($action === 'publier'){
-            if($outingForm->isSubmitted() && $outingForm->isValid()){
+        if($outingForm->isSubmitted() && $outingForm->isValid()){
 
-                    $file = $outingForm -> get('photo')-> getData();
-                    if ($file != null) {
-                        $outing->setPhoto(
-                            $fileUploader->upload($file, 'images/Outings/', $outing->getName())
-                        );
-                    }else {
-                        $outing->setPhoto('Outing-default.png');
-                    }
-                //Le user qui créé la sortie = organisateur
-                $outing->setOrganiser($this->getUser());
-                //Organisateur est participant par défault
-                $outing->addParticipant($this->getUser());
-                //Status = ouvert quand on clic sur "Publier"
+            $file = $outingForm -> get('photo')-> getData();
+            if ($file != null) {
+                $outing->setPhoto(
+                    $fileUploader->upload($file, 'images/Outings/', $outing->getName())
+                );
+            }else {
+                $outing->setPhoto('Outing-default.png');
+            }
+            //Le user qui créé la sortie = organisateur
+            $outing->setOrganiser($this->getUser());
+            //Organisateur est participant par défault
+            $outing->addParticipant($this->getUser());
+            //Status = ouvert quand on clic sur "Publier"
+
+            if($action === 'enregistrer') {
+                $enCreation = $statusRepository->getStatusByName('En création');
+                $outing->setStatus($enCreation);
+
+                $entityManager->persist($outing);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été enregistrée.');
+                //Redirection vers la liste de sorties enregistrées
+                return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
+            } else if ($action === 'publier') {
                 $published = $statusRepository->getStatusByName('Ouverte');
                 $outing->setStatus($published);
 
@@ -197,36 +207,12 @@ final class OutingController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été publiée.');
-                //redirection vers la page de détail de la sortie
+
                 return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
-            }
-        }
-
-        if($action === 'enregistrer'){
-            if($outingForm->isSubmitted() && $outingForm->isValid()){
-                $file = $outingForm -> get('photo')-> getData();
-                if ($file != null) {
-                    $outing->setPhoto(
-                        $fileUploader->upload($file, 'images/Outings/', $outing->getName())
-                    );
-                }else {
-                    $outing->setPhoto('Outing-default.png');
                 }
-                $outing->setOrganiser($this->getUser());
-                //Status = en création si on clic sur "enregistrer"
-                $published = $statusRepository->getStatusByName('En création');
-                $outing->setStatus($published);
-                $statusService->statusOpenClose($outing);
 
-                $entityManager->persist($outing);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été enregistrée.');
-
-                //Redirection vers la liste de sorties enregistrées
-                return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
-            }
         }
+
         return $this->render('outing/create.html.twig', [
             'outingForm'=> $outingForm
         ]);
