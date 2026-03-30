@@ -317,6 +317,12 @@ li#outing_search_endSearchDate_error1 {
     padding: 0.75rem 1rem;
 }
 
+.status-create {
+    background-color: #801691;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+}
+
 .widgets-space {
     display: flex;
     justify-content: space-between;

@@ -31,12 +31,12 @@
                     {{ form_end(outingCancelForm) }}
                 </div>
                 <button class="cancel-form-trigger" style="display: block" style="background-color: #5B21B6">Annuler</button>
-                {% if outing.status == "En création" %}
-                    <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
-                {% endif %}
+            {% endif %}
+            {% if outing.status == "En création" %}
+                <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
             {% endif %}
 
-            {% elseif outing.participants.contains(app.user) %}
+            {% elseif outing.participants.contains(app.user) and outing.status.label != 'En création' %}
                 <div class="button-space">
                     <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
                     <a href="{{ path('outing_quit', {'id': outing.id}) }}"
@@ -44,7 +44,7 @@
                         <button>Se désister</button>
                     </a>
                 </div>
-            {% elseif outing.status.label == 'Ouverte' and outing.participants.count < outing.nbSignupsMax %}
+            {% elseif outing.status.label == 'Ouverte' %}
                 <a href="{{ path('outing_participate', {'id':outing.id}) }}"
                    onclick="return confirm('Participer à cette sortie ?')">
                     <button>Participer</button>
