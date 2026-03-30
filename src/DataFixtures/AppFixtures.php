@@ -11,6 +11,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Random\RandomException;
 
 class AppFixtures extends Fixture
 {
@@ -104,6 +105,10 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    /**
+     * @throws \DateInvalidOperationException
+     * @throws RandomException
+     */
     public function addOutings(ObjectManager $manager): void {
         $faker = Factory::create();
         $campusList = $manager->getRepository(Campus::class)->findAll();
@@ -129,8 +134,10 @@ class AppFixtures extends Fixture
             /////////////////////Participants/////////////////////
             //Make the organiser a participant :
             $participantsList = [$outing->getOrganiser()];
-            //Then add a number of random users (between 1 and 49)
-            for($x = 0; $x < random_int(1, $outing->getNbSignupsMax()); $x++) {
+            //Then add a number of random users (between 1 and max)
+            $randomParticipants = random_int(0, ($outing->getNbSignupsMax()-1));
+
+            for($x = 0; $x < $randomParticipants; $x++) {
                 $participantsList[] = $faker->randomElement($usersList);
             }
             //And add them one by one in $outing's participants.
