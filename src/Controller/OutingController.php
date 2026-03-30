@@ -184,8 +184,8 @@ final class OutingController extends AbstractController
                 }
                 $outing->setOrganiser($this->getUser());
                 //Status = en création si on clic sur "enregistrer"
-                $published = $statusRepository->getStatusByName('En création');
-                $outing->setStatus($published);
+                $enCreation = $statusRepository->getStatusByName('En création');
+                $outing->setStatus($enCreation);
             $statusService->statusOpenClose($outing);
 
                 $entityManager->persist($outing);
