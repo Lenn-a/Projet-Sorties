@@ -100,13 +100,14 @@ class OutingRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findMyOutings()
-    {
+
+    public function findMyOutings(int $organiserId){
         $queryBuilder = $this->createQueryBuilder('ec');
-        $queryBuilder
-            ->leftJoin('ec.status', 'status')
+        $queryBuilder->innerJoin('ec.status', 'status')
             ->addSelect('status')
-            ->Where('status.label = :encreation')->setParameter('encreation', 'En création');
+            ->where('status.label = :encreation')->setParameter('encreation', 'En creation')
+            ->andWhere('ec.organiser = :organiser')->setParameter('organiser', $organiserId);
+        dump('bonjour');
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -120,9 +121,11 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
             ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
             ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée')
+            ->orWhere('s.label = :encreation')->setParameter('encreation', 'En creation')
             ->innerJoin('o.participants', 'p')
             ->addSelect('p')
             ;
         return $queryBuilder->getQuery()->getResult();
     }
+
 }
