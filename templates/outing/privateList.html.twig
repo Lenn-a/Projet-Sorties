@@ -5,13 +5,16 @@
 {% endblock %}
 
 {% block body %}
-<div class="general-infos">
-    <p><strong>Date du jour : {{ "now" | date('d/m/Y') }}</strong></p>
-    {% if app.user %}
-        <p><strong>Participant : {{ app.user.username }}</strong></p>
-    {% endif %}
-</div>
-<h1>Mes sorties</h1>
+{#<div class="general-infos">#}
+{#    <p><strong>Date du jour : {{ "now" | date('d/m/Y') }}</strong></p>#}
+{#    {% if app.user %}#}
+{#        <p><strong>Participant : {{ app.user.username }}</strong></p>#}
+{#    {% endif %}#}
+{#</div>#}
+    <div class="gen-div-format" id="private-h1">
+        <h1>Mes sorties</h1>
+    </div>
+
 {% for outing in outings %}
 <article class="outingInList">
 
