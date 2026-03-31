@@ -309,6 +309,7 @@ li#outing_search_endSearchDate_error1 {
     font-size: 0.7em;
     margin-right: 0.3vw;
     border-radius: 15px;
+    border-style: none;
 }
 
 #outing-show:hover {
