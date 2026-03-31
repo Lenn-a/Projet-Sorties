@@ -229,7 +229,6 @@ final class OutingController extends AbstractController
                                     StatusService $statusService,
                                    ): RedirectResponse
 {
-//        $outing = $outingRepository->find($id);
         $currentUser = $this->getUser();
 
         $outing->addParticipant($currentUser);
@@ -251,21 +250,6 @@ public function quitAnOuting(Outing $outing,
     $currentUser = $this->getUser();
 
     $outing->removeParticipant($currentUser);
-
-    #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
-    public function quitAnOuting(int                    $id,
-                                 EntityManagerInterface $entityManager,
-                                 StatusService          $statusService,
-                                 OutingRepository       $outingRepository)
-    {
-        $outing = $outingRepository->find($id);
-        $currentUser = $this->getUser();
-
-        if (!$outing->getParticipants()->contains($currentUser)) {
-            $this->addFlash('error', "User isn't signed up for this outing");
-            return $this->redirectToRoute('outing_list');
-        }
-        $outing->removeParticipant($currentUser);
 
         $statusService->statusOpenClose($outing);
 
