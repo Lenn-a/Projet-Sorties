@@ -41,9 +41,13 @@ h1 {
 }
 
 /* Style de HEADER, FOOTER et NAV : */
+.header-div {
+    display: flex;
+    align-items: center;
+}
 .eniwhere-logo {
-    max-height: 55px;
-    margin-bottom: 15px;
+    max-height: 75px;
+    margin-right : 3vw;
 }
 
 #nav-div {
@@ -254,7 +258,7 @@ li#outing_search_endSearchDate_error1 {
 .general-infos {
     font-size: 0.7rem;
     display: flex;
-    padding: 5px;
+    padding: 7px 15px;
     justify-content: center;
     align-self: center;
     flex-wrap: wrap;
