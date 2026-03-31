@@ -483,9 +483,14 @@ li#outing_search_endSearchDate_error1 {
     font-weight: bold;
 }
 
-.user-active-btn {
+#td-user-phone {
+    min-width: fit-content;
+}
+
+.user-list-btn {
     background-color: #1a44a1;
     width: fit-content !important;
+    min-width: 68px;
     padding: 0.4vw 0.7vw;
     color: white;
     font-size: 0.7em;
@@ -501,6 +506,17 @@ li#outing_search_endSearchDate_error1 {
 #deactivate-btn:hover {
     background-color: #911238;
     border: #911238 2px;
+}
+
+#user-delete-btn {
+    background-color: #911238;
+    border: #911238 2px;
+    margin-top: 3px;
+}
+
+#user-delete-btn:hover {
+    background-color: #680e27;
+    border: #680e27 2px;
 }
 
 /* Gestion villes */

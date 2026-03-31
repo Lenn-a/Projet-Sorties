@@ -10,6 +10,7 @@
         <h2>{{ outing.name }}</h2>
         <div>Organisateur : <a
                 href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
+        <div><img src="{{ asset('images/Outings/' ~ outing.photo) }}"></div>
         <div>Date et heure : {{ outing.startDateTime | date('d/m/Y H:i') }}</div>
         <div>Date limite d'inscription : {{ outing.signupDateLimit | date('d/m/Y H:i') }}</div>
         <div>Nombre de places : {{ outing.nbSignupsMax }}</div>
@@ -32,21 +33,30 @@
 {#                {% endif %}#}
 {#            {% endif %}#}
 
-{#            {% if is_granted('OUTING_QUIT', outing) %}#}
-{#                <div class="button-space">#}
-{#                    <span class="goodNews">Vous êtes inscrit à cette sortie !</span>#}
-{#                    <a href="{{ path('outing_quit', {'id': outing.id}) }}"#}
-{#                       onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">#}
-{#                        <button>Se désister</button>#}
-{#                    </a>#}
-{#                </div>#}
-{#            {% elseif is_granted('OUTING_PARTICIPATE', outing) %}#}
-{#                <a href="{{ path('outing_participate', {'id':outing.id}) }}"#}
-{#                   onclick="return confirm('Participer à cette sortie ?')">#}
-{#                    <button>Participer</button>#}
-{#                </a>#}
-{#            {% endif %}#}
-{#        </div>#}
+            {% if is_granted('OUTING_QUIT', outing) %}
+                <div class="button-space">
+                    <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
+                    <a href="{{ path('outing_quit', {'id': outing.id}) }}"
+                       onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">
+                        <button>Se désister</button>
+                    </a>
+                </div>
+            {% elseif is_granted('OUTING_PARTICIPATE', outing) %}
+                <a href="{{ path('outing_participate', {'id':outing.id}) }}"
+                   onclick="return confirm('Participer à cette sortie ?')">
+                    <button>Participer</button>
+                </a>
+            {% endif %}
+            {% if is_granted('OUTING_EDIT', outing) %}
+                <a href="{{ path('outing_create', {'id':outing.id}) }}"
+                   onclick="return confirm('Publier cette sortie ?')">
+                    <button>Publier</button>
+                </a>
+                <a href="{{ path('outing_modify', {'id':outing.id}) }}">
+                    <button>Modifier</button>
+                </a>
+            {% endif %}
+        </div>
     </div>
     <div class="gen-div-format">
         <h2>Liste des participants à la sortie {{ outing.name }}</h2>
