@@ -87,25 +87,19 @@ final class OutingController extends AbstractController
         ]);
     }
 
+
     #[Route('/cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
+    #[IsGranted('OUTING_CANCEL', 'outing')]
     public function cancel(
-        int                    $id,
-        OutingRepository       $outingRepository,
+        Outing $outing,
         StatusService          $statusService,
-        OutingCancel           $outingCancel,
         EntityManagerInterface $entityManager,
         Request $request,
     ): Response
     {
-        $outing = $outingRepository->find($id);
 
         if(!$outing){
             throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
-        }
-
-        if ($outing->getOrganiser() !== $this->getUser()) {
-            $this->addFlash('error', 'Vous n\'avez pas le droit d\'annuler une sortie que vous n\'avez pas créée.');
-            return $this->redirectToRoute('outing_list');
         }
 
         $outingCancel = new OutingCancel();

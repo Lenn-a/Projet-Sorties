@@ -32,7 +32,7 @@
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.phone }}</td>
+                    <td id="td-user-phone">{{ user.phone }}</td>
                     <td>{{ user.campus.name }}</td>
                     <td>
                         {% for role in user.roles %}
@@ -43,17 +43,20 @@
                         <td>Inactif </td>
                         <td>
                             <a href="{{ path('admin_users_active', {'id' : user.id}) }}">
-                                <button class="user-active-btn" id="activate-btn">Activer</button>
+                                <button class="user-list-btn" id="activate-btn">Activer</button>
                             </a>
-                        </td>
                     {% else %}
                         <td>Actif </td>
                         <td>
                             <a href="{{ path('admin_users_active', {'id' : user.id}) }}">
-                                <button class="user-active-btn" id="deactivate-btn">Désactiver</button>
+                                <button class="user-list-btn" id="deactivate-btn">Désactiver</button>
                             </a>
-                        </td>
+
                     {% endif %}
+                    <a href="">
+                        <button class="user-list-btn" id="user-delete-btn">Supprimer</button>
+                    </a>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
