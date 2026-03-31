@@ -68,10 +68,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Outing>
      */
-    #[ORM\ManyToMany(targetEntity: Outing::class, mappedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Outing::class, mappedBy: 'participants', cascade: ['remove'])]
     private Collection $outings;
 
-    #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'organiser')]
+    #[ORM\OneToMany(targetEntity: Outing::class, mappedBy: 'organiser', cascade: ['remove'])]
     private Collection $myOutings;
 
     #[ORM\Column]
