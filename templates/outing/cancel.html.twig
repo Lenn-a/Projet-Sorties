@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Annulation
+{% endblock %}
+
+{% block body %}
+    {% if app.user == outing.organiser %}
+        {% if outing.status.label != "Annulée" %}
+            <div id="cancelForm">
+                <h3 id="cancel-motive-prompt">Veuillez donner un motif d'annulation <span class="required-motive">(obligatoire)</span></h3>
+                    {{ form_start(outingCancelForm) }}
+                    {{ form_widget(outingCancelForm) }}
+                <a href="{{ path('outing_details', {'id' : outing.id}) }}">
+                    <button type="submit" class="btn" onclick="return confirm('Etes-vous sûr de vouloir annuler cette sortie ?')">Annuler</button>
+                </a>
+                    {{ form_end(outingCancelForm) }}
+                <a href="{{ path('outing_details', {'id' : outing.id}) }}">
+                    <button>Retour</button>
+                </a>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+

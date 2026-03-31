@@ -57,8 +57,15 @@
                 </div>
                 <div class="widgets-space">
 
-                    <div>
-                        <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button>Afficher les détails</button></a>
+                    <div class="outing-actions-div">
+                        <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button class="outing-list-action" id="outing-show">Afficher</button></a>
+                        <a href="{{ path('outing_participate', {'id':outing.id}) }}"
+                           onclick="return confirm('Participer à cette sortie ?')"><button class="outing-list-action" id="outing-join">Participer</button></a>
+                        <a href="{{ path('outing_quit', {'id': outing.id}) }}"
+                              onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')"><button class="outing-list-action" id="outing-desist">Se désister</button></a>
+                        <a href="{{ path('outing_create', {'id' : outing.id}) }}"><button class="outing-list-action" id="outing-mod">Modifier</button></a>
+                        <a href="{{ path('outing_details', {'id' : outing.id}) }}"><button class="outing-list-action" id="outing-publish">Publier</button></a>
+                        <a href="{{ path('outing_cancel', {'id' : outing.id}) }}"><button type="submit" class="outing-list-action" id="outing-cancel">Annuler</button></a>
                     </div>
 
                     <div class="outing-status">
