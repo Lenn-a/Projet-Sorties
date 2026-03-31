@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block body %}
-    {% if app.user == outing.organiser %}
-        {% if outing.status.label != "Annulée" %}
-            <div class="gen-div-format" id="cancelForm">
+      {% if is_granted('OUTING_CANCEL', outing) %}
+            <div id="cancelForm">
                 <h3 id="cancel-motive-prompt">Veuillez donner un motif d'annulation <span class="required-motive">(obligatoire)</span></h3>
                     {{ form_start(outingCancelForm) }}
                     {{ form_widget(outingCancelForm) }}
@@ -19,7 +18,6 @@
                     <button>Retour</button>
                 </a>
             </div>
-        {% endif %}
     {% endif %}
 {% endblock %}
 

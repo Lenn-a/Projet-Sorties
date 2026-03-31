@@ -229,7 +229,6 @@ final class OutingController extends AbstractController
                                     StatusService $statusService,
                                    ): RedirectResponse
 {
-//        $outing = $outingRepository->find($id);
         $currentUser = $this->getUser();
 
         $outing->addParticipant($currentUser);

@@ -6,6 +6,7 @@ body {
     background-image: url('../images/base/temp-eniwhere-background.png');
     background-position: top center;
     background-repeat: repeat;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     font-family: "Roboto", sans-serif;
@@ -46,7 +47,7 @@ h1 {
     align-items: center;
 }
 .eniwhere-logo {
-    max-height: 75px;
+    max-height: 100px;
     margin-right : 3vw;
 }
 

@@ -97,8 +97,8 @@ class OutingVoter extends Voter
 
     private function canCancel(mixed $outing, User $user): bool
     {
-        if ($user == $outing->getOrganiser() && $outing->getStatus()->getLabel() != 'Annulée'
-            || $user->getRoles() == 'ROLE_ADMIN' && $outing->getStatus()->getLabel() != 'Annulée')
+        if ($user == $outing->getOrganiser() && $outing->getStatus()->getLabel() == 'Ouverte'
+            || $user->getRoles() == 'ROLE_ADMIN' && $outing->getStatus()->getLabel() == 'Ouverte')
         {
             return true;
         }
