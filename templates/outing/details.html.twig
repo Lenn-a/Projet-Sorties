@@ -36,7 +36,7 @@
                         Annuler
                     </button>
                     {% if outing.status == "En création" %}
-                        <a href="{{ path('outing_create', {'id': outing.id}) }}"
+                        <a href="{{ path('outing_modify', {'id': outing.id}) }}"
                            onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')">
                             <button>Modifier</button>
                         </a>
