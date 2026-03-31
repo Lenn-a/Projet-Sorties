@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="gen-div-format">
+        <h1>Modifier une sortie</h1>
+        {{ form_start(outingModifyForm) }}
+        {{ form_widget(outingModifyForm) }}
+        <button type="submit" name="action" value="publier">Publier</button>
+        <button type="submit" name="action" value="enregistrer">Enregistrer</button>
+        {{ form_end(outingModifyForm) }}
+    </div>
+{% endblock %}
