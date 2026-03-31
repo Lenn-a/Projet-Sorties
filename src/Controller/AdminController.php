@@ -24,16 +24,38 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/users', name: 'users')]
-    public function displayUsers(
+    public function manageUsers(
         UserRepository $userRepository,
-        Request $request,
     ): Response
     {
+
         $users = $userRepository->findAll();
 
         return $this->render('admin/users.html.twig', [
             'users' => $users,
         ]);
+    }
+
+    #[Route('/users/active/{id}', name: 'users_active')]
+    public function changeUserActive(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        User $id,
+        UserRepository $userRepository,
+    )
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw $this->createNotFoundException('Oups ! Cet utilisateur n\'existe pas !');
+        }
+        if ($user->isActive()) {
+            $user->setActive(false);
+        } else {
+            $user->setActive(true);
+        }
+        $entityManager->persist($user);
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_users');
     }
 
     #[Route('/users/register', name: 'register')]

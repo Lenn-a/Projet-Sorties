@@ -130,56 +130,6 @@ final class OutingController extends AbstractController
         ]);
     }
 
-//    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-//    public function delete(
-//        int                    $id,
-//        OutingRepository       $outingRepository,
-//        StatusService          $statusService,
-//        OutingCancel           $outingCancel,
-//        EntityManagerInterface $entityManager,
-//    ): Response
-//    {
-//        $outing = $outingRepository->find($id);
-//
-////        if(!$outing){
-////            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-////        }
-////
-////        if ($outing->getOrganiser() !== $this->getUser()) {
-////            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
-////            return $this->redirectToRoute('outing_list');
-////        }
-////
-////        $statusService->setStatusWithName($outing, 'Annulée');
-////
-////        $entityManager->persist($outing);
-////        $entityManager->flush();
-//
-//        return $this->redirectToRoute('outing_details', ['id' => $id]);
-//    }
-
-//    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-//    public function create(
-//        EntityManagerInterface $entityManager,
-//    ) : Response {
-//        $outing = $outingRepository->find($id);
-//
-////        if(!$outing){
-////            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-////        }
-////
-////        if ($outing->getOrganiser() !== $this->getUser()) {
-////            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
-////            return $this->redirectToRoute('outing_list');
-////        }
-////
-////        $statusService->setStatusWithName($outing, 'Annulée');
-////
-////        $entityManager->persist($outing);
-////        $entityManager->flush();
-//
-//        return $this->redirectToRoute('outing_details', ['id' => $id]);
-//    }
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
         EntityManagerInterface $entityManager,

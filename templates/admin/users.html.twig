@@ -41,10 +41,18 @@
                     </td>
                     {% if user.active === false %}
                         <td>Inactif </td>
-                        <td><button class="user-active-btn" id="activate-btn">Activer</button></td>
+                        <td>
+                            <a href="{{ path('admin_users_active', {'id' : user.id}) }}">
+                                <button class="user-active-btn" id="activate-btn">Activer</button>
+                            </a>
+                        </td>
                     {% else %}
                         <td>Actif </td>
-                        <td><button class="user-active-btn" id="deactivate-btn">Désactiver</button></td>
+                        <td>
+                            <a href="{{ path('admin_users_active', {'id' : user.id}) }}">
+                                <button class="user-active-btn" id="deactivate-btn">Désactiver</button>
+                            </a>
+                        </td>
                     {% endif %}
                 </tr>
             {% endfor %}

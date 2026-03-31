@@ -20,7 +20,7 @@
 
         <div>
             <h4>{{ outing.name }}</h4>
-            <small>Organisée par {{ outing.organiser.username }}</small>
+            <small>Organisée par <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></small>
         </div>
 
         <div class="outing-date">
