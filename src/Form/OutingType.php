@@ -81,6 +81,7 @@ class OutingType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo (facultatif)',
+                'mapped' => false,
             ])
 ;
     }
