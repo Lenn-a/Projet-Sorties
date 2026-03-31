@@ -29,10 +29,10 @@ final class AdminController extends AbstractController
         Request $request,
     ): Response
     {
-        $user = $userRepository->findAll();
+        $users = $userRepository->findAll();
 
         return $this->render('admin/users.html.twig', [
-            'user' => $user,
+            'users' => $users,
         ]);
     }
 

@@ -243,30 +243,14 @@ final class OutingController extends AbstractController
 
 }
 
-#[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
-#[IsGranted(OutingVoter::QUIT, 'outing')]
-public function quitAnOuting(Outing $outing,
-                             EntityManagerInterface $entityManager,
-                             StatusService $statusService) {
-    $currentUser = $this->getUser();
-
-    $outing->removeParticipant($currentUser);
-
     #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
-    public function quitAnOuting(int                    $id,
+    #[IsGranted(OutingVoter::QUIT, 'outing')]
+    public function quitAnOuting(Outing $outing,
                                  EntityManagerInterface $entityManager,
-                                 StatusService          $statusService,
-                                 OutingRepository       $outingRepository)
-    {
-        $outing = $outingRepository->find($id);
+                                 StatusService $statusService) {
         $currentUser = $this->getUser();
 
-        if (!$outing->getParticipants()->contains($currentUser)) {
-            $this->addFlash('error', "User isn't signed up for this outing");
-            return $this->redirectToRoute('outing_list');
-        }
         $outing->removeParticipant($currentUser);
-
         $statusService->statusOpenClose($outing);
 
         $entityManager->persist($outing);

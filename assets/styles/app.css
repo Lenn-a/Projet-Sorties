@@ -89,20 +89,20 @@ nav a:hover{
 
 /* Style de messages FLASH et ERROR : */
 .flash {
-    padding: 20px;
+    padding: 15px;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1rem;
     margin: 1rem 0;
     border-radius: 5px;
     color: black;
 }
 
 .flash-success {
-    background-color: lawngreen
+    background-color: #68cc09
 }
 
-.error {
-    color: red;
+.flash-error {
+    background-color: #df0b0b;
 }
 
 /**********************************/
