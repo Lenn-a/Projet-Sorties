@@ -5,14 +5,57 @@
 {% endblock %}
 
 {% block body %}
-<div class="gen-div-format">
-    <h1>Gestion d'utilisateurs</h1>
-    <button>Inscrire utilisateur</button>
-</div>
-    <div>
-
+    <div class="gen-div-format" id="users-title-div">
+        <h1>Gestion d'utilisateurs</h1>
+        <button id="user-register-trigger">Inscrire utilisateur(s)</button>
+    </div>
+    <div class="gen-div-format" id="users-table-div">
+        <table class="users-table">
+            <tr>
+                <th class="users-table-headers">Pseudo</th>
+                <th class="users-table-headers">Prénom</th>
+                <th class="users-table-headers">Nom</th>
+                <th class="users-table-headers">Mail</th>
+                <th class="users-table-headers">Phone</th>
+                <th class="users-table-headers">Campus</th>
+                <th class="users-table-headers">Role(s)</th>
+                <th class="users-table-headers">Statut</th>
+                <th class="users-table-headers">Action(s)</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ path('user_profile', {'id': user.id}) }}">
+                            {{ user.username }}
+                        </a>
+                    </td>
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.campus.name }}</td>
+                    <td>
+                        {% for role in user.roles %}
+                            {{ role }}
+                        {% endfor %}
+                    </td>
+                    {% if user.active === false %}
+                        <td>Inactif </td>
+                        <td>
+                            <a href="{{ path('admin_users_active', {'id' : user.id}) }}">
+                                <button class="user-active-btn" id="activate-btn">Activer</button>
+                            </a>
+                        </td>
+                    {% else %}
+                        <td>Actif </td>
+                        <td>
+                            <a href="{{ path('admin_users_active', {'id' : user.id}) }}">
+                                <button class="user-active-btn" id="deactivate-btn">Désactiver</button>
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 {% endblock %}
-
-
-

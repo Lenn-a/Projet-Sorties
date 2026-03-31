@@ -88,7 +88,7 @@ final class OutingController extends AbstractController
     }
 
     #[Route('/cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-    public function delete(
+    public function cancel(
         int                    $id,
         OutingRepository       $outingRepository,
         StatusService          $statusService,
@@ -128,34 +128,6 @@ final class OutingController extends AbstractController
             'outingCancelForm' => $outingCancelForm,
             'outingCancel' => $outingCancel,
         ]);
-    }
-
-    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-    public function cancel(
-        int                    $id,
-        OutingRepository       $outingRepository,
-        StatusService          $statusService,
-        OutingCancel           $outingCancel,
-        EntityManagerInterface $entityManager,
-    ): Response
-    {
-        $outing = $outingRepository->find($id);
-
-//        if(!$outing){
-//            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-//        }
-//
-//        if ($outing->getOrganiser() !== $this->getUser()) {
-//            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
-//            return $this->redirectToRoute('outing_list');
-//        }
-//
-//        $statusService->setStatusWithName($outing, 'Annulée');
-//
-//        $entityManager->persist($outing);
-//        $entityManager->flush();
-
-        return $this->redirectToRoute('outing_details', ['id' => $id]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
@@ -280,15 +252,14 @@ final class OutingController extends AbstractController
 
 }
 
-#[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
-#[IsGranted(OutingVoter::QUIT, 'outing')]
-public function quitAnOuting(Outing $outing,
-                             EntityManagerInterface $entityManager,
-                             StatusService $statusService) {
-    $currentUser = $this->getUser();
+    #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
+    #[IsGranted(OutingVoter::QUIT, 'outing')]
+    public function quitAnOuting(Outing $outing,
+                                 EntityManagerInterface $entityManager,
+                                 StatusService $statusService) {
+        $currentUser = $this->getUser();
 
-    $outing->removeParticipant($currentUser);
-
+        $outing->removeParticipant($currentUser);
         $statusService->statusOpenClose($outing);
 
         $entityManager->persist($outing);
