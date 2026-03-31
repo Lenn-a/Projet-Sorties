@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use \Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class OutingVoter extends Voter
 {
@@ -51,22 +52,23 @@ class OutingVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
-                return $this->canEdit($outing, $user);
+                return $this->canEdit($outing, $user, $token);
             case self::PARTICIPATE:
                 return $this->canParticipate($outing, $user);
             case self::QUIT:
                 return $this->canQuit($outing, $user);
             case self::CANCEL:
-                return $this->canCancel($outing, $user);
+                return $this->canCancel($outing, $user, $token);
             default:
                 throw new \LogicException('This code should not be reached!');
         }
     }
 
-    private function canEdit(Outing $outing, User $user): bool
+    private function canEdit(Outing $outing, User $user, TokenInterface $token): bool
     {
         if ($user === $outing->getOrganiser() && $outing->getStatus()->getLabel() === "En création"
-            || $user->getRoles() == 'ROLE_ADMIN') {
+            || $this->accessDecisionManager->decide($token, ['ROLE_ADMIN']) && $outing->getStatus()->getLabel() === "En création")
+        {
             return true;
         }
         return false;
@@ -95,10 +97,10 @@ class OutingVoter extends Voter
         return false;
     }
 
-    private function canCancel(mixed $outing, User $user): bool
+    private function canCancel(mixed $outing, User $user, TokenInterface $token): bool
     {
         if ($user == $outing->getOrganiser() && $outing->getStatus()->getLabel() == 'Ouverte'
-            || $user->getRoles() == 'ROLE_ADMIN' && $outing->getStatus()->getLabel() == 'Ouverte')
+            ||  $this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])  && $outing->getStatus()->getLabel() == 'Ouverte' )
         {
             return true;
         }
