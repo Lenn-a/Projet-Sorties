@@ -6,6 +6,7 @@ body {
     background-image: url('../images/base/temp-eniwhere-background.png');
     background-position: top center;
     background-repeat: repeat;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     font-family: "Roboto", sans-serif;
@@ -46,7 +47,7 @@ h1 {
     align-items: center;
 }
 .eniwhere-logo {
-    max-height: 75px;
+    max-height: 100px;
     margin-right : 3vw;
 }
 
@@ -124,7 +125,7 @@ nav a:hover{
     flex-direction: row;
     justify-content: space-between;
     max-height: 250px;
-    width: 100%;
+    width: fit-content;
     font-size: 16px;
     justify-self: center;
 }
@@ -242,13 +243,13 @@ li#outing_search_endSearchDate_error1 {
 
 .outing-infos div:first-child {
     flex-flow: wrap column;
-    margin-bottom: 5vh;
+    /*margin-bottom: 5vh;*/
 }
 
-.outing-infos button {
-    border-radius: 15px;
-    margin-right: 2vw;
-}
+/*.outing-infos button {*/
+/*    border-radius: 15px;*/
+/*    margin-right: 2vw;*/
+/*}*/
 
 .outing-date {
     display: inline-block;
@@ -294,6 +295,55 @@ li#outing_search_endSearchDate_error1 {
     margin-top: 2vh;
 }
 
+/* Style des OUTING ACTION BUTTONS : */
+.outing-actions-div {
+    display: flex;
+    flex-direction: row !important;
+}
+
+.outing-list-action {
+    background-color: #1a44a1;
+    width: fit-content !important;
+    padding: 0.4vw 0.7vw;
+    color: white;
+    font-size: 0.7em;
+    margin-right: 0.3vw;
+    border-radius: 15px;
+    border-style: none;
+}
+
+#outing-show:hover {
+    background-color: #028ee3;
+    border: #028ee3 2px;
+}
+
+#outing-join:hover {
+    background-color: #12914d;
+    border: #12914d 2px;
+}
+
+#outing-desist:hover {
+    background-color: #911238;
+    border: #911238 2px;
+}
+
+#outing-mod:hover {
+    background-color: #e37607;
+    border: #e37607 2px;
+}
+
+#outing-publish:hover {
+    background-color: #cd03a3;
+    border: #cd03a3 2px;
+}
+
+#outing-cancel:hover {
+    background-color: #6f1fed;
+    border: #6f1fed 2px;
+}
+
+
+
 /* Affichage selon le STATUT de la SORTIE : */
 .outing-status {
     font-weight: bold;
@@ -301,12 +351,14 @@ li#outing_search_endSearchDate_error1 {
     border-radius: 20px;
     color: white;
     max-width: 15vw;
+    font-size: 0.9em;
 }
 
 .status-cancelled {
     background-color: #911238;
     border-radius: 20px;
     padding: 0.75rem 1rem;
+    margin-bottom: 1vw;
 }
 
 .status-toolate {
@@ -330,18 +382,12 @@ li#outing_search_endSearchDate_error1 {
 .widgets-space {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    padding-bottom: 0;
 }
-.widgets-space button {
-    margin:0
-}
-
-.profilePic {
-    display: flex;
-    border-radius: 100%;
-    width: 25vh;
-    height: 25vh;
-    justify-self:center;
-}
+/*.widgets-space button {*/
+/*    margin:0*/
+/*}*/
 
 /**********************************/
 /******* OUTING DETAILS PAGE ******/
@@ -374,6 +420,10 @@ li#outing_search_endSearchDate_error1 {
     font-size: 14px;
 }
 
+.hidden {
+    display: none;
+}
+
 /**********************************/
 /******* CREATE OUTING PAGE *******/
 /**********************************/
@@ -382,7 +432,13 @@ li#outing_search_endSearchDate_error1 {
 /**********************************/
 /********** PROFILE PAGE **********/
 /**********************************/
-
+.profilePic {
+    display: flex;
+    border-radius: 100%;
+    width: 25vh;
+    height: 25vh;
+    justify-self:center;
+}
 
 /**********************************/
 /******** MES SORTIES PAGE ********/

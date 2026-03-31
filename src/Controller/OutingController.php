@@ -42,20 +42,12 @@ final class OutingController extends AbstractController
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
+
         if ($outingSearchForm->isSubmitted() && $outingSearchForm->isValid()) {
-            // IF "Je suis organisateur", "Je suis inscrit" or "Je ne suis pas inscrit" CHECKED
-            if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
-                $outingSearch->setConnectedUser($this->getUser());
-            }
-            // IF "Sorties passées" CHECKED
-            if ($outingSearch->getOutingPassed() === true) {
-                $outingSearch->setCurrentDateTime(new \DateTime());
-            }
             $outings = $outingRepository->findAllPublishedOutings($outingSearch);
         } else {
             $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
-
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings,
@@ -82,14 +74,40 @@ final class OutingController extends AbstractController
             return $item->getUserId();
         }, $userOutingIds);
 
-        //On récupère la liste des utilisateurs correspondant à la liste des ids de user
+        //On récupère la liste des utilisateurs correspondant à la liste des ids d'user
         $users = $userRepository->findUsersById($userIds);
 
         if (!$outing) {
             throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
         }
 
-        // CANCELLATION of an OUTING (ANNULATION)
+        return $this->render('outing/details.html.twig', [
+            'outing' => $outing,
+            'users' => $users,
+        ]);
+    }
+
+    #[Route('/cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
+    public function delete(
+        int                    $id,
+        OutingRepository       $outingRepository,
+        StatusService          $statusService,
+        OutingCancel           $outingCancel,
+        EntityManagerInterface $entityManager,
+        Request $request,
+    ): Response
+    {
+        $outing = $outingRepository->find($id);
+
+        if(!$outing){
+            throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
+        }
+
+        if ($outing->getOrganiser() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous n\'avez pas le droit d\'annuler une sortie que vous n\'avez pas créée.');
+            return $this->redirectToRoute('outing_list');
+        }
+
         $outingCancel = new OutingCancel();
         $outingCancelForm = $this->createForm(OutingCancelType::class, $outingCancel);
         $outingCancelForm->handleRequest($request);
@@ -101,11 +119,12 @@ final class OutingController extends AbstractController
 
             $entityManager->persist($outing);
             $entityManager->flush();
+
+            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
         }
 
-        return $this->render('outing/details.html.twig', [
+        return $this->render('outing/cancel.html.twig', [
             'outing' => $outing,
-            'users' => $users,
             'outingCancelForm' => $outingCancelForm,
             'outingCancel' => $outingCancel,
         ]);
@@ -273,7 +292,6 @@ final class OutingController extends AbstractController
                                     StatusService $statusService,
                                    ): RedirectResponse
 {
-//        $outing = $outingRepository->find($id);
         $currentUser = $this->getUser();
 
         $outing->addParticipant($currentUser);
@@ -296,13 +314,13 @@ public function quitAnOuting(Outing $outing,
 
     $outing->removeParticipant($currentUser);
 
-    $statusService->statusOpenClose($outing);
+        $statusService->statusOpenClose($outing);
 
-    $entityManager->persist($outing);
-    $entityManager->flush();
+        $entityManager->persist($outing);
+        $entityManager->flush();
 
-    return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
-}
+        return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+    }
 
 }
 

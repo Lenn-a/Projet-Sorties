@@ -8,15 +8,17 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Outing>
  */
 class OutingRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Outing::class);
+        $this->security = $security;
     }
 
     public function findAllPublishedOutings(OutingSearch $outingSearch)
@@ -75,25 +77,25 @@ class OutingRepository extends ServiceEntityRepository
                 ->andWhere('o.startDateTime <= :endSearchDate')->setParameter('endSearchDate', $outingSearch->getEndSearchDate());
         }
         // Filter outings by ORGANISER
-        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingOrganiser()) {
+        if ($outingSearch->getOutingOrganiser()) {
             $queryBuilder
-                ->andWhere('o.organiser = :organiser')->setParameter('organiser', $outingSearch->getConnectedUser());
+                ->andWhere('o.organiser = :organiser')->setParameter('organiser', $this->security->getToken()->getUser());
         }
         // Filter outings by PARTICIPANT
-        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingParticipant()) {
+        if ($outingSearch->getOutingParticipant()) {
             $queryBuilder
-                ->andWhere(':participant MEMBER OF o.participants')->setParameter('participant', $outingSearch->getConnectedUser());
+                ->andWhere(':participant MEMBER OF o.participants')->setParameter('participant', $this->security->getToken()->getUser());
         }
         // Filter outings by NOT PARTICIPANT
-        if ($outingSearch->getConnectedUser() and $outingSearch->getOutingNotParticipant()) {
+        if ($outingSearch->getOutingNotParticipant()) {
             $queryBuilder
-                ->andWhere(':participant NOT MEMBER OF o.participants')->setParameter('participant', $outingSearch->getConnectedUser());
+                ->andWhere(':participant NOT MEMBER OF o.participants')->setParameter('participant', $this->security->getToken()->getUser());
         }
 
         // Filter outings by PASSED DATE
         if ($outingSearch->getOutingPassed()) {
             $queryBuilder
-                ->andWhere('DATE_ADD(o.startDateTime, o.duration, \'MINUTE\') < :passed')->setParameter('passed', $outingSearch->getCurrentDateTime());
+                ->andWhere('DATE_ADD(o.startDateTime, o.duration, \'MINUTE\') < :passed')->setParameter('passed', new DateTime('now'));
         }
 
         $queryBuilder->orderBy('o.startDateTime', 'ASC');

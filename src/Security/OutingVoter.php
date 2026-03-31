@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use \Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class OutingVoter extends Voter
 {
@@ -37,13 +38,8 @@ class OutingVoter extends Voter
         return true;
 
     }
-
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
-        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
-            return true;
-        }
-
         $user = $token->getUser();
 
         if (!$user instanceof User) {
@@ -54,58 +50,60 @@ class OutingVoter extends Voter
 
         $outing = $subject;
 
-        return match ($attribute) {
-            self::EDIT => $this->canEdit($outing, $user, $vote),
-            self::PARTICIPATE => $this->canParticipate($outing, $user, $vote),
-            self::QUIT => $this->canQuit($outing, $user, $vote),
-            self::CANCEL => $this->canCancel($outing, $user, $vote),
-            default => throw new \LogicException('This code should not be reached!')
-        };
-    }
-
-    private function canEdit(Outing $outing, User $user, ?Vote $vote): bool
-    {
-        if ($user === $outing->getOrganiser() && $outing->getStatus()->getLabel() === "En création") {
-            return true;
+        switch ($attribute) {
+            case self::EDIT:
+                return $this->canEdit($outing, $user, $token);
+            case self::PARTICIPATE:
+                return $this->canParticipate($outing, $user);
+            case self::QUIT:
+                return $this->canQuit($outing, $user);
+            case self::CANCEL:
+                return $this->canCancel($outing, $user, $token);
+            default:
+                throw new \LogicException('This code should not be reached!');
         }
-
-        $vote?->addReason(sprintf(
-            'The logged in user (username: %s) is not the author of this outing (name: %s).',
-            $user->getUsername(), $outing->getName()
-        ));
-
-        return false;
     }
 
-    private function canParticipate(Outing $outing, User $user, ?Vote $vote): bool
+    private function canEdit(Outing $outing, User $user, TokenInterface $token): bool
     {
-        if ($outing->getStatus()->getLabel() != 'Clôturée'
-            && !$outing->getParticipants()->contains($user))
+        if ($user === $outing->getOrganiser() && $outing->getStatus()->getLabel() === "En création"
+            || $this->accessDecisionManager->decide($token, ['ROLE_ADMIN']) && $outing->getStatus()->getLabel() === "En création")
         {
             return true;
         }
-        $vote?->addReason('You cannot participate in this outing.');
+        return false;
+    }
+
+    private function canParticipate(Outing $outing, User $user): bool
+    {
+        if (($outing->getStatus()->getLabel() != 'Clôturée' || $outing->getStatus()->getLabel() != 'Annulée')
+            && !$outing->getParticipants()->contains($user)
+            && $user != $outing->getOrganiser())
+        {
+            return true;
+        }
         return false;
 
     }
 
-    private function canQuit(mixed $outing, User $user, ?Vote $vote): bool
+    private function canQuit(mixed $outing, User $user): bool
     {
-        if ($outing->getParticipants()->contains($user))
+        if ($outing->getParticipants()->contains($user)
+            && $user != $outing->getOrganiser()
+            && $outing->getStatus()->getLabel() != 'Annulée')
         {
             return true;
         }
-        $vote?->addReason('You cannot quit an outing if you\'re not already a participant.');
         return false;
     }
 
-    private function canCancel(mixed $outing, User $user, ?Vote $vote): bool
+    private function canCancel(mixed $outing, User $user, TokenInterface $token): bool
     {
-        if ($user == $outing->getOrganiser())
+        if ($user == $outing->getOrganiser() && $outing->getStatus()->getLabel() == 'Ouverte'
+            ||  $this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])  && $outing->getStatus()->getLabel() == 'Ouverte' )
         {
             return true;
         }
-        $vote?->addReason('You cannot cancel an outing you have not created.');
         return false;
     }
 }

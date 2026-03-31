@@ -26,8 +26,6 @@ class OutingSearch
 
     private ?bool $outingPassed = null;
 
-    private ?User $connectedUser = null;
-
     private ?\DateTime $currentDateTime = null;
 
     public function getCampus(): ?Campus
@@ -108,16 +106,6 @@ class OutingSearch
     public function setOutingPassed(?bool $outingPassed): void
     {
         $this->outingPassed = $outingPassed;
-    }
-
-    public function getConnectedUser(): ?User
-    {
-        return $this->connectedUser;
-    }
-
-    public function setConnectedUser(?User $connectedUser): void
-    {
-        $this->connectedUser = $connectedUser;
     }
 
     public function getCurrentDateTime(): ?\DateTime

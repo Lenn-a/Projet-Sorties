@@ -7,14 +7,6 @@ import './stimulus_bootstrap.js';
  */
 import './styles/app.css';
 
-// EMILIA's JS code for OUTING CANCELLATION FORM
-let cancelFormTrigger = document.querySelector('.cancel-form-trigger')
-let cancelForm = document.querySelector('.cancel-form-div')
-cancelFormTrigger.addEventListener('click', function(){
-    cancelFormTrigger.style.display = 'none';
-    cancelForm.style.display = 'block';
-})
-
 // -----------------------------------------------
 
 
