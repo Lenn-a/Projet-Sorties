@@ -35,21 +35,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-//    public function findConnectedUserFullDetails(UserInterface $user)
-//    {
-//        $qb = $this->createQueryBuilder('u');
-//        $qb
-//            ->leftJoin('u.campus', 'campus')
-//            ->addSelect('campus')
-//            ->leftJoin('u.outings', 'outings')
-//            ->addSelect('outings')
-//
-//            ->andWhere('u.id = :id')
-//            ->setParameter('id', $user->getId());
-//
-//        $query = $qb->getQuery();
-//        return $query->getResult();
-//    }
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
         $qb = $this->createQueryBuilder('u');
