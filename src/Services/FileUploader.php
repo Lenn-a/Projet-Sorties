@@ -22,7 +22,8 @@ class FileUploader
     }
     public function update(string $oldFilename, string $directory, UploadedFile $file, string $newName = '') {
         $this->delete($oldFilename, $directory);
-        $this->upload($file, $directory, $newName);
+        return $this->upload($file, $directory, $newName);
+
     }
 
 }
