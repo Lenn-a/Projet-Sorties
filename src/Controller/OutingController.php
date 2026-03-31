@@ -12,6 +12,7 @@ use App\Repository\OutingRepository;
 use App\Repository\OutingUserRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
+use App\Security\OutingVoter;
 use App\Services\FileUploader;
 use App\Services\StatusService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use function Symfony\Component\Clock\now;
 
 
@@ -130,58 +132,32 @@ final class OutingController extends AbstractController
 //    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
 //    public function create(
 //        EntityManagerInterface $entityManager,
-//        StatusRepository $statusRepository,
-//        FileUploader $fileUploader,
-//        StatusService $statusService,
-//        Request $request,
-//    ): Response {
-//        $outing = new Outing();
+//    ) : Response {
+//        $outing = $outingRepository->find($id);
 //
-//        $file = $outingForm -> get('photo')-> getData();
-//        if ($file != null) {
-//            $outing->setPhoto(
-//                $fileUploader->upload($file, 'images/Outings/', $outing->getName())
-//            );
-//        }else {
-//            $outing->setPhoto('Outing-default.png');
-//        }
-//        $form = $this->createForm(OutingType::class, $outing);
-//        $form->handleRequest($request);
-//        $action = $request->request->get('action');
+////        if(!$outing){
+////            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
+////        }
+////
+////        if ($outing->getOrganiser() !== $this->getUser()) {
+////            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
+////            return $this->redirectToRoute('outing_list');
+////        }
+////
+////        $statusService->setStatusWithName($outing, 'Annulée');
+////
+////        $entityManager->persist($outing);
+////        $entityManager->flush();
 //
-//        if($action === 'publier'){
-//            if ($form->isSubmitted() && $form->isValid()) {
-//                $outing->setOrganiser($this->getUser());
-//                $outing->addParticipant($this->getUser());
-//                $published = $statusRepository->getStatusByName('Ouverte');
-//                $outing->setStatus($published);
-//                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été publiée.');
-//                //redirection vers la page de détail de la sortie
-//                return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
-//            }
-//        }else{
-//            $save = $statusRepository->getStatusByName('En création');
-//            $outing->setStatus($save);
-//            $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été enregistrée.');
-//            //Redirection vers la liste de sorties enregistrées
-//            return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
-//        }
-//
-//        $entityManager->persist($outing);
-//        $entityManager->flush();
-//        return $this->render('outing/create.html.twig', [
-//            'outingForm' => $form->createView(),
-//        ]);
+//        return $this->redirectToRoute('outing_details', ['id' => $id]);
 //    }
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
         EntityManagerInterface $entityManager,
-        StatusRepository       $statusRepository,
-        FileUploader           $fileUploader,
-        StatusService          $statusService,
-        Request                $request,
-    ): Response
-    {
+        StatusRepository $statusRepository,
+        FileUploader $fileUploader,
+        Request $request,
+    ): Response {
         $outing = new Outing();
 
         $outingForm = $this->createForm(OutingType::class, $outing);
@@ -189,59 +165,45 @@ final class OutingController extends AbstractController
 
         $action = $request->request->get('action');
 
-        if ($action === 'publier') {
-            if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+        if($outingForm->isSubmitted() && $outingForm->isValid()){
 
-                $file = $outingForm->get('photo')->getData();
-                if ($file != null) {
-                    $outing->setPhoto(
-                        $fileUploader->upload($file, 'images/Outings/', $outing->getName())
-                    );
-                } else {
-                    $outing->setPhoto('Outing-default.png');
-                }
-                //Le user qui créé la sortie = organisateur
-                $outing->setOrganiser($this->getUser());
-                //Organisateur est participant par défault
-                $outing->addParticipant($this->getUser());
-                //Status = ouvert quand on clic sur "Publier"
+            $file = $outingForm -> get('photo')-> getData();
+            if ($file != null) {
+                $outing->setPhoto(
+                    $fileUploader->upload($file, 'images/Outings/', $outing->getName())
+                );
+            }else {
+                $outing->setPhoto('Outing-default.png');
+            }
+            //Le user qui créé la sortie = organisateur
+            $outing->setOrganiser($this->getUser());
+            //Organisateur est participant par défault
+            $outing->addParticipant($this->getUser());
+            //Status = ouvert quand on clic sur "Publier"
+
+            if($action === 'enregistrer') {
+                $enCreation = $statusRepository->getStatusByName('En création');
+                $outing->setStatus($enCreation);
+
+                $entityManager->persist($outing);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été enregistrée.');
+                //Redirection vers la liste de sorties enregistrées
+                return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
+            } else if ($action === 'publier') {
                 $published = $statusRepository->getStatusByName('Ouverte');
                 $outing->setStatus($published);
 
                 $entityManager->persist($outing);
                 $entityManager->flush();
 
-                $this->addFlash('success', 'La sortie ' . $outing->getName() . ' a bien été publiée.');
-                //redirection vers la page de détail de la sortie
+                $this->addFlash('success', 'La sortie ' .$outing->getName(). ' a bien été publiée.');
+
                 return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
-            }
-        }
-
-        if ($action === 'enregistrer') {
-            if ($outingForm->isSubmitted() && $outingForm->isValid()) {
-                $file = $outingForm->get('photo')->getData();
-                if ($file != null) {
-                    $outing->setPhoto(
-                        $fileUploader->upload($file, 'images/Outings/', $outing->getName())
-                    );
-                } else {
-                    $outing->setPhoto('Outing-default.png');
                 }
-                $outing->setOrganiser($this->getUser());
-                //Status = en création si on clic sur "enregistrer"
-                $enCreation = $statusRepository->getStatusByName('En création');
-                $outing->setStatus($enCreation);
-                $statusService->statusOpenClose($outing);
-
-                $entityManager->persist($outing);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'La sortie ' . $outing->getName() . ' a bien été enregistrée.');
-
-                //Redirection vers la liste de sorties enregistrées
-                return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
-            }
         }
+
         return $this->render('outing/create.html.twig', [
             'outingForm' => $outingForm
         ]);
@@ -253,8 +215,6 @@ final class OutingController extends AbstractController
         int              $id,
         OutingRepository $outingRepository): Response
     {
-
-        dump('privateList of ' . $id);
         $outings = $outingRepository->findMyOutings($id);
 
         return $this->render('outing/privateList.html.twig', [
@@ -263,31 +223,34 @@ final class OutingController extends AbstractController
     }
 
     #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
-    public function participateInOuting(int                    $id,
-                                        EntityManagerInterface $entityManager,
-                                        OutingRepository       $outingRepository,
-                                        StatusService          $statusService,
-    ): RedirectResponse
-    {
-        $outing = $outingRepository->find($id);
+    #[IsGranted(OutingVoter::PARTICIPATE, 'outing')]
+    public function participateInOuting(Outing $outing,
+                                    EntityManagerInterface $entityManager,
+                                    StatusService $statusService,
+                                   ): RedirectResponse
+{
+//        $outing = $outingRepository->find($id);
         $currentUser = $this->getUser();
-
-        if ($outing->getParticipants()->contains($currentUser)) {
-            $this->addFlash('error', "User already signed up for this outing");
-            return $this->redirectToRoute('outing_list');
-        }
-        if ($outing->getStatus()->getLabel() == "Clôturée") {
-            $this->addFlash('error', "Il n'y a plus de places pour cette sortie.");
-        }
 
         $outing->addParticipant($currentUser);
 
         $statusService->statusOpenClose($outing);
+
         $entityManager->persist($outing);
         $entityManager->flush();
+
         return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
 
-    }
+}
+
+#[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
+#[IsGranted(OutingVoter::QUIT, 'outing')]
+public function quitAnOuting(Outing $outing,
+                             EntityManagerInterface $entityManager,
+                             StatusService $statusService) {
+    $currentUser = $this->getUser();
+
+    $outing->removeParticipant($currentUser);
 
     #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
     public function quitAnOuting(int                    $id,

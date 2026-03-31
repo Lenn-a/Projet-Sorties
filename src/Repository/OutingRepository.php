@@ -54,7 +54,8 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
             ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
             ->orWhere('s.label = :cloturee')->setParameter('cloturee', 'Clôturée')
-            ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée');
+            ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée')
+            ->orWhere('s.label = :encreation')->setParameter('encreation', 'En creation');
         // Filter outings by CAMPUS
         if ($outingSearch->getCampus()) {
             $queryBuilder
@@ -109,7 +110,6 @@ class OutingRepository extends ServiceEntityRepository
             ->addSelect('status')
             ->where('status.label = :encreation')->setParameter('encreation', 'En creation')
             ->andWhere('ec.organiser = :organiser')->setParameter('organiser', $organiserId);
-        dump('bonjour');
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -123,7 +123,6 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
             ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
             ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée')
-            ->orWhere('s.label = :encreation')->setParameter('encreation', 'En creation')
             ->innerJoin('o.participants', 'p')
             ->addSelect('p')
             ;
