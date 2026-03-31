@@ -88,7 +88,7 @@ final class OutingController extends AbstractController
     }
 
     #[Route('/cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-    public function delete(
+    public function cancel(
         int                    $id,
         OutingRepository       $outingRepository,
         StatusService          $statusService,
@@ -255,15 +255,14 @@ final class OutingController extends AbstractController
 
 }
 
-#[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
-#[IsGranted(OutingVoter::QUIT, 'outing')]
-public function quitAnOuting(Outing $outing,
-                             EntityManagerInterface $entityManager,
-                             StatusService $statusService) {
-    $currentUser = $this->getUser();
+    #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
+    #[IsGranted(OutingVoter::QUIT, 'outing')]
+    public function quitAnOuting(Outing $outing,
+                                 EntityManagerInterface $entityManager,
+                                 StatusService $statusService) {
+        $currentUser = $this->getUser();
 
-    $outing->removeParticipant($currentUser);
-
+        $outing->removeParticipant($currentUser);
         $statusService->statusOpenClose($outing);
 
         $entityManager->persist($outing);
