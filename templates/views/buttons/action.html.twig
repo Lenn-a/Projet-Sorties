@@ -1,0 +1,48 @@
+<div class="outing-actions-div">
+    {% if app.request.attributes.get('_route') != 'outing_details' %}
+    <a href="{{ path('outing_details', {'id' : outing.id}) }}">
+        <button class="outing-list-action" id="outing-show">
+            Afficher
+        </button>
+    </a>
+    {% endif %}
+
+    {% if is_granted('OUTING_PARTICIPATE', outing) %}
+        <a href="{{ path('outing_participate', {'id':outing.id}) }}"
+           onclick="return confirm('Participer à cette sortie ?')">
+            <button class="outing-list-action" id="outing-join">
+                Participer
+            </button>
+        </a>
+    {% endif %}
+
+    {% if is_granted('OUTING_QUIT', outing) %}
+        <a href="{{ path('outing_quit', {'id': outing.id}) }}"
+           onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">
+            <button class="outing-list-action" id="outing-desist" onclick="return confirm('Voulez-vous vraiment annuler votre participation à cette sortie ?')">
+                Se désister
+            </button>
+        </a>
+    {% endif %}
+
+    {% if is_granted('OUTING_EDIT', outing) %}
+        <a href="{{ path('outing_create', {'id' : outing.id}) }}">
+            <button class="outing-list-action" id="outing-mod" onclick="return confirm('Etes-vous sûr de vouloir modifier cette sortie ?')">
+            Modifier
+            </button>
+        </a>
+        <a href="{{ path('outing_details', {'id' : outing.id}) }}">
+            <button class="outing-list-action" id="outing-publish"onclick="return confirm('Etes-vous sûr de vouloir publier cette sortie ?')">
+                Publier
+            </button>
+        </a>
+    {% endif %}
+
+    {% if is_granted('OUTING_CANCEL', outing) %}
+        <a href="{{ path('outing_cancel', {'id' : outing.id}) }}">
+            <button type="submit" class="outing-list-action" id="outing-cancel">
+                Annuler
+            </button>
+        </a>
+    {% endif %}
+</div>

@@ -24,7 +24,7 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/users', name: 'users')]
-    public function manageUsers(
+    public function displayUsers(
         UserRepository $userRepository,
         Request $request,
     ): Response

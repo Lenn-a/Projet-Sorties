@@ -5,12 +5,6 @@
 {% endblock %}
 
 {% block body %}
-{#<div class="general-infos">#}
-{#    <p><strong>Date du jour : {{ "now" | date('d/m/Y') }}</strong></p>#}
-{#    {% if app.user %}#}
-{#        <p><strong>Participant : {{ app.user.username }}</strong></p>#}
-{#    {% endif %}#}
-{#</div>#}
     <div class="gen-div-format" id="private-h1">
         <h1>Mes sorties</h1>
     </div>
@@ -34,17 +28,7 @@
             <span><strong>Date limite inscription :</strong> {{ outing.signupDateLimit | date('d/m/Y') }}</span>
         </div>
 
-        <div>
-            <a href="{{ path('outing_details', {'id' : outing.id}) }}">
-                <button>Afficher les détails</button>
-            </a>
-            {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
-                <a href="{{ path('outing_quit', {'id': outing.id}) }}"
-                   onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">
-                    <button>Se désister</button>
-                </a>
-            {% endif %}
-        </div>
+        {% include 'views/buttons/action.html.twig' %}
 
     </div>
 </article>

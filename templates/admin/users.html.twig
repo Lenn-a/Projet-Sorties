@@ -5,30 +5,49 @@
 {% endblock %}
 
 {% block body %}
-<div class="gen-div-format">
-    <h1>Gestion d'utilisateurs</h1>
-    <button>Inscrire utilisateur</button>
-</div>
-<div class="gen-div-format">
-    Liste d'utilisateurs
-    {% for user in users %}
-        <div class="participants-details">
-            <div>Prénom : {{ user.firstname }}</div>
-            <div>Nom : {{ user.lastname }}</div>
-            <a href="{{ path('user_profile', {'id': user.id}) }}">
-                <div>Pseudo : {{ user.username }}</div>
-            </a>
-            <div>Mail : {{ user.email }}</div>
-            <div>Phone : {{ user.phone }}</div>
-            {% if user.active === false %}
-            <div>Statut : Actif <button>Désactiver</button></div>
-            {% else %}
-                <div>Statut : Inactif <button>Activer</button></div>
-            {% endif %}
-        </div>
-    {% endfor %}
-</div>
+    <div class="gen-div-format" id="users-title-div">
+        <h1>Gestion d'utilisateurs</h1>
+        <button id="user-register-trigger">Inscrire utilisateur(s)</button>
+    </div>
+    <div class="gen-div-format" id="users-table-div">
+        <table class="users-table">
+            <tr>
+                <th class="users-table-headers">Pseudo</th>
+                <th class="users-table-headers">Prénom</th>
+                <th class="users-table-headers">Nom</th>
+                <th class="users-table-headers">Mail</th>
+                <th class="users-table-headers">Phone</th>
+                <th class="users-table-headers">Campus</th>
+                <th class="users-table-headers">Role(s)</th>
+                <th class="users-table-headers">Statut</th>
+                <th class="users-table-headers">Action(s)</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ path('user_profile', {'id': user.id}) }}">
+                            {{ user.username }}
+                        </a>
+                    </td>
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.campus.name }}</td>
+                    <td>
+                        {% for role in user.roles %}
+                            {{ role }}
+                        {% endfor %}
+                    </td>
+                    {% if user.active === false %}
+                        <td>Inactif </td>
+                        <td><button class="user-active-btn" id="activate-btn">Activer</button></td>
+                    {% else %}
+                        <td>Actif </td>
+                        <td><button class="user-active-btn" id="deactivate-btn">Désactiver</button></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
-
-
-
