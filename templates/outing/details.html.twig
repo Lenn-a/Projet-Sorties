@@ -22,18 +22,14 @@
         {% endif %}
 
         <div>
-            {% if is_granted('OUTING_CANCEL', outing) %}
-                <div class="cancel-form-div" style="display: none">
-                    <h3 id="cancel-motive-prompt">Veuillez donner un motif d'annulation <span class="required-motive">(obligatoire)</span></h3>
-                    {{ form_start(outingCancelForm) }}
-                    {{ form_widget(outingCancelForm) }}
-                        <button type="submit" class="btn">Valider</button>
-                    {{ form_end(outingCancelForm) }}
-                </div>
-                <button class="cancel-form-trigger" style="display: block" style="background-color: #5B21B6">Annuler</button>
-            {% endif %}
-            {% if is_granted('OUTING_EDIT', outing) %}
-                <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
+        {% if app.user == outing.organiser %}
+            {% if outing.status.label != "Annulée" %}
+                <a href="{{ path('outing_cancel', {'id' : outing.id}) }}">
+                    <button style="background-color: #5B21B6">Annuler</button>
+                </a>
+                {% if outing.status == "En création" %}
+                    <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
+                {% endif %}
             {% endif %}
 
             {% if is_granted('OUTING_QUIT', outing) %}

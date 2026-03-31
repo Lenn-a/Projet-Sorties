@@ -31,8 +31,8 @@ final class OutingController extends AbstractController
     #[Route('', name: 'list')]
     public function list(
         OutingRepository $outingRepository,
-        Request $request,
-        StatusService $statusService): Response
+        Request          $request,
+        StatusService    $statusService): Response
     {
         $statusService->setStatusByDate();
 
@@ -41,21 +41,12 @@ final class OutingController extends AbstractController
         $outingSearchForm = $this->createForm(OutingSearchType::class, $outingSearch);
         $outingSearchForm->handleRequest($request);
 
+
         if ($outingSearchForm->isSubmitted() && $outingSearchForm->isValid()) {
-            // IF "Je suis organisateur", "Je suis inscrit" or "Je ne suis pas inscrit" CHECKED
-            if ($outingSearch->getOutingOrganiser() === true or $outingSearch->getOutingParticipant() === true or $outingSearch->getOutingNotParticipant() === true) {
-                $outingSearch->setConnectedUser($this->getUser());
-            }
-            // IF "Sorties passées" CHECKED
-            if ($outingSearch->getOutingPassed() === true) {
-                $outingSearch->setCurrentDateTime(new \DateTime());
-            }
             $outings = $outingRepository->findAllPublishedOutings($outingSearch);
         } else {
             $outings = $outingRepository->findAllPublishedOutings(new OutingSearch());
         }
-
-
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings,
@@ -65,30 +56,57 @@ final class OutingController extends AbstractController
 
     #[Route('/{id}', name: 'details', requirements: ['id' => '\d+'])]
     public function details(
-        int $id,
-        OutingRepository $outingRepository,
-        Request $request,
-        StatusService $statusService,
-        UserRepository $userRepository,
+        int                    $id,
+        OutingRepository       $outingRepository,
+        Request                $request,
+        StatusService          $statusService,
+        UserRepository         $userRepository,
         EntityManagerInterface $entityManager,
-        OutingUserRepository $outingUserRepository,
-    ): Response {
+        OutingUserRepository   $outingUserRepository,
+    ): Response
+    {
         $outing = $outingRepository->find($id);
         //récupération des utilisateurs liés à une sortie (par son id)
         $userOutingIds = $outingUserRepository->findOutingUsersByOutingId($id);
 
-        $userIds = array_map(function($item){
+        $userIds = array_map(function ($item) {
             return $item->getUserId();
         }, $userOutingIds);
 
-        //On récupère la liste des utilisateurs correspondant à la liste des ids de user
+        //On récupère la liste des utilisateurs correspondant à la liste des ids d'user
         $users = $userRepository->findUsersById($userIds);
+
+        if (!$outing) {
+            throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
+        }
+
+        return $this->render('outing/details.html.twig', [
+            'outing' => $outing,
+            'users' => $users,
+        ]);
+    }
+
+    #[Route('/cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
+    public function delete(
+        int                    $id,
+        OutingRepository       $outingRepository,
+        StatusService          $statusService,
+        OutingCancel           $outingCancel,
+        EntityManagerInterface $entityManager,
+        Request $request,
+    ): Response
+    {
+        $outing = $outingRepository->find($id);
 
         if(!$outing){
             throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
         }
 
-        // CANCELLATION of an OUTING (ANNULATION)
+        if ($outing->getOrganiser() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous n\'avez pas le droit d\'annuler une sortie que vous n\'avez pas créée.');
+            return $this->redirectToRoute('outing_list');
+        }
+
         $outingCancel = new OutingCancel();
         $outingCancelForm = $this->createForm(OutingCancelType::class, $outingCancel);
         $outingCancelForm->handleRequest($request);
@@ -100,41 +118,15 @@ final class OutingController extends AbstractController
 
             $entityManager->persist($outing);
             $entityManager->flush();
+
+            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
         }
 
-        return $this->render('outing/details.html.twig', [
+        return $this->render('outing/cancel.html.twig', [
             'outing' => $outing,
-            'users' => $users,
             'outingCancelForm' => $outingCancelForm,
             'outingCancel' => $outingCancel,
         ]);
-    }
-
-    #[Route('cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
-    public function delete(
-        int $id,
-        OutingRepository $outingRepository,
-        StatusService $statusService,
-        OutingCancel $outingCancel,
-        EntityManagerInterface $entityManager,
-    ) : Response {
-        $outing = $outingRepository->find($id);
-
-//        if(!$outing){
-//            throw $this->createNotFoundException("Oups ! Activité non trouvée !");
-//        }
-//
-//        if ($outing->getOrganiser() !== $this->getUser()) {
-//            $this->addFlash('error', 'You cannot cancel an outing you didn\'t create.');
-//            return $this->redirectToRoute('outing_list');
-//        }
-//
-//        $statusService->setStatusWithName($outing, 'Annulée');
-//
-//        $entityManager->persist($outing);
-//        $entityManager->flush();
-
-        return $this->redirectToRoute('outing_details', ['id' => $id]);
     }
 
 //    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
@@ -213,14 +205,14 @@ final class OutingController extends AbstractController
         }
 
         return $this->render('outing/create.html.twig', [
-            'outingForm'=> $outingForm
+            'outingForm' => $outingForm
         ]);
     }
 
     //Liste privée d'un utilisateur
     #[Route('/privateList/{id}', name: 'privateList')]
     public function privateList(
-        int $id,
+        int              $id,
         OutingRepository $outingRepository): Response
     {
         $outings = $outingRepository->findMyOutings($id);
@@ -260,13 +252,28 @@ public function quitAnOuting(Outing $outing,
 
     $outing->removeParticipant($currentUser);
 
-    $statusService->statusOpenClose($outing);
+    #[Route('/quit/{id}', name: 'quit', requirements: ['id' => '\d+'])]
+    public function quitAnOuting(int                    $id,
+                                 EntityManagerInterface $entityManager,
+                                 StatusService          $statusService,
+                                 OutingRepository       $outingRepository)
+    {
+        $outing = $outingRepository->find($id);
+        $currentUser = $this->getUser();
 
-    $entityManager->persist($outing);
-    $entityManager->flush();
+        if (!$outing->getParticipants()->contains($currentUser)) {
+            $this->addFlash('error', "User isn't signed up for this outing");
+            return $this->redirectToRoute('outing_list');
+        }
+        $outing->removeParticipant($currentUser);
 
-    return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
-}
+        $statusService->statusOpenClose($outing);
+
+        $entityManager->persist($outing);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+    }
 
 }
 
