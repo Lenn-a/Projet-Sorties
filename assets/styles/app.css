@@ -90,20 +90,20 @@ nav a:hover{
 
 /* Style de messages FLASH et ERROR : */
 .flash {
-    padding: 20px;
+    padding: 15px;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1rem;
     margin: 1rem 0;
     border-radius: 5px;
     color: black;
 }
 
 .flash-success {
-    background-color: lawngreen
+    background-color: #68cc09
 }
 
-.error {
-    color: red;
+.flash-error {
+    background-color: #df0b0b;
 }
 
 /**********************************/
@@ -452,6 +452,58 @@ li#outing_search_endSearchDate_error1 {
 /*********** ADMIN PAGES **********/
 /**********************************/
 
-.admin-h2 {
-    font-size: 1rem;
+/* Tableau de bord */
+
+
+/* Gestion utilisateurs */
+
+#users-title-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
+
+#user-register-trigger {
+    font-size: 0.85em;
+    border-radius: 15px;
+    max-height: 10vh;
+}
+
+#users-table-div {
+
+}
+
+.users-table {
+    font-size: 0.7em;
+    width: 100%;
+    background-color: #c7efff;
+}
+
+.users-table-headers {
+    font-weight: bold;
+}
+
+.user-active-btn {
+    background-color: #1a44a1;
+    width: fit-content !important;
+    padding: 0.4vw 0.7vw;
+    color: white;
+    font-size: 0.7em;
+    margin-right: 0.3vw;
+    border-radius: 15px;
+}
+
+#activate-btn:hover {
+    background-color: #12914d;
+    border: #12914d 2px;
+}
+
+#deactivate-btn:hover {
+    background-color: #911238;
+    border: #911238 2px;
+}
+
+/* Gestion villes */
+
+
+/* Gestion campus */
