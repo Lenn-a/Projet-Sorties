@@ -8,7 +8,8 @@
     <div class="gen-div-format" id="outing-details">
         <h1>Détails d'une sortie</h1>
         <h2>{{ outing.name }}</h2>
-        <div>Organisateur : <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
+        <div>Organisateur : <a
+                href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
         <div>Date et heure : {{ outing.startDateTime | date('d/m/Y H:i') }}</div>
         <div>Date limite d'inscription : {{ outing.signupDateLimit | date('d/m/Y H:i') }}</div>
         <div>Nombre de places : {{ outing.nbSignupsMax }}</div>
@@ -17,24 +18,30 @@
         <div>Campus : {{ outing.campus }}</div>
         <div>Lieu : {{ outing.location }}</div>
         {% if outing.status.label !== "Annulée" %}
-        <div>Statut : {{ outing.status }}</div>
+            <div>Statut : {{ outing.status }}</div>
         {% endif %}
 
         <div>
-        {% if app.user == outing.organiser %}
-            {% if outing.status.label != "Annulée" %}
-                <div class="cancel-form-div" style="display: none">
-                    <h3 id="cancel-motive-prompt">Veuillez donner un motif d'annulation <span class="required-motive">(obligatoire)</span></h3>
-                    {{ form_start(outingCancelForm) }}
-                    {{ form_widget(outingCancelForm) }}
+            {% if app.user == outing.organiser %}
+                {% if outing.status.label != "Annulée" %}
+                    <div class="cancel-form-div" style="display: none">
+                        <h3 id="cancel-motive-prompt">Veuillez donner un motif d'annulation <span
+                                class="required-motive">(obligatoire)</span></h3>
+                        {{ form_start(outingCancelForm) }}
+                        {{ form_widget(outingCancelForm) }}
                         <button type="submit" class="btn">Valider</button>
-                    {{ form_end(outingCancelForm) }}
-                </div>
-                <button class="cancel-form-trigger" style="display: block" style="background-color: #5B21B6">Annuler</button>
-            {% endif %}
-            {% if outing.status == "En création" %}
-                <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>
-            {% endif %}
+                        {{ form_end(outingCancelForm) }}
+                    </div>
+                    <button class="cancel-form-trigger" style="display: block" style="background-color: #5B21B6">
+                        Annuler
+                    </button>
+                    {% if outing.status == "En création" %}
+                        <a href="{{ path('outing_create', {'id': outing.id}) }}"
+                           onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')">
+                            <button>Modifier</button>
+                        </a>
+                    {% endif %}
+                {% endif %}
 
             {% elseif outing.participants.contains(app.user) and outing.status.label != 'En création' %}
                 <div class="button-space">
@@ -56,11 +63,13 @@
         <h2>Liste des participants à la sortie {{ outing.name }}</h2>
         <div class="participants-list">
             {% for user in users %}
-                    <div class="participants-details">
-                        <div>Nom : {{ user.firstname }}</div>
-                        <div>Prénom : {{ user.lastname }}</div>
+                <div class="participants-details">
+                    <div>Prénom : {{ user.firstname }}</div>
+                    <div>Nom : {{ user.lastname }}</div>
+                    <a href="{{ path('user_profile', {'id': user.id}) }}">
                         <div>Pseudo : {{ user.username }}</div>
-                    </div>
+                    </a>
+                </div>
             {% endfor %}
         </div>
     </div>

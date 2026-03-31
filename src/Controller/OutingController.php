@@ -210,7 +210,6 @@ final class OutingController extends AbstractController
 
                 return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
                 }
-
         }
 
         return $this->render('outing/create.html.twig', [
@@ -224,8 +223,6 @@ final class OutingController extends AbstractController
         int $id,
         OutingRepository $outingRepository): Response
     {
-
-        dump('privateList of ' . $id);
         $outings = $outingRepository->findMyOutings($id);
 
         return $this->render('outing/privateList.html.twig', [
