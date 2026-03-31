@@ -74,6 +74,9 @@
                         {% if outing.status.label == "En cours" %}
                             <div class="status-done">Se déroule aujourd'hui !</div>
                         {% endif %}
+                        {% if outing.status.label == "En création" %}
+                            <div class="status-create">Non publiée</div>
+                        {% endif %}
                     </div>
 
                 </div>
