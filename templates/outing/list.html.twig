@@ -50,7 +50,7 @@
 
                 <div>
                     <p><strong>Inscrits :</strong> {{ outing.participants | length }}/{{ outing.nbSignupsMax }}
-                {% if outing.participants.contains(app.user) and outing.organiser != app.user %}
+                {% if is_granted('OUTING_QUIT', outing) %}
                     <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
                 {% endif %}
                     </p>
