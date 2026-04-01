@@ -32,15 +32,15 @@
                     <th class="participants-table-headers">Prénom</th>
                     <th class="participants-table-headers">Nom</th>
                 </tr>
-                {% for user in users %}
+                {% for participant in outing.participants %}
                 <tr>
                     <td>
-                        <a href="{{ path('user_profile', {'id': user.id}) }}">
-                            {{ user.username }}
+                        <a href="{{ path('user_profile', {'id': participant.id}) }}">
+                            {{ participant.username }}
                         </a>
                     </td>
-                    <td>{{ user.firstname }}</td>
-                    <td>{{ user.lastname }}</td>
+                    <td>{{ participant.firstname }}</td>
+                    <td>{{ participant.lastname }}</td>
                 </tr>
                 {% endfor %}
             </table>
