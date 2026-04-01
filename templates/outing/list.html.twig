@@ -39,7 +39,15 @@
 
                 <div>
                     <h4>{{ outing.name }}</h4>
-                    <small>Organisée par <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></small>
+                    <small>Organisée par
+                        {% if outing.organiser != null %}
+                        <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">
+                            {{ outing.organiser.username }}
+                        </a>
+                            {% else %}
+                             <span id="inactive-user">Utilisateur inactif</span>
+                        {% endif %}
+                    </small>
                 </div>
 
                 <div class="outing-date">

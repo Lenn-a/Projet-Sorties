@@ -30,7 +30,7 @@ class OutingRepository extends ServiceEntityRepository
 //        $queryBuilder->select('o.name', 'o.signupDateLimit', 'o.nbSignupsMax', 'o.startDateTime', 'o.photo')
         $queryBuilder->innerJoin('o.campus', 'c')
             ->addSelect('c')
-            ->innerJoin('o.organiser', 'u')
+            ->leftJoin('o.organiser', 'u')
             ->addSelect('u')
             ->leftJoin('o.participants', 'p')
             ->addSelect('p')
