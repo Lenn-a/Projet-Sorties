@@ -38,7 +38,7 @@ class StatusService
         $outing->setStatus($status);
     }
 
-    public function setStatusByDate()
+    public function setStatusByDate(): void
     {
         $outings = $this->outingRepository->outingsThatCanChange();
 
@@ -60,6 +60,9 @@ class StatusService
             $maxParticipants = $outing->getNbSignupsMax();
             $inscrits = $outing->getParticipants()->count();
 
+            if ($outing->getId() == 111) {
+                dump($outing);
+            }
 
             $endOuting = date_add( $outing->getStartDateTime(), date_interval_create_from_date_string( $outing->getDuration() . 'minutes'));
             $finalStatus = $ouverte;

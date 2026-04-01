@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Sorties historisées</h1>
+    {% for outing in outings %}
+<article class="outingInList">
+
+    <div class="outing-img">
+        <img src="{{ asset('images/Outings/' ~ outing.photo) }}" alt="{{ outing.name }}">
+    </div>
+
+    <div class="outing-infos">
+        <div>
+            <h4>{{ outing.name }}</h4>
+            <small>Organisée par <a href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></small>
+        </div>
+        <div class="outing-date">
+            <span><strong>Date de la sortie :</strong> {{ outing.startDateTime | date('d/m/Y H:i') }}</span><span> | </span>
+            <span><strong>Date limite inscription :</strong> {{ outing.signupDateLimit | date('d/m/Y H:i') }}</span>
+        </div>
+        <div>
+            <p><strong>Inscrits :</strong> {{ outing.participants | length }}/{{ outing.nbSignupsMax }}</p>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

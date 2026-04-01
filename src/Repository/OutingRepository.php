@@ -6,7 +6,6 @@ use App\Entity\Outing;
 use App\Form\Model\OutingSearch;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -55,7 +54,7 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
             ->orWhere('s.label = :cloturee')->setParameter('cloturee', 'Clôturée')
             ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée')
-            ->orWhere('s.label = :encreation')->setParameter('encreation', 'En creation');
+            ->orWhere('s.label = :encreation AND u.id = :id')->setParameter('encreation', 'En creation')->setParameter('id', $this->security->getToken()->getUser());
         // Filter outings by CAMPUS
         if ($outingSearch->getCampus()) {
             $queryBuilder
@@ -123,10 +122,19 @@ class OutingRepository extends ServiceEntityRepository
             ->orWhere('s.label = :encours')->setParameter('encours', 'En cours')
             ->orWhere('s.label = :terminee')->setParameter('terminee', 'Terminée')
             ->orWhere('s.label = :annulee')->setParameter('annulee', 'Annulée')
+            ->orWhere('s.label = :historisee')->setParameter('historisee', 'Historisée')
             ->innerJoin('o.participants', 'p')
             ->addSelect('p')
             ;
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function findArchivedOutings() {
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder->innerJoin('o.status', 's')
+            ->addSelect('s')
+            ->where('s.label = :historisee')->setParameter('historisee', 'Historisée')
+            ;
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

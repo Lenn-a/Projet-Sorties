@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserRegistrationType;
+use App\Repository\OutingRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -96,6 +97,16 @@ final class AdminController extends AbstractController
             'userRegistrationForm' => $userRegistrationForm,
         ]);
     }
+
+    #[Route("/archives", name: 'archives')]
+    public function archivedOutings(
+        OutingRepository $outingRepository): Response
+    {
+
+        $outings = $outingRepository->findArchivedOutings();
+
+        return $this->render('admin/outingsArchives.html.twig', ['outings' => $outings]);
+}
 
 
 
