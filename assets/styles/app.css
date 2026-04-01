@@ -275,6 +275,10 @@ li#outing_search_endSearchDate_error1 {
     margin-bottom: 5px;
 }
 
+#inactive-user {
+    font-style: italic;
+}
+
 .general-infos div {
     align-self: center;
 }
@@ -452,6 +456,9 @@ li#outing_search_endSearchDate_error1 {
 
 /* Tableau de bord */
 
+#admin-h1 {
+    margin-bottom: 15px;
+}
 
 /* Gestion utilisateurs */
 
