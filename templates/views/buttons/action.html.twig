@@ -27,12 +27,12 @@
 
     {% if is_granted('OUTING_EDIT', outing) %}
         <a href="{{ path('outing_modify', {'id' : outing.id}) }}">
-            <button class="outing-list-action" id="outing-mod" onclick="return confirm('Etes-vous sûr de vouloir modifier cette sortie ?')">
+            <button class="outing-list-action" id="outing-mod" )>
             Modifier
             </button>
         </a>
-        <a href="{{ path('outing_details', {'id' : outing.id}) }}">
-            <button class="outing-list-action" id="outing-publish"onclick="return confirm('Etes-vous sûr de vouloir publier cette sortie ?')">
+        <a href="{{ path('outing_publish', {'id' : outing.id}) }}">
+            <button name="action" value="publier" class="outing-list-action" id="outing-publish" onclick="return confirm('Etes-vous sûr de vouloir publier cette sortie ?')">
                 Publier
             </button>
         </a>

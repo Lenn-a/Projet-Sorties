@@ -18,9 +18,9 @@
         <div>Description et infos : {{ outing.outingInfo }}</div>
         <div>Campus : {{ outing.campus }}</div>
         <div>Lieu : {{ outing.location }}</div>
-        {% if outing.status.label !== "Annulée" %}
+{#        {% if outing.status.label != "Annulée" %}#}
             <div>Statut : {{ outing.status }}</div>
-        {% endif %}
+{#        {% endif %}#}
 
         {% include 'views/buttons/action.html.twig' %}
         <div>
@@ -45,15 +45,6 @@
                 <a href="{{ path('outing_participate', {'id':outing.id}) }}"
                    onclick="return confirm('Participer à cette sortie ?')">
                     <button>Participer</button>
-                </a>
-            {% endif %}
-            {% if is_granted('OUTING_EDIT', outing) %}
-                <a href="{{ path('outing_create', {'id':outing.id}) }}"
-                   onclick="return confirm('Publier cette sortie ?')">
-                    <button>Publier</button>
-                </a>
-                <a href="{{ path('outing_modify', {'id':outing.id}) }}">
-                    <button>Modifier</button>
                 </a>
             {% endif %}
         </div>
