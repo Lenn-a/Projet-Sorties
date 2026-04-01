@@ -4,6 +4,8 @@
 
 body {
     background-image: url('../images/base/temp-eniwhere-background.png');
+    background-color: rgba(140, 203, 255, 0.7);
+    background-blend-mode: overlay;
     background-position: top center;
     background-repeat: repeat;
     min-height: 100vh;
@@ -426,6 +428,31 @@ li#outing_search_endSearchDate_error1 {
     font-weight: bold;
 }
 
+.details {
+    margin-top:2vh;
+    background-color: rgba(255, 255, 255, 0.52);
+    border-radius: 20px;
+    margin-left : 1vw;
+    margin-right : 1vw;
+    padding: 2%;
+}
+
+.details a {
+    margin-top: 1vh;
+}
+
+.details-flex {
+    display: flex;
+}
+
+.flex2 {
+    margin-left: 3vw;
+}
+
+.details-photo {
+    margin: 1vh;
+}
+
 /**********************************/
 /******* CREATE OUTING PAGE *******/
 /**********************************/
@@ -440,6 +467,25 @@ li#outing_search_endSearchDate_error1 {
     width: 25vh;
     height: 25vh;
     justify-self:center;
+}
+
+.profile {
+    background-color: rgba(255, 255, 255, 0.52);
+    border-radius: 20px;
+    text-align: center;
+    margin-left : 10vw;
+    margin-right : 10vw;
+    padding: 2%;
+}
+
+.profile div {
+    margin-bottom : 1vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
+.profile a {
+    margin: 1vh 1vw;
 }
 
 /**********************************/

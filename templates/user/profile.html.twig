@@ -6,18 +6,20 @@
 
 {% block body %}
 <div class="gen-div-format">
-    <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
-    <h1>{{ user.username }}</h1>
-    <div>
-        <div>Prénom : {{ user.firstname }}</div>
-        <div>Nom :  {{ user.lastname }}</div>
-        <div>Téléphone : {{ user.phone }}</div>
-        <div>Email : {{ user.email }}</div>
-        <div>Campus : {{ user.campus.name }}</div>
-    </div>
-    <div>
-        <a href="{{ app.request.headers.get('referer') ?? path('outing_list') }}">Retour</a>
-        <a href="{{ path('user_update', {'id' : user.id }) }}">Modifier</a>
+    <div class="profile">
+        <div><img src="{{ asset('images/PFP/' ~ user.photo) }}" alt="{{ user.username }}" class="profilePic"></div>
+        <div><h1>{{ user.username }}</h1></div>
+        <div>
+            <div><strong>Prénom :</strong> {{ user.firstname }}</div>
+            <div><strong>Nom :</strong>  {{ user.lastname }}</div>
+            <div><strong>Téléphone :</strong> {{ user.phone }}</div>
+            <div><strong>Email :</strong> {{ user.email }}</div>
+            <div><strong>Campus :</strong> {{ user.campus.name }}</div>
+        </div>
+        <div>
+            <a href="{{ app.request.headers.get('referer') ?? path('outing_list') }}"><button class="outing-list-action" id="outing-cancel">Retour</button></a>
+            <a href="{{ path('user_update', {'id' : user.id }) }}"><button class="outing-list-action" id="outing-mod">Modifier</button></a>
+        </div>
     </div>
 </div>
 {% endblock %}
