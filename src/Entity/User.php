@@ -295,4 +295,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->password = $this->getPassword();
     }
+
+    // A USER who is INACTIVE cannot LOG IN
+    public function isEnabled(): bool
+    {
+        return $this->active;
+    }
 }
