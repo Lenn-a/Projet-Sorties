@@ -6,7 +6,6 @@ use App\Entity\Outing;
 use App\Form\Model\OutingCancel;
 use App\Form\Model\OutingSearch;
 use App\Form\OutingCancelType;
-use App\Form\OutingModifyType;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
@@ -59,11 +58,10 @@ final class OutingController extends AbstractController
     public function details(
         int                    $id,
         OutingRepository       $outingRepository,
-        Request                $request,
-        StatusService          $statusService,
         UserRepository         $userRepository,
-        EntityManagerInterface $entityManager,
         OutingUserRepository   $outingUserRepository,
+        EntityManagerInterface   $entityManager,
+        StatusRepository       $statusRepository,
     ): Response
     {
         $outing = $outingRepository->find($id);
@@ -197,10 +195,9 @@ final class OutingController extends AbstractController
     }
 
     //Modifier une sortie
-    #[Route('/modify/{id}', name: 'modify', requirements: ['id' => '\d+'])]
+    #[Route('/modify/{id}', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modify(
         Outing $outing,
-        OutingRepository $outingRepository,
         EntityManagerInterface $entityManager,
         Request          $request,
         FileUploader       $fileUploader,
@@ -213,17 +210,14 @@ final class OutingController extends AbstractController
 
                 if ($file != null) {
                     $outing->setPhoto(
-                            $fileUploader->update($outing->getPhoto(), 'images/Outings', $file, $outing->getName())
-                );
+                        $fileUploader->update($outing->getPhoto(), 'images/Outings', $file, $outing->getName())
+                    );
+                }
                 $entityManager->persist($outing);
                 $entityManager->flush();
-                }
+                return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
             }
-
-
-                $this->addFlash('success', 'La sortie '. $outing->getName().' a été mise à jour.');
-//            }
-            return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+           return $this->render('outing/modify.html.twig', [ 'outing' =>$outing,'outingForm' => $outingForm]);
         }
 
     #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
@@ -259,6 +253,18 @@ final class OutingController extends AbstractController
         $entityManager->persist($outing);
         $entityManager->flush();
 
+        return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+    }
+
+    #[Route("/{id}/publish", name: 'publish', requirements: ['id' => '\d+'])]
+    #[IsGranted(OutingVoter::EDIT, 'outing')]
+public function publish(Outing $outing,
+                        StatusService $statusService,
+                        EntityManagerInterface $entityManager
+    ): RedirectResponse {
+        $statusService->setStatusWithName($outing, 'Ouverte');
+        $entityManager->persist($outing);
+        $entityManager->flush();
         return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
     }
 
