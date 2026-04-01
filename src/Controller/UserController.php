@@ -24,6 +24,10 @@ final class UserController extends AbstractController
     {
         $user = $userRepository->find($id);
 
+        if (!$user) {
+            throw $this->createNotFoundException('Oups ! Utilisateur n\'existe pas !');
+        }
+
 
         return $this->render('user/profile.html.twig', [
             'user' => $id,
