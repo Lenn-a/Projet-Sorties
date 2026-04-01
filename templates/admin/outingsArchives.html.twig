@@ -4,7 +4,6 @@
     <h1>Sorties historisées</h1>
     {% for outing in outings %}
 <article class="outingInList">
-
     <div class="outing-img">
         <img src="{{ asset('images/Outings/' ~ outing.photo) }}" alt="{{ outing.name }}">
     </div>
@@ -21,6 +20,8 @@
         <div>
             <p><strong>Inscrits :</strong> {{ outing.participants | length }}/{{ outing.nbSignupsMax }}</p>
         </div>
+    </div>
+</article>
     {% endfor %}
 
 {% endblock %}

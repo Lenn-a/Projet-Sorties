@@ -206,10 +206,13 @@ class AppFixtures extends Fixture
 
         foreach ($outings as $outing) {
             if ($outing->getStartDateTime() == null) {
-                $outing->setStartDateTime($faker->dateTimeBetween('+10 days', '+6 months'))
-                    ->setDuration($faker->randomElement([30, 60, 90, 120, 150, 180, 210, 240, 270, 300]));
+                $minDates = ['-6 months', '-2 months', '-10 days' ,'+1 days', '+1 months', '+2 months', '+3 months', '+5 months'];
+                $maxDates = ['-6 months +10 days', '-2 months +10 days', 'now', '+11 days', '+1 months +10 days', '+2 months +10 days', '+3 months +10 days', '+5 months +10 days'];
+                $d = random_int(0, 7);
 
-                $outing->setSignupDateLimit($faker->dateTimeBetween('-10 days', '+9 days'))
+                $outing->setStartDateTime($faker->dateTimeBetween($minDates[$d], $maxDates[$d]))
+                    ->setDuration($faker->randomElement([30, 60, 90, 120, 150, 180, 210, 240, 270, 300]))
+                    ->setSignupDateLimit(new \DateTime($minDates[$d]))
                     ->setNbSignupsMax($faker->numberBetween(1, 50))
                     ->setOutingInfo($faker->paragraph())
                     ->setLocation($faker->randomElement($locationList))
@@ -242,12 +245,15 @@ class AppFixtures extends Fixture
         for($i = 1; $i <= 20; $i++) {
             $user = new User();
             $user->setFirstName($faker->firstName())
-                ->setLastName($faker->lastName());
-            $username = strtolower($user->getFirstname()[0] . $user->getLastname());
+                ->setLastName($faker->lastName())
+            ;
+            $y = random_int(3,7);
+            $username = strtolower($user->getFirstname()[0] . $user->getLastname() . 202 . $y);
             $user
                 ->setUsername($username)
                 ->setPhone($faker->phoneNumber());
-            $user->setEmail(strtolower($user->getFirstname() . '.' . $user->getLastname() . '2026@campus-eni.fr'))
+            $email = strtolower($user->getFirstname() . '.' . $user->getLastname() . 202 . $y . '@campus-eni.fr');
+            $user->setEmail($email)
                 ->setPassword(password_hash('password', PASSWORD_DEFAULT))
                 ->setRoles(['ROLE_USER'])
                 ->setActive(true)
