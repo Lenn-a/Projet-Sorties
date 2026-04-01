@@ -393,20 +393,7 @@ li#outing_search_endSearchDate_error1 {
 /******* OUTING DETAILS PAGE ******/
 /**********************************/
 
-
 /* List of PARTICIPANTS : */
-.participants-list{
-    margin-inline: 7rem;
-}
-.participants-details{
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 0.5rem;
-}
-
 /* Formulaire d'annulation */
 #cancel-motive-prompt {
     font-size: 20px;
@@ -422,6 +409,17 @@ li#outing_search_endSearchDate_error1 {
 
 .hidden {
     display: none;
+}
+
+.participants-table {
+    font-size: 1em;
+    width: 60vw;
+    background-color: #c7efff;
+    justify-self: center;
+}
+
+.participants-table-headers {
+    font-weight: bold;
 }
 
 /**********************************/
@@ -515,8 +513,8 @@ li#outing_search_endSearchDate_error1 {
 }
 
 #user-delete-btn:hover {
-    background-color: #680e27;
-    border: #680e27 2px;
+    background-color: #0c0c0c;
+    border: #0c0c0c 2px;
 }
 
 /* Gestion villes */
