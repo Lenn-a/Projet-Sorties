@@ -58,22 +58,9 @@ final class OutingController extends AbstractController
     public function details(
         int                    $id,
         OutingRepository       $outingRepository,
-        UserRepository         $userRepository,
-        OutingUserRepository   $outingUserRepository,
-        EntityManagerInterface   $entityManager,
-        StatusRepository       $statusRepository,
     ): Response
     {
         $outing = $outingRepository->find($id);
-        //récupération des utilisateurs liés à une sortie (par son id)
-        $userOutingIds = $outingUserRepository->findOutingUsersByOutingId($id);
-
-        $userIds = array_map(function ($item) {
-            return $item->getUserId();
-        }, $userOutingIds);
-
-        //On récupère la liste des utilisateurs correspondant à la liste des ids d'user
-        $users = $userRepository->findUsersById($userIds);
 
         if (!$outing) {
             throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
@@ -81,7 +68,6 @@ final class OutingController extends AbstractController
 
         return $this->render('outing/details.html.twig', [
             'outing' => $outing,
-            'users' => $users,
         ]);
     }
 

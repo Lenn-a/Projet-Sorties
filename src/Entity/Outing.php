@@ -56,6 +56,7 @@ class Outing
     private ?Location $location = null;
 
     #[ORM\ManyToOne(inversedBy: 'myOutings')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL') ]
     private ?User $organiser = null;
 
     /**
