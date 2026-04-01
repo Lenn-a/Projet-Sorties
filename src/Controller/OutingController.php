@@ -9,7 +9,6 @@ use App\Form\OutingCancelType;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
-use App\Repository\OutingUserRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
 use App\Security\OutingVoter;
@@ -272,7 +271,8 @@ final class OutingController extends AbstractController
     #[IsGranted(OutingVoter::QUIT, 'outing')]
     public function quitAnOuting(Outing $outing,
                                  EntityManagerInterface $entityManager,
-                                 StatusService $statusService) {
+                                 StatusService $statusService): RedirectResponse
+    {
         $currentUser = $this->getUser();
 
         $outing->removeParticipant($currentUser);

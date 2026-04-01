@@ -6,23 +6,32 @@
 
 {% block body %}
     <div class="gen-div-format" id="outing-details">
-        <h1>Détails d'une sortie</h1>
-        <h2>{{ outing.name }}</h2>
-        <div>Organisateur : <a
-                href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
-        <div><img src="{{ asset('images/Outings/' ~ outing.photo) }}"></div>
-        <div>Date et heure : {{ outing.startDateTime | date('d/m/Y H:i') }}</div>
-        <div>Date limite d'inscription : {{ outing.signupDateLimit | date('d/m/Y H:i') }}</div>
-        <div>Nombre de places : {{ outing.nbSignupsMax }}</div>
-        <div>Durée : {{ outing.duration }}</div>
-        <div>Description et infos : {{ outing.outingInfo }}</div>
-        <div>Campus : {{ outing.campus }}</div>
-        <div>Lieu : {{ outing.location }}</div>
-        {% if outing.status.label != "Annulée" %}
-            <div>Statut : {{ outing.status }}</div>
-        {% endif %}
+        <h1>Détails</h1>
+        <div class="details">
+            <h2>{{ outing.name }}</h2>
+            <div class="details-flex">
+                <div class="flex1">
+                    <div><img src="{{ asset('images/Outings/' ~ outing.photo) }}" class="details-photo"></div>
+                </div>
+                <div class="flex2">
+                    <div><strong>Organisateur :</strong> <a
+                            href="{{ path('user_profile', {'id': outing.organiser.id}) }}">{{ outing.organiser.username }}</a></div>
+                    <div><strong>Date et heure :</strong> {{ outing.startDateTime | date('d/m/Y H:i') }}</div>
+                    <div><strong>Date limite d'inscription :</strong> {{ outing.signupDateLimit | date('d/m/Y H:i') }}</div>
+                    <div><strong>Nombre de places </strong>> {{ outing.nbSignupsMax }}</div>
+                    <div><strong>Durée </strong>> {{ outing.duration }}</div>
+                    <div><strong>Description et infos :</strong> {{ outing.outingInfo }}</div>
+                    <div><strong>Campus :</strong> {{ outing.campus }}</div>
+                    <div><strong>Lieu :</strong> {{ outing.location }}</div>
+                    {% if outing.status.label != "Annulée" %}
+                        <div>Statut : {{ outing.status }}</div>
+                    {% endif %}
+                    {% include 'views/buttons/action.html.twig' %}
+                </div>
+            </div>
+        </div>
 
-        {% include 'views/buttons/action.html.twig' %}
+
     </div>
     <div class="gen-div-format">
         <h2>Liste des participants à la sortie {{ outing.name }}</h2>
