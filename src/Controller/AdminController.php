@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin', name: 'admin_')]
@@ -81,6 +82,7 @@ final class AdminController extends AbstractController
     public function registerUsers(
         EntityManagerInterface $entityManager,
         Request $request,
+        UserPasswordHasherInterface $passwordHasher,
     ): Response
     {
         $user = new User();
@@ -88,10 +90,34 @@ final class AdminController extends AbstractController
         $userRegistrationForm->handleRequest($request);
 
         if ($userRegistrationForm->isSubmitted() && $userRegistrationForm->isValid()) {
+            $user->setActive(true);
+
+            $role = $userRegistrationForm->get('roles')->getData();
+
+            if ($role === 'ROLE_ADMIN') {
+                $user->setRoles(['ROLE_ADMIN']);
+            }
+            if ($role === "ROLE_USER") {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+            // Handle random starter MDP
+            $length = 8;
+            $randomStarterPassword = bin2hex(random_bytes($length / 2));
+            $hashedPassword = $passwordHasher->hashPassword($user, $randomStarterPassword);
+            $user->setPassword($hashedPassword);
+
+            $user->setPhoto('default_pfp.png');
+
             $entityManager->persist($user);
             $entityManager->flush();
+
+            return $this->redirectToRoute('admin_users');
         }
 
+
+
+        $this->addFlash('success', message: 'Ajout d\'utilisateur réussi.');
         return $this->render('admin/register.html.twig', [
             'user' => $user,
             'userRegistrationForm' => $userRegistrationForm,
