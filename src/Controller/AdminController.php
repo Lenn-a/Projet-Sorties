@@ -38,11 +38,10 @@ final class AdminController extends AbstractController
 
     #[Route('/users/active/{id}', name: 'users_active')]
     public function changeUserActive(
-        Request $request,
         EntityManagerInterface $entityManager,
         User $id,
         UserRepository $userRepository,
-    )
+    ): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $user = $userRepository->find($id);
         if (!$user) {
@@ -55,6 +54,25 @@ final class AdminController extends AbstractController
         }
         $entityManager->persist($user);
         $entityManager->flush();
+        return $this->redirectToRoute('admin_users');
+    }
+
+    #[Route('/users/delete/{id}', name: 'users_delete')]
+    public function deleteUser(
+        EntityManagerInterface $entityManager,
+        User $id,
+        UserRepository $userRepository,
+    ): Response
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw $this->createNotFoundException('Oups ! Cet utilisateur n\'existe pas !');
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', message: 'L\'utilisateur vient d\'être supprimé.');
         return $this->redirectToRoute('admin_users');
     }
 
@@ -78,5 +96,7 @@ final class AdminController extends AbstractController
             'userRegistrationForm' => $userRegistrationForm,
         ]);
     }
+
+
 
 }

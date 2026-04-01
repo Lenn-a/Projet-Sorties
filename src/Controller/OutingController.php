@@ -6,7 +6,6 @@ use App\Entity\Outing;
 use App\Form\Model\OutingCancel;
 use App\Form\Model\OutingSearch;
 use App\Form\OutingCancelType;
-use App\Form\OutingModifyType;
 use App\Form\OutingSearchType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
@@ -59,11 +58,10 @@ final class OutingController extends AbstractController
     public function details(
         int                    $id,
         OutingRepository       $outingRepository,
-        Request                $request,
-        StatusService          $statusService,
         UserRepository         $userRepository,
-        EntityManagerInterface $entityManager,
         OutingUserRepository   $outingUserRepository,
+        EntityManagerInterface   $entityManager,
+        StatusRepository       $statusRepository,
     ): Response
     {
         $outing = $outingRepository->find($id);
@@ -297,6 +295,18 @@ final class OutingController extends AbstractController
         $entityManager->persist($outing);
         $entityManager->flush();
 
+        return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+    }
+
+    #[Route("/{id}/publish", name: 'publish', requirements: ['id' => '\d+'])]
+    #[IsGranted(OutingVoter::EDIT, 'outing')]
+public function publish(Outing $outing,
+                        StatusService $statusService,
+                        EntityManagerInterface $entityManager
+    ): RedirectResponse {
+        $statusService->setStatusWithName($outing, 'Ouverte');
+        $entityManager->persist($outing);
+        $entityManager->flush();
         return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
     }
 
