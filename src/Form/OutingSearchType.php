@@ -33,11 +33,11 @@ class OutingSearchType extends AbstractType
             ])
             ->add('startSearchDate', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'Entre',
+                'label' => 'Du',
             ])
             ->add('endSearchDate', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'et',
+                'label' => 'au',
             ])
             ->add('outingOrganiser', CheckboxType::class, [
                 'label' => 'Sorties dont je l\'organisateur/trice',
