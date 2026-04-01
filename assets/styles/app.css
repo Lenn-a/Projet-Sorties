@@ -502,7 +502,7 @@ li#outing_search_endSearchDate_error1 {
 
 /* Tableau de bord */
 
-#admin-h1 {
+.admin-h1 {
     margin-bottom: 15px;
 }
 
@@ -512,6 +512,12 @@ li#outing_search_endSearchDate_error1 {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+#user-register-link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 #user-register-trigger {
@@ -569,6 +575,22 @@ li#outing_search_endSearchDate_error1 {
     background-color: #0c0c0c;
     border: #0c0c0c 2px;
 }
+
+/* Inscriptions utilisateur(s) */
+.roles-div {
+    margin-bottom: 15px;
+}
+
+.register-action-buttons-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.register-action-buttons {
+    width: 10vw !important;
+    margin-right: 15px;
+}
+
 
 /* Gestion villes */
 

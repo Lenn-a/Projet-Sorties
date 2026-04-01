@@ -52,7 +52,10 @@ class UserRegistrationType extends AbstractType
                 'choice_label' => 'name',
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'Role(s)*',
+                'label' => 'Role*',
+                'attr' => [
+                    'class' => 'roles-div',
+                ],
                 'choices' => [
                     'Administrateur' => 'ROLE_ADMIN',
                     'Utilisateur' => 'ROLE_USER',
