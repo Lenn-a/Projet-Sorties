@@ -18,36 +18,11 @@
         <div>Description et infos : {{ outing.outingInfo }}</div>
         <div>Campus : {{ outing.campus }}</div>
         <div>Lieu : {{ outing.location }}</div>
-{#        {% if outing.status.label != "Annulée" %}#}
+        {% if outing.status.label != "Annulée" %}
             <div>Statut : {{ outing.status }}</div>
-{#        {% endif %}#}
+        {% endif %}
 
         {% include 'views/buttons/action.html.twig' %}
-        <div>
-{#        {% if is_granted('OUTING_CANCEL', outing) %}#}
-{#                <a href="{{ path('outing_cancel', {'id' : outing.id}) }}">#}
-{#                    <button style="background-color: #5B21B6">Annuler</button>#}
-{#                </a>#}
-{#                {% if outing.status == "En création" %}#}
-{#                    <a href="{{ path('outing_create', {'id': outing.id}) }}" onclick="return confirm('Es-tu sur de vouloir modifier cette sortie ?')"><button>Modifier</button></a>#}
-{#                {% endif %}#}
-{#            {% endif %}#}
-
-            {% if is_granted('OUTING_QUIT', outing) %}
-                <div class="button-space">
-                    <span class="goodNews">Vous êtes inscrit à cette sortie !</span>
-                    <a href="{{ path('outing_quit', {'id': outing.id}) }}"
-                       onclick="return confirm('Veux-tu vraiment annuler ta participation à cette sortie ?')">
-                        <button>Se désister</button>
-                    </a>
-                </div>
-            {% elseif is_granted('OUTING_PARTICIPATE', outing) %}
-                <a href="{{ path('outing_participate', {'id':outing.id}) }}"
-                   onclick="return confirm('Participer à cette sortie ?')">
-                    <button>Participer</button>
-                </a>
-            {% endif %}
-        </div>
     </div>
     <div class="gen-div-format">
         <h2>Liste des participants à la sortie {{ outing.name }}</h2>
