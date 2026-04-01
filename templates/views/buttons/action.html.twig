@@ -27,7 +27,7 @@
 
     {% if is_granted('OUTING_EDIT', outing) %}
         <a href="{{ path('outing_modify', {'id' : outing.id}) }}">
-            <button class="outing-list-action" id="outing-mod" )>
+            <button class="outing-list-action" id="outing-mod" onclick="return confirm('Etes-vous sûr de vouloir modifier cette sortie ?')">
             Modifier
             </button>
         </a>

@@ -89,14 +89,14 @@ final class OutingController extends AbstractController
     #[Route('/cancel/{id}', name: 'cancel', requirements: ['id' => '\d+'])]
     #[IsGranted('OUTING_CANCEL', 'outing')]
     public function cancel(
-        Outing $outing,
+        Outing                 $outing,
         StatusService          $statusService,
         EntityManagerInterface $entityManager,
-        Request $request,
+        Request                $request,
     ): Response
     {
 
-        if(!$outing){
+        if (!$outing) {
             throw $this->createNotFoundException("Oups ! Sortie non trouvée !");
         }
 
@@ -195,31 +195,73 @@ final class OutingController extends AbstractController
     }
 
     //Modifier une sortie
-    #[Route('/modify/{id}', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    //Modifier une sortie
+    #[Route('/modify/{id}', name: 'modify', methods: ['GET', 'POST'])]
     public function modify(
-        Outing $outing,
+        int $id,
+        OutingRepository       $outingRepository,
         EntityManagerInterface $entityManager,
-        Request          $request,
-        FileUploader       $fileUploader,
-    ): Response {
-            $outingForm = $this->createForm(OutingType::class, $outing);
-            $outingForm->handleRequest($request);
+        StatusRepository       $statusRepository,
+        FileUploader           $fileUploader,
+        Request                $request,
+    ): Response
+    {
+        $outing = $outingRepository->find($id);
 
-            if ($outingForm->isSubmitted() && $outingForm->isValid()) {
-                $file = $outingForm->get('photo')->getData();
-
-                if ($file != null) {
-                    $outing->setPhoto(
-                        $fileUploader->update($outing->getPhoto(), 'images/Outings', $file, $outing->getName())
-                    );
-                }
-                $entityManager->persist($outing);
-                $entityManager->flush();
-                return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
-            }
-           return $this->render('outing/modify.html.twig', [ 'outing' =>$outing,'outingForm' => $outingForm]);
+        // Traitement de la photo: en base c'est un string (ex: "maPhoto.png")
+        // mais dans le formulaire c'est un objet File, donc il faut le convertir
+        if ($outing->getPhoto()) {
+            $outing->setPhoto(
+                null
+            );
         }
 
+
+        $outingForm = $this->createForm(OutingType::class, $outing);
+        $outingForm->handleRequest($request);
+
+        $action = $request->request->get('action');
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+
+            $file = $outingForm->get('photo')->getData();
+            if ($file != null) {
+                $outing->setPhoto(
+                    $fileUploader->upload($file, 'images/Outings/', $outing->getName())
+                );
+            } else {
+                $outing->setPhoto('Outing-default.png');
+            }
+
+            //Status = ouvert quand on clic sur "Publier"
+
+            if ($action === 'enregistrer') {
+                $enCreation = $statusRepository->getStatusByName('En création');
+                $outing->setStatus($enCreation);
+
+                $entityManager->persist($outing);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie ' . $outing->getName() . ' a bien été enregistrée.');
+                //Redirection vers la liste de sorties enregistrées
+                return $this->redirectToRoute('outing_privateList', ['id' => $this->getUser()->getId()]);
+            } else if ($action === 'publier') {
+                $published = $statusRepository->getStatusByName('Ouverte');
+                $outing->setStatus($published);
+
+                $entityManager->persist($outing);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie ' . $outing->getName() . ' a bien été publiée.');
+
+                return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
+            }
+        }
+
+        return $this->render('outing/modify.html.twig', [
+            'outingForm' => $outingForm
+        ]);
+    }
     #[Route('/participate/{id}', name: 'participate', requirements: ['id' => '\d+'])]
     #[IsGranted(OutingVoter::PARTICIPATE, 'outing')]
     public function participateInOuting(Outing $outing,
