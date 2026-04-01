@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}
     {{ parent() }} | Inscriptions
 {% endblock %}
 
-{% block title %}
+{% block body %}
     <div class="gen-div-format">
         <h1>Inscriptions</h1>
         {{ form_start(userRegistrationForm) }}

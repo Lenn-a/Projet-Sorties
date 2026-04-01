@@ -290,6 +290,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[ORM\PrePersist]
+    public function prePersist()
+    {
+        $this->active = true;
+        $this->photo = 'default_pfp.png';
+    }
+
     #[ORM\PreUpdate]
     public function preUpdate()
     {

@@ -7,7 +7,7 @@
 {% block body %}
     <div class="gen-div-format" id="users-title-div">
         <h1>Gestion d'utilisateurs</h1>
-        <button id="user-register-trigger">Inscrire utilisateur(s)</button>
+        <a href="{{ path('admin_register') }}"><button id="user-register-trigger">Inscrire utilisateur(s)</button></a>
     </div>
     <div class="gen-div-format" id="users-table-div">
         <table class="users-table">

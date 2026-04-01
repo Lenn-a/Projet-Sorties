@@ -60,15 +60,15 @@ class UserRegistrationType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('active', ChoiceType::class, [
-                'label' => 'Statut*',
-                'choices' => [
-                    'Actif' => 1,
-                    'Inactif' => 0,
-                ],
-                'multiple' => false,
-                'expanded' => true,
-            ])
+//            ->add('active', ChoiceType::class, [
+//                'label' => 'Statut*',
+//                'choices' => [
+//                    'Actif' => 1,
+//                    'Inactif' => 0,
+//                ],
+//                'multiple' => false,
+//                'expanded' => true,
+//            ])
         ;
     }
 
